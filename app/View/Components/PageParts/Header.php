@@ -23,7 +23,7 @@ class Header extends Component
             $page= explode('/', $_SERVER['REQUEST_URI'])[1];
         }
         $this->menu = [
-            ["Historia", $page == 'historia', "user.all"],
+            ["Historia", $page == 'historia', "historia.index"],
             ["Nuestras ligas", $page == 'ligas', "user.all"],
             ["Clasificación", $page == 'clasificacion', "user.all"],
             ["Galeria", $page == 'galeria', "user.all"],

@@ -65,7 +65,7 @@
             '</div>' +
             '<div class="col-span-6 mt-4">' +
               '<label class="block ml-1 mb-3" for="username">Nombre de usuario</label>' +
-              '<x-input.no-label placeholder="Nombre de usuario" id="username" name="username"/>' + 
+              '<x-input.no-label placeholder="Nombre de usuario" id="username" name="username"/>' +
             '</div>' +
           '</div>',
         showCloseButton: true,
@@ -137,7 +137,6 @@
           data:{'id':id},
           type:'DELETE',
           success: function (response) {
-            console.log(response);
             Toast.fire({
               icon: 'success',
               title: 'Usuario eliminado'
@@ -168,7 +167,7 @@
         Swal.fire('El usuario no se ha eliminado', '', 'info')
       }
     })
-    
+
   }
 </script>
 

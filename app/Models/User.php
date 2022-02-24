@@ -46,7 +46,7 @@ class User extends Authenticatable
     ];
 
     function get_users() {
-        return DB::table('users')->get();
+        return DB::table('users')->where('role', '!=', 'super')->get();
     }
 
     function get_user_by_username($user) {
@@ -79,11 +79,8 @@ class User extends Authenticatable
     }
 
     function create_user_admin($name, $surname, $username) {
-        // return DB::table('users')->insertGetId(
-        //     ['name' => $name, 'username' => $username, 'surname' => $surname]
-        // );
         return DB::table('users')->insertGetId(
-            ['name' => $name, 'username' => $name, 'surname' => $name]
+            ['name' => $name, 'username' => $username, 'surname' => $surname]
         );
     }
 

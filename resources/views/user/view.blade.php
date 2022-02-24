@@ -8,12 +8,12 @@
             <h4 class="font-bold text-sm opacity-50 italic">{{ $user->username }}</h4>
         </div>
     </div>
-    <div class="col-span-2 p-10 text-left bg-white shadow-lg rounded-lg" id="bioContainer">      
+    <div class="col-span-2 p-10 text-left bg-white shadow-lg rounded-lg" id="bioContainer">
         @foreach($user_bios as $user_bio)
             <div class="mb-8">
-                <div class="w-full mb-4 flex items-end gap-2">
-                    <h3 class="font-bold text-xl">{{ $user_bio->title }}</h3>
-                    <h4 class="font-bold text-sm opacity-50 italic">{{ $user_bio->subtitol }}</h4>
+                <div class="w-full mb-4 flex items-end items-baseline gap-2">
+                    <h3 class="font-bold text-xl align-baseline">{{ $user_bio->title }}</h3>
+                    <h4 class="font-bold text-sm opacity-50 italic align-baseline">{{ $user_bio->subtitol }}</h4>
                     @if(session()->get('user')->role != "player")
                         <div class="justify-self-end">Delete</div>
                     @endif
@@ -34,23 +34,23 @@
                         <div class="flex flex-wrap gap-4 mb-4">
                             <div class="grow">
                                 <div class="w-100">
-                                    <label class="block ml-1 mb-3" for="title">Título</label> 
+                                    <label class="block ml-1 mb-3" for="title">Título</label>
                                     <x-input.no-label placeholder="Título" id="title" name="title"/>
                                 </div>
                             </div>
-                            <div class="grow"> 
-                                <label class="block ml-1 mb-3" for="subtitle">Subtítulo</label> 
+                            <div class="grow">
+                                <label class="block ml-1 mb-3" for="subtitle">Subtítulo</label>
                                 <x-input.no-label placeholder="Subtítulo" id="subtitle" name="subtitle"/>
                             </div>
                         </div>
                         <div class="mb-4">
-                            <label class="block ml-1 mb-3" for="text">Texto</label> 
-                            <x-input.textarea name="text" id="text" rows="5" placeholder="Texto"></x-input>           
+                            <label class="block ml-1 mb-3" for="text">Texto</label>
+                            <x-input.textarea name="text" id="text" rows="5" placeholder="Texto"></x-input>
                         </div>
                         <div class="flex ">
-                            <x-button type="submit" text="Añadir" />    
-                        </div>             
-                    </form> 
+                            <x-button type="submit" text="Añadir" />
+                        </div>
+                    </form>
                 </div>
                 <script>
                     document.querySelector("#addBioForm").addEventListener("submit", (e) => {
@@ -60,7 +60,7 @@
                         const subtitle = form.get("subtitle");
                         const text = form.get("text");
                         const bio = document.getElementById("bioContainer");
-                        
+
                         Swal.fire({
                             title: '<h1 class="font-medium leading-tight text-black text-4xl">Quieres añadir esta descripcion?</h1>',
                             icon: 'info',

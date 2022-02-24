@@ -6,16 +6,14 @@ use Illuminate\View\Component;
 
 class tinymceConfig extends Component
 {
-    $public $text;
-
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($text)
+    public function __construct()
     {
-        $this->text = $text;
+
     }
 
     /**
