@@ -1,6 +1,6 @@
 <x-page-parts.html-header/>
 
-<nav class="bg-gray-800">
+<nav class="bg-gray-800 z-50 fixed w-full">
   <div class="bg-gray-800 max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
     <div class="relative flex items-center justify-between h-16">
       <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -19,10 +19,10 @@
           <img class="block lg:hidden h-8 w-auto" src="{{ asset('images/logo/logo_lliga_rectoret_no_letters.svg') }}" alt="Familia Tipster">
           <img class="hidden lg:block h-8 w-auto" src="{{ asset('images/logo/logo_lliga_rectoret_no_font.svg') }}" alt="Familia Tipster">
         </div>
-        <div class="hidden sm:block sm:ml-6">
-          <div class="flex space-x-4">
+        <div class="hidden sm:flex sm:ml-6">
+          <div class="flex items-center space-x-4">
             @for($i = 0; $i < count($menu); $i++)
-              <x-menu.desktop-link :text="$menu[$i][0]" :active="$menu[$i][1]" :link="$menu[$i][2]"/>
+              <x-menu.desktop-link :text="$menu[$i][0]" :active="$menu[$i][1]" :link="$menu[$i][2]" :submenu="isset($menu[$i][3]) ? $menu[$i][3] : null"/>
             @endfor
           </div>
         </div>
@@ -44,12 +44,22 @@
               </svg>
             </button>
           </div>
-          <div id="admin-menu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+          <div id="admin-menu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none galoo-submenu" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
             @for($i = 0; $i < count($admin_menu); $i++)
-              <x-menu.submenu-link :link="$admin_menu[$i][1]" :text="$admin_menu[$i][0]" menuName="admin-menu" :elementId="$i" />
+              <x-menu.submenu-link :link="$admin_menu[$i][1]" :text="$admin_menu[$i][0]" menuName="admin-menu" :elementId="$i" :subMenu="isset($user_menu[$i][2]) ? $user_menu[$i][2] : null"/>
             @endfor
           </div>
         </div>
+        <script>
+            $(document).ready(function(){
+                $("#admin-menu-button").on("click", function(){
+                    $(".galoo-submenu:not(#admin-menu)").hide();
+                    $("#mobile-menu").hide();
+                    $(".galoo-active-submenu").removeClass("galoo-active-submenu");
+                    $("#admin-menu").toggle('fast');
+                });
+            });
+        </script>
         @endif
         <div class="ml-3 relative">
           <div>
@@ -58,9 +68,9 @@
               <img class="h-8 w-8 rounded-full object-cover object-center" src="{{ isset(session()->get("user")->image) ? asset('images/uploads/profiles/'.session()->get("user")->username.'/'.session()->get("user")->image) : asset('images/uploads/profiles/no_image/no_image.jpg') }}" alt="">
             </button>
           </div>
-          <div id="user-menu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+          <div id="user-menu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none galoo-submenu" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
             @for($i = 0; $i < count($user_menu); $i++)
-              <x-menu.submenu-link :link="$user_menu[$i][1]" :text="$user_menu[$i][0]" menuName="user-menu" :elementId="$i" />
+              <x-menu.submenu-link :link="$user_menu[$i][1]" :text="$user_menu[$i][0]" menuName="user-menu" :elementId="$i" :subMenu="isset($user_menu[$i][2]) ? $user_menu[$i][2] : null"/>
             @endfor
           </div>
         </div>
@@ -72,7 +82,7 @@
   <div class="hidden" id="mobile-menu">
     <div class="px-2 pt-2 pb-3 space-y-1">
       @for($i = 0; $i < count($menu); $i++)
-        <x-menu.mobile-link :text="$menu[$i][0]" :active="$menu[$i][1]" :link="$menu[$i][2]"/>
+        <x-menu.mobile-link :text="$menu[$i][0]" :active="$menu[$i][1]" :link="$menu[$i][2]" :submenu="isset($menu[$i][3]) ? $menu[$i][3] : null"/>
       @endfor
     </div>
   </div>

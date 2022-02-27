@@ -104,3 +104,17 @@ table.dataTable tr.odd {
 table.dataTable tr:hover {
     background: #f1f1f1;
 }
+
+/* Menu color activo */
+
+.galoo-active-submenu {
+    --tw-bg-opacity: 1;
+    background-color: rgb(226 232 240 / var(--tw-bg-opacity));
+}
+
+.galoo-active-menu {
+    --tw-text-opacity: 1;
+    --tw-bg-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity));
+    background-color: rgb(55 65 81 / var(--tw-bg-opacity));
+}

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HistoriaController;
+use App\Http\Controllers\TemporadaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,7 @@ Route::middleware(['logged'])->group(function() {
     Route::get('/user/logoff', [UserController::class, 'do_logoff'])->name('user.logoff');
     Route::get('/user/{id}', [UserController::class, 'view'])->name('user.view');
     Route::resource('/historia', HistoriaController::class)->only(['index']);
+    Route::resource('/temporada', TemporadaController::class)->only(['index','show']);
 
     //SELF OR EDITOR ROUTES
     Route::middleware(['selfOrEditor'])->group(function() {
@@ -40,6 +42,7 @@ Route::middleware(['logged'])->group(function() {
     //MODERATOR ROUTES
     Route::middleware(['moderator'])->group(function() {
         Route::resource('/historia', HistoriaController::class)->only(['update']);
+        Route::resource('/temporada', TemporadaController::class)->except(['index','show']);
     });
 
     //EDITOR ROUTES

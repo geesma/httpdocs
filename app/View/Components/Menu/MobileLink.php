@@ -15,11 +15,12 @@ class MobileLink extends Component
      *
      * @return void
      */
-    public function __construct($active, $link, $text)
+    public function __construct($active, $link, $text, $submenu)
     {
         $this->active = $active;
         $this->link = $link;
         $this->text = $text;
+        $this->submenu = $submenu;
     }
 
     /**

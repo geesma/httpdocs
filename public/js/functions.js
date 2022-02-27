@@ -1,20 +1,16 @@
 $(document).ready(function(){
 	$("button[aria-controls='mobile-menu']").on("click", function(){
-		$("#admin-menu").hide();
-		$("#user-menu").hide();
+		$(".galoo-submenu").hide();
+        $(".galoo-active-submenu").removeClass("galoo-active-submenu");
+        $(".galoo-submenu-submenu").hide();
 		$("#mobile-menu").toggle('fast');
 	});
 
 	$("#user-menu-button").on("click", function(){
-		$("#admin-menu").hide();
-		$("#mobile-menu").hide();
+		$(".galoo-submenu:not(#user-menu)").hide();
+        $(".galoo-submenu-submenu").hide();
+        $(".galoo-active-submenu").removeClass("galoo-active-submenu");
+        $("#mobile-menu").hide();
 		$("#user-menu").toggle('fast');
-	});
-
-	$("#admin-menu-button").on("click", function(){
-		$("#user-menu").hide();
-		$("#mobile-menu").hide();
-		$("#admin-menu").toggle('fast');
-		
 	});
 });

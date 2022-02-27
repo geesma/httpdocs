@@ -10,17 +10,19 @@ class SubmenuLink extends Component
     public $text;
     public $menuName;
     public $elementId;
+    public $subMenu;
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($link, $text, $menuName, $elementId)
+    public function __construct($link, $text, $menuName, $elementId, $subMenu)
     {
         $this->link = $link;
         $this->text = $text;
         $this->menuName = $menuName;
         $this->elementId = $elementId;
+        $this->subMenu = $subMenu;
     }
 
     /**

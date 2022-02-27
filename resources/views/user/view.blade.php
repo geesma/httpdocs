@@ -1,6 +1,6 @@
 <x-page-parts.header page="user"/>
 
-<div class="max-w-7xl w-full grid grid-cols-3 gap-4 mx-auto p-2 sm:p-6 lg:p-8">
+<div class="max-w-7xl w-full grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4 mx-auto p-2 sm:p-6 lg:p-8">
     <div class="">
         <div class="p-8 bg-white shadow-lg rounded-lg text-center">
             <img src="{{ isset($user->image) ? asset('images/uploads/profiles/'.$user->username.'/'.$user->image) : asset('images/uploads/profiles/no_image/no_image.jpg') }}" alt="" class="w-full rounded-lg mb-4">
@@ -8,12 +8,12 @@
             <h4 class="font-bold text-sm opacity-50 italic">{{ $user->username }}</h4>
         </div>
     </div>
-    <div class="col-span-2 p-10 text-left bg-white shadow-lg rounded-lg" id="bioContainer">
+    <div class="md:col-span-2 p-10 text-left bg-white shadow-lg rounded-lg" id="bioContainer">
         @foreach($user_bios as $user_bio)
             <div class="mb-8">
                 <div class="w-full mb-4 flex items-end items-baseline gap-2">
                     <h3 class="font-bold text-xl align-baseline">{{ $user_bio->title }}</h3>
-                    <h4 class="font-bold text-sm opacity-50 italic align-baseline">{{ $user_bio->subtitol }}</h4>
+                    <h4 class="font-bold text-sm text-gray-500 align-baseline">{{ $user_bio->subtitol }}</h4>
                     @if(session()->get('user')->role != "player")
                         <div class="justify-self-end">Delete</div>
                     @endif
@@ -25,7 +25,7 @@
         @endforeach
         </div>
         @if(session()->get('user')->role != "player")
-            <div class="col-span-2 col-start-2 p-10 text-left bg-white shadow-lg rounded-lg" id="bioContainer">
+            <div class="md:col-span-2 md:col-start-2 p-10 text-left bg-white shadow-lg rounded-lg" id="bioContainer">
                 <div>
                     <form id="addBioForm">
                         <div class="mb-4">

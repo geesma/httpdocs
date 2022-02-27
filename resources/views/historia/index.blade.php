@@ -2,7 +2,7 @@
 
 <div class="flex items-center gap-4 items-baseline flex-wrap mb-6">
     <h1 class="font-medium leading-tight align-baseline text-5xl">Historia</h1>
-    <h4 class="font-medium opacity-50 align-baseline text-xl">Última actualización {{ $historia->updated_at }}</h4>
+    <h4 class="font-medium text-gray-500 align-baseline text-xl">Última actualización {{ $historia->updated_at }}</h4>
 </div>
 @if(session()->get('user')->role != 'player')
     <div>
