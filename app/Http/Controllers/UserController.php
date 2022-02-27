@@ -12,7 +12,7 @@ class UserController extends Controller
     function login () {
         return view('user.login');
     }
-    
+
     function do_login (Request $request) {
         $username = $request->username;
         if(!$username) {
@@ -28,7 +28,7 @@ class UserController extends Controller
             $error = "Usuario bloqueado";
             return view('user.login', ['error' => $error]);
         }
-        
+
         $user = User::get_user_by_username($username);
         if($user->role != "player") {
             return view('user.loginPassword', ['user' => $username]);
@@ -41,7 +41,7 @@ class UserController extends Controller
         $username = $request->username;
         $password = $request->password;
         $user = User::get_user_password($username);
-        
+
         if(!Hash::check($password, $user->password)) {
             User::addAtempt($username);
             $error = "Contraseña incorrecta";
@@ -54,7 +54,7 @@ class UserController extends Controller
     }
 
     private function redirectLogin($user) {
-        return view('user.view', ['user' => User::get_user_by_id($user->id), 'user_bios' => User::get_user_bio($user->id), 'notification' => ['type'=>"success" , 'message' =>"Hola, ".$user->name. " ". $user->surname. "!"]]);
+        return redirect()->route("user.view", ["id" => $user->id])->with('status', ['type'=>"success" , 'message' =>"Hola, ".$user->name. " ". $user->surname. "!"]);
     }
 
     function do_logoff(Request $request) {
@@ -78,12 +78,35 @@ class UserController extends Controller
         return User::create_user_admin($request->name,$request->surname,$request->username);
     }
 
-    function edit (Request $request) {
-        return view('user.view', ['user' => User::get_user_by_id($user_id)]);
+    function edit ($user_id) {
+        return view('user.edit', ['user' => User::find($user_id)]);
     }
 
-    function update ($user_id) {
-
+    function update (Request $request, $user_id) {
+        $validated = $request->validate([
+            'nombre' => 'required|max:15',
+            'apellido' => 'required|max:30',
+            'foto' => 'image|max:1000|mimes:jpg,png,jpeg'
+        ]);
+        $user = User::find($user_id);
+        if($request->username != $user->username) {
+            $validated = $request->validate([
+                'username' => 'required|unique:users|max:30'
+            ]);
+        }
+        $user->name = $request->nombre;
+        $user->surname = $request->apellido;
+        $user->username = $request->username;
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $extension = $request->foto->getClientOriginalExtension();
+            $fileName = $user->username.'-profile-'.uniqid().'.'.$extension;
+            $data = 'images/uploads/profiles/'.$user->username.'/';
+            $file->move(public_path().'/'.$data,$fileName);
+            $user->image = $data.$fileName;
+        }
+        $user->save();
+        return redirect()->route("user.view", ["id" => $user->id])->with('success', ['type'=>"success" , 'message' =>"El usuario ".$user->name. " ". $user->surname. " se ha actualizado correctamente"]);
     }
 
     function destroy (Request $request) {
@@ -93,7 +116,7 @@ class UserController extends Controller
     }
 
     function addBioToUser(Request $request, $id) {
-        
+
         if(!User::create_user_bio($id, $request->title, $request->subtitle, $request->text)) {
             return response()->json(['message' => 'No se ha podido crear'], 409);
         }

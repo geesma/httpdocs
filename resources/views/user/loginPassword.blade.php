@@ -3,7 +3,7 @@
 <div class="flex items-center justify-center min-h-screen bg-cover bg-no-repeat bg-center bg-[url('/images/login/background.jpg')]">
     <div class="px-8 py-6 mt-4 text-left bg-white shadow-lg rounded-md" style="background-color: white">
         <h3 class="text-2xl font-bold text-center">Familia Tipster</h3>
-        <form action="/user/loginPassword" method="POST">
+        <form action="{{ route("user.login.password") }}" method="POST">
 		@csrf
             <div class="mt-6">
                 <div>
@@ -21,7 +21,7 @@
 			</div>
 			@isset($error)
 				<div class="mt-6 max-w-xs text-center">
-					<span class="text-sm text-red-800">{{ $error }}</span>				
+					<span class="text-sm text-red-800">{{ $error }}</span>
 				</div>
 			@endisset
         </form>

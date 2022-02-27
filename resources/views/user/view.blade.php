@@ -3,9 +3,14 @@
 <div class="max-w-7xl w-full grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4 mx-auto p-2 sm:p-6 lg:p-8">
     <div class="">
         <div class="p-8 bg-white shadow-lg rounded-lg text-center">
-            <img src="{{ isset($user->image) ? asset('images/uploads/profiles/'.$user->username.'/'.$user->image) : asset('images/uploads/profiles/no_image/no_image.jpg') }}" alt="" class="w-full rounded-lg mb-4">
+            <img src="{{ isset($user->image) ? asset($user->image) : asset('images/uploads/profiles/no_image/no_image.jpg') }}" alt="" class="w-full rounded-lg mb-4">
             <h3 class="text-xl font-bold mb-2">{{ $user->name . " " . $user->surname }}</h3>
             <h4 class="font-bold text-sm opacity-50 italic">{{ $user->username }}</h4>
+            @if((session()->get('user')->role != "player" && session()->get('user')->role != "moderator") || session()->get('user')->id == $user->id)
+                <div class="mt-8">
+                    <x-elements.link :href="route('user.update', ['id' => $user->id])" text="Editar"/>
+                </div>
+            @endif
         </div>
     </div>
     <div class="md:col-span-2 p-10 text-left bg-white shadow-lg rounded-lg" id="bioContainer">

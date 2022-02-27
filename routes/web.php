@@ -22,9 +22,9 @@ Route::get('/', function () {
 });
 
 Route::middleware(['notLogged'])->group(function() {
-    Route::get('/user/login', [UserController::class, 'login']);
-    Route::post('/user/login', [UserController::class, 'do_login']);
-    Route::post('/user/loginPassword', [UserController::class, 'do_login_password']);
+    Route::get('/user/login', [UserController::class, 'login'])->name("user.login");
+    Route::post('/user/login', [UserController::class, 'do_login'])->name("user.login.post");
+    Route::post('/user/loginPassword', [UserController::class, 'do_login_password'])->name("user.login.password");
 });
 
 Route::middleware(['logged'])->group(function() {
@@ -37,6 +37,7 @@ Route::middleware(['logged'])->group(function() {
     //SELF OR EDITOR ROUTES
     Route::middleware(['selfOrEditor'])->group(function() {
         Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
+        Route::patch('/user/edit/{id}', [UserController::class, 'update'])->name('user.update');
     });
 
     //MODERATOR ROUTES

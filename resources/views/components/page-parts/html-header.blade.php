@@ -12,7 +12,7 @@
 	<script>
 		$.ajaxSetup({
 			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')     
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			}
 		});
 
@@ -30,7 +30,12 @@
 	</script>
 </head>
 <body>
-	
+
+@if(session("status"))
+    <?php $statusMessage = session("status"); ?>
+    <x-notifications.success :type="$statusMessage['type']" :message="$statusMessage['message']"/>
+@endif
+
 @if(isset($notification))
 	<x-notifications.success :type="$notification['type']" :message="$notification['message']"/>
 @endif
