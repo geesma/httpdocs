@@ -87,4 +87,4 @@
     </div>
   </div>
 </nav>
-<div class="flex items-center justify-center min-h-screen bg-cover bg-no-repeat bg-center bg-gray-600">
+<div class="flex items-center justify-center pt-16 min-h-screen bg-cover bg-no-repeat bg-center bg-gray-600">
