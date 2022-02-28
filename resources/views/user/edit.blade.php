@@ -8,7 +8,7 @@
                 @method('PATCH')
                 <div class="flex items-center space-x-6 mb-8">
                   <div class="shrink-0">
-                    <img class="h-16 w-16 object-cover rounded-full" src="{{ isset($user->image) ? asset('images/uploads/profiles/'.$user->username.'/'.$user->image) : asset('images/uploads/profiles/no_image/no_image.jpg') }}" alt="Current profile photo" />
+                    <img class="h-16 w-16 object-cover rounded-full" src="{{ isset($user->image) ? asset($user->image) : asset('images/uploads/profiles/no_image/no_image.jpg') }}" alt="Current profile photo" />
                   </div>
                   <label class="block">
                     <span class="sr-only">Elige la foto de perfil</span>
@@ -50,16 +50,5 @@
         </div>
     </div>
 </div>
-
-<script>
-
-$('input[name="foto"]').each(function () {
-    $(this).rules('add', {
-        required: true,
-        accept: "image/jpeg, image/pjpeg"
-    })
-})
-
-</script>
 
 <x-page-parts.footer/>

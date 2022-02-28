@@ -106,7 +106,7 @@ class UserController extends Controller
             $user->image = $data.$fileName;
         }
         $user->save();
-        return redirect()->route("user.view", ["id" => $user->id])->with('success', ['type'=>"success" , 'message' =>"El usuario ".$user->name. " ". $user->surname. " se ha actualizado correctamente"]);
+        return redirect()->route("user.view", ["id" => $user->id])->with('status', ['type'=>"success" , 'message' =>"El usuario ".$user->name. " ". $user->surname. " se ha actualizado correctamente"]);
     }
 
     function destroy (Request $request) {
