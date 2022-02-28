@@ -4,7 +4,7 @@ $random_id = str_replace('.','-',$link) . "-" . substr(str_shuffle("0123456789ab
 <div class="relative">
 <div>
 @if($active)
-    <a href="{{ route($link) }}" id="{{$random_id}}-button" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">
+    <a href="{{ route($link) }}" id="{{$random_id}}-menu-button" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">
         {{$text}}
         {{-- @if(isset($submenu))
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

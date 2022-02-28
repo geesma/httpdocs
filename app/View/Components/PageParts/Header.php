@@ -59,11 +59,13 @@ class Header extends Component
             ]]
           ];
         $this->admin_menu = [
-            ["Usuarios", route("user.all")]
+            ["Usuarios", route("user.all"), "editor"],
+            ["Ligas", "#", "editor"],
+            ["Reportes", "#", "moderator"]
           ];
         $this->user_menu = [
             ["Tu usuario", route('user.view', ['id' => $request->session()->get('user')->id])],
-            ["Configuracion", "#"],
+            ["Página de bienvenida", "#"],
             ["Cerrar sesión",  route('user.logoff')]
         ];
     }
