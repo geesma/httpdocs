@@ -52,6 +52,8 @@ Route::middleware(['logged'])->group(function() {
         Route::delete('/user', [UserController::class, 'destroy'])->name('user.delete');
         Route::post('/user/create', [UserController::class, 'create'])->name('user.create');
         Route::post('/user/{id}/bio', [UserController::class, 'addBioToUser'])->name('user.bio.add');
+        Route::delete('/bio/{id}', [UserController::class, 'removeBioToUser'])->name('user.bio.destroy');
+        Route::get('/bio', [UserController::class, 'removeBioToUser'])->name('user.bio.get');
     });
 
     //ADMIN ROUTES

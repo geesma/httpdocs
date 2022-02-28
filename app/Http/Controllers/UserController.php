@@ -122,4 +122,8 @@ class UserController extends Controller
         }
         return true;
     }
+
+    function removeBioToUser(Request $request, $id) {
+        return User::delete_user_bio($id);;
+    }
 }

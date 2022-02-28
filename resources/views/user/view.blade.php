@@ -16,11 +16,15 @@
     <div class="md:col-span-2 p-10 text-left bg-white shadow-lg rounded-lg" id="bioContainer">
         @foreach($user_bios as $user_bio)
             <div class="mb-8">
-                <div class="w-full mb-4 flex items-end items-baseline gap-2">
+                <div class="w-full mb-4 flex items-end items-baseline gap-2"
+                    {{ (session()->get("user")->role != "player") ? "aria-route=". route("user.bio.get") :"" }}
+                    {{ (session()->get("user")->role != "player") ? "aria-repeat=2":"" }} >
                     <h3 class="font-bold text-xl align-baseline">{{ $user_bio->title }}</h3>
                     <h4 class="font-bold text-sm text-gray-500 align-baseline">{{ $user_bio->subtitol }}</h4>
                     @if(session()->get('user')->role != "player")
-                        <div class="justify-self-end">Delete</div>
+                        <div class="justify-self-end" aria-id="{{$user_bio->id}}" aria-name="{{$user_bio->title}}">
+                            <x-button.inline-delete />
+                        </div>
                     @endif
                 </div>
                 <div class="text-justify">

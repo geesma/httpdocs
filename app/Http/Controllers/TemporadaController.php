@@ -15,7 +15,8 @@ class TemporadaController extends Controller
      */
     public function index()
     {
-        //
+        $temporades = Temporada::all();
+        return view("temporades.index", compact('temporades'));
     }
 
     /**
@@ -25,7 +26,7 @@ class TemporadaController extends Controller
      */
     public function create()
     {
-        //
+        echo "hola";
     }
 
     /**
@@ -36,7 +37,13 @@ class TemporadaController extends Controller
      */
     public function store(StoreTemporadaRequest $request)
     {
-        //
+        $validatedData = $request->validate([
+            'nom_temporada' => 'required|max:30',
+            'nom_any' => 'required|max:4',
+            'content' => 'required|max:255',
+            'order' => 'required',
+        ]);
+        return Temporada::create($validatedData);
     }
 
     /**
@@ -47,7 +54,7 @@ class TemporadaController extends Controller
      */
     public function show(Temporada $temporada)
     {
-        //
+        var_dump($temporada);
     }
 
     /**
@@ -79,8 +86,10 @@ class TemporadaController extends Controller
      * @param  \App\Models\Temporada  $temporada
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Temporada $temporada)
+    public function destroy($id)
     {
-        //
+        $temporada = Temporada::findOrFail($id);
+
+        return $temporada->delete();
     }
 }

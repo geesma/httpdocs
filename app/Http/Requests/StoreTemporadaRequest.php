@@ -13,6 +13,9 @@ class StoreTemporadaRequest extends FormRequest
      */
     public function authorize()
     {
+        if(session()->get('user')->role == "super" || session()->get('user')->role == "moderator") {
+            return true;
+        }
         return false;
     }
 

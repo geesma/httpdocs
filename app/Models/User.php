@@ -103,4 +103,8 @@ class User extends Authenticatable
             'text' => $text
         ]);
     }
+
+    function delete_user_bio($id) {
+        return DB::table('user_bios')->where('id', '=', $id)->delete();
+    }
 }

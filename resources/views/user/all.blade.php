@@ -23,7 +23,7 @@
     <tbody>
       @foreach ($users as $user)
         <tr>
-          <td class="flex justify-center"><img src="{{ isset($user->image) ? asset('images/uploads/profiles/'.$user->username.'/'.$user->image) : asset('images/uploads/profiles/no_image/no_image.jpg') }}" alt="" class="w-24 h-24 object-cover object-center rounded-full"></td>
+          <td class="flex justify-center"><img src="{{ isset($user->image) ? asset($user->image) : asset('images/uploads/profiles/no_image/no_image.jpg') }}" alt="" class="w-24 h-24 object-cover object-center rounded-full"></td>
           <td>{{ $user->name }}</td>
           <td>{{ $user->surname }}</td>
           <td>{{ $user->username }}</td>
