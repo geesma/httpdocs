@@ -1,8 +1,8 @@
 <x-page-parts.center-rectangle-header page="historia" />
 
-<div class="flex items-center gap-4 items-baseline flex-wrap mb-6">
-    <h1 class="font-medium leading-tight align-baseline text-5xl">Historia</h1>
-    <h4 class="font-medium text-gray-500 align-baseline text-xl">Última actualización {{ $historia->updated_at }}</h4>
+<div class="flex flex-wrap items-baseline gap-4 mb-6">
+    <h1 class="text-5xl font-medium leading-tight align-baseline">Historia</h1>
+    <h4 class="text-xl font-medium text-gray-500 align-baseline">Última actualización {{ $historia->updated_at->locale('es')->diffForHumans() }}</h4>
 </div>
 @if(session()->get('user')->role != 'player')
     <div>

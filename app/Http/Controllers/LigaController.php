@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTemporadaRequest;
-use App\Http\Requests\UpdateTemporadaRequest;
+use App\Models\Liga;
 use App\Models\Temporada;
 use App\Models\User;
+use Illuminate\Http\Request;
 
-class TemporadaController extends Controller
+class LigaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +16,8 @@ class TemporadaController extends Controller
      */
     public function index()
     {
-        $temporadas = Temporada::all();
-        return view("temporades.index", compact('temporadas'));
+        $ligas = Liga::all();
+        return view("liga.index", compact("ligas"));
     }
 
     /**
@@ -27,44 +27,48 @@ class TemporadaController extends Controller
      */
     public function create()
     {
-        echo "hola";
+        //
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreTemporadaRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTemporadaRequest $request)
+    public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'nom_temporada' => 'required|max:30',
-            'nom_any' => 'required|max:4',
+            'name' => 'required|max:30',
+            'subname' => 'required|max:255',
             'content' => 'required',
             'order' => 'required',
+            'color' => 'required',
+            'initials' => 'required|max:3'
         ]);
-        return Temporada::create($validatedData);
+        return Liga::create($validatedData);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Temporada  $temporada
+     * @param  \App\Models\Liga  $liga
      * @return \Illuminate\Http\Response
      */
-    public function show(Temporada $temporada)
+    public function show(Liga $liga)
     {
-        return view("temporades.view", compact('temporada'));
+        $temporada = Temporada::orderBy('nom_any', 'desc')->first();
+        $players = User::getTemporadaLigaPlayers($temporada->id, $liga->id);
+        return view("liga.view", compact(["liga", 'temporada', 'players']));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Temporada  $temporada
+     * @param  \App\Models\Liga  $liga
      * @return \Illuminate\Http\Response
      */
-    public function edit(Temporada $temporada)
+    public function edit(Liga $liga)
     {
         //
     }
@@ -72,11 +76,11 @@ class TemporadaController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateTemporadaRequest  $request
-     * @param  \App\Models\Temporada  $temporada
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Liga  $liga
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTemporadaRequest $request, Temporada $temporada)
+    public function update(Request $request, Liga $liga)
     {
         //
     }
@@ -84,17 +88,12 @@ class TemporadaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Temporada  $temporada
+     * @param  \App\Models\Liga  $liga
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $temporada = Temporada::findOrFail($id);
-
-        return $temporada->delete();
-    }
-
-    public function historico() {
-        return view("temporades.historico");
+        $liga = Liga::findOrFail($id);
+        return $liga->delete();
     }
 }

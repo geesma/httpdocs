@@ -104,7 +104,42 @@ class User extends Authenticatable
         ]);
     }
 
+    function getSeaseonPoints() {
+        return $this->id;
+    }
+
     function delete_user_bio($id) {
         return DB::table('user_bios')->where('id', '=', $id)->delete();
+    }
+
+    static function getTemporadaLigaPlayers($temporada_id, $liga_id) {
+        $users = DB::table('liga_temporada')->select(['id','name', 'surname', 'username', 'image'])->join('users', 'users.id', "=", 'liga_temporada.user_id')->where('temporada_id', '=', $temporada_id)->where('liga_id', '=', $liga_id)->get();
+        return $users;
+    }
+
+    static function getAllUsers() {
+        $users = DB::table('users')->select(['id','name', 'surname', 'username', 'image'])->where('role', '!=', 'super')->get();
+        return $users;
+    }
+
+    static function getNotUsedUsers($temporada_id) {
+        return DB::table('users')->where('role', '!=', 'super')->whereNotIn('id', function($query) use (&$temporada_id) {
+            $query->select('user_id')->from('liga_temporada')->where('temporada_id', '=', $temporada_id);
+        })->get();
+    }
+
+    static function getTemporadaLigaPlayersWithPoints($temporada_id, $liga_id) {
+        $users = DB::table('liga_temporada')->select(['id','points','name', 'surname', 'username', 'image'])->join('users', 'users.id', "=", 'liga_temporada.user_id')->where('temporada_id', '=', $temporada_id)->where('liga_id', '=', $liga_id)->orderBy('points', 'desc')->get();
+        return $users;
+    }
+
+    /**
+     * Get all of the posts for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
     }
 }

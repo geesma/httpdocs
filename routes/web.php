@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HistoriaController;
 use App\Http\Controllers\TemporadaController;
+use App\Http\Controllers\LigaController;
+use App\Http\Controllers\TemporadaLigaController;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,22 +31,10 @@ Route::middleware(['notLogged'])->group(function() {
 });
 
 Route::middleware(['logged'])->group(function() {
-    //USER ROUTES
-    Route::get('/user/logoff', [UserController::class, 'do_logoff'])->name('user.logoff');
-    Route::get('/user/{id}', [UserController::class, 'view'])->name('user.view');
-    Route::resource('/historia', HistoriaController::class)->only(['index']);
-    Route::resource('/temporada', TemporadaController::class)->only(['index','show']);
 
-    //SELF OR EDITOR ROUTES
-    Route::middleware(['selfOrEditor'])->group(function() {
-        Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
-        Route::patch('/user/edit/{id}', [UserController::class, 'update'])->name('user.update');
-    });
+    //ADMIN ROUTES
+    Route::middleware(['admin'])->group(function() {
 
-    //MODERATOR ROUTES
-    Route::middleware(['moderator'])->group(function() {
-        Route::resource('/historia', HistoriaController::class)->only(['update']);
-        Route::resource('/temporada', TemporadaController::class)->except(['index','show']);
     });
 
     //EDITOR ROUTES
@@ -56,17 +47,28 @@ Route::middleware(['logged'])->group(function() {
         Route::get('/bio', [UserController::class, 'removeBioToUser'])->name('user.bio.get');
     });
 
-    //ADMIN ROUTES
-    Route::middleware(['admin'])->group(function() {
-
+    //SELF OR EDITOR ROUTES
+    Route::middleware(['selfOrEditor'])->group(function() {
+        Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
+        Route::patch('/user/edit/{id}', [UserController::class, 'update'])->name('user.update');
     });
 
-
-
-
-    Route::any('*', function () {
-        echo "error 404";
-        return "error";
+    //MODERATOR ROUTES
+    Route::middleware(['moderator'])->group(function() {
+        Route::resource('historia', HistoriaController::class)->only(['update']);
+        Route::resource('temporada', TemporadaController::class)->except(['index','show']);
+        Route::resource('liga', LigaController::class)->except(['index','show']);
+        Route::resource('temporada.liga', TemporadaLigaController::class)->except(['index','show']);
+        Route::resource('post', PostController::class)->except(['index','show']);
     });
 
+    //USER ROUTES
+    Route::get('/user/logoff', [UserController::class, 'do_logoff'])->name('user.logoff');
+    Route::get('/user/{id}', [UserController::class, 'view'])->name('user.view');
+    Route::resource('historia', HistoriaController::class)->only(['index']);
+    Route::resource('temporada', TemporadaController::class)->only(['index','show']);
+    Route::resource('liga', LigaController::class)->only(['index','show']);
+    Route::resource('temporada.liga', TemporadaLigaController::class)->only(['index','show']);
+    Route::get('historico', [TemporadaController::class, 'historico'])->name('temporada.historico');
+    Route::resource('post', PostController::class)->only(['index','show']);
 });
