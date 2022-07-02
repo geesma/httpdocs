@@ -6,7 +6,7 @@
     </div>
     @if (isset($subMenu))
         <div id="{{ $menuName }}-item-{{ $elementId }}-menu"
-            class="absolute top-0 hidden w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg left-full ring-1 ring-black ring-opacity-5 focus:outline-none galoo-submenu-submenu"
+            class="top-0 hidden w-full py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg lg:w-48 lg:absolute left-full ring-1 ring-black ring-opacity-5 focus:outline-none galoo-submenu-submenu"
             role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
             @for ($i = 0; $i < count($subMenu); $i++)
                 <x-menu.submenu-link :link="$subMenu[$i][1]" :text="$subMenu[$i][0]" menuName="{{ $random_id }}-menu"

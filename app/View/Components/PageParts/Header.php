@@ -42,7 +42,7 @@ class Header extends Component
             ["Estatutos", $page == 'estatutos', "estatuto.index"],
             ["Premios", $page == 'premios', "user.all", [
                 ["Past Champions", route('temporada.pastChampions')],
-                ["Premios", route('temporada.index'),[]],
+                ["Premios", route('temporada.index'),[['prueba1', route('temporada.index')]]],
                 // ["Diplomas", route('temporada.index'), [
                 //     ["Temporada 2019/2020", route('temporada.index')],
                 //     ["Temporada 2020/2021", route('temporada.index')]

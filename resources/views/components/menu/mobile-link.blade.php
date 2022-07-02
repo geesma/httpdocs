@@ -14,7 +14,7 @@ $random_id = str_replace('.', '-', $link) . '-' . substr(str_shuffle('0123456789
     @endif
     @if (isset($submenu))
         <div id="{{ $random_id }}-menu"
-            class="left-0 hidden w-full py-1 mt-6 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none galoo-submenu"
+            class="left-0 hidden w-full py-1 mt-4 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none galoo-submenu"
             role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
             @for ($i = 0; $i < count($submenu); $i++)
                 <x-menu.submenu-link :link="$submenu[$i][1]" :text="$submenu[$i][0]" menuName="{{ $random_id }}-menu"
