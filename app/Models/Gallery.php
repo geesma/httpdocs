@@ -9,8 +9,8 @@ class Gallery extends Model
 {
     use HasFactory;
 
-    public function temporada(): BelongsTo
+    public function temporada()
     {
-        return $this->belongsTo(Te::class);
+        return $this->belongsTo(Temporada::class);
     }
 }

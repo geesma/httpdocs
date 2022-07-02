@@ -26,6 +26,10 @@ class Liga extends Model
         return $this->hasMany(Users::class, 'liga_temporada');
     }
 
+    public function temporadas() {
+        return $this->belongsToMany(Temporada::class);
+    }
+
     public static function getLigasToCreateOn($temporada_id) {
         return DB::select('SELECT * FROM ligas WHERE id not in (SELECT liga_temporada.liga_id from liga_temporada WHERE liga_temporada.temporada_id = ' . $temporada_id . ' GROUP BY liga_temporada.liga_id)');
     }

@@ -2074,6 +2074,10 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var dropzone__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! dropzone */ "./node_modules/dropzone/dist/dropzone.mjs");
+/* harmony import */ var lightgallery__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lightgallery */ "./node_modules/lightgallery/lightgallery.es5.js");
+/* harmony import */ var lightgallery_plugins_thumbnail__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lightgallery/plugins/thumbnail */ "./node_modules/lightgallery/plugins/thumbnail/lg-thumbnail.es5.js");
+/* harmony import */ var lightgallery_plugins_zoom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! lightgallery/plugins/zoom */ "./node_modules/lightgallery/plugins/zoom/lg-zoom.es5.js");
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -2128,6 +2132,14 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default().extend((jquery__WEBPACK_IMPORTED_M
   },
   responsive: true
 });
+
+__webpack_require__.g.Dropzone = dropzone__WEBPACK_IMPORTED_MODULE_1__["default"];
+
+__webpack_require__.g.lightGallery = lightgallery__WEBPACK_IMPORTED_MODULE_2__["default"];
+
+__webpack_require__.g.lgThumbnail = lightgallery_plugins_thumbnail__WEBPACK_IMPORTED_MODULE_3__["default"];
+
+__webpack_require__.g.lgZoom = lightgallery_plugins_zoom__WEBPACK_IMPORTED_MODULE_4__["default"];
 
 /***/ }),
 
@@ -29826,6 +29838,4239 @@ return jQuery;
 
 /***/ }),
 
+/***/ "./node_modules/just-extend/index.esm.js":
+/*!***********************************************!*\
+  !*** ./node_modules/just-extend/index.esm.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ objectExtend)
+/* harmony export */ });
+var objectExtend = extend;
+
+/*
+  var obj = {a: 3, b: 5};
+  extend(obj, {a: 4, c: 8}); // {a: 4, b: 5, c: 8}
+  obj; // {a: 4, b: 5, c: 8}
+
+  var obj = {a: 3, b: 5};
+  extend({}, obj, {a: 4, c: 8}); // {a: 4, b: 5, c: 8}
+  obj; // {a: 3, b: 5}
+
+  var arr = [1, 2, 3];
+  var obj = {a: 3, b: 5};
+  extend(obj, {c: arr}); // {a: 3, b: 5, c: [1, 2, 3]}
+  arr.push(4);
+  obj; // {a: 3, b: 5, c: [1, 2, 3, 4]}
+
+  var arr = [1, 2, 3];
+  var obj = {a: 3, b: 5};
+  extend(true, obj, {c: arr}); // {a: 3, b: 5, c: [1, 2, 3]}
+  arr.push(4);
+  obj; // {a: 3, b: 5, c: [1, 2, 3]}
+
+  extend({a: 4, b: 5}); // {a: 4, b: 5}
+  extend({a: 4, b: 5}, 3); {a: 4, b: 5}
+  extend({a: 4, b: 5}, true); {a: 4, b: 5}
+  extend('hello', {a: 4, b: 5}); // throws
+  extend(3, {a: 4, b: 5}); // throws
+*/
+
+function extend(/* [deep], obj1, obj2, [objn] */) {
+  var args = [].slice.call(arguments);
+  var deep = false;
+  if (typeof args[0] == 'boolean') {
+    deep = args.shift();
+  }
+  var result = args[0];
+  if (isUnextendable(result)) {
+    throw new Error('extendee must be an object');
+  }
+  var extenders = args.slice(1);
+  var len = extenders.length;
+  for (var i = 0; i < len; i++) {
+    var extender = extenders[i];
+    for (var key in extender) {
+      if (Object.prototype.hasOwnProperty.call(extender, key)) {
+        var value = extender[key];
+        if (deep && isCloneable(value)) {
+          var base = Array.isArray(value) ? [] : {};
+          result[key] = extend(
+            true,
+            Object.prototype.hasOwnProperty.call(result, key) && !isUnextendable(result[key])
+              ? result[key]
+              : base,
+            value
+          );
+        } else {
+          result[key] = value;
+        }
+      }
+    }
+  }
+  return result;
+}
+
+function isCloneable(obj) {
+  return Array.isArray(obj) || {}.toString.call(obj) == '[object Object]';
+}
+
+function isUnextendable(val) {
+  return !val || (typeof val != 'object' && typeof val != 'function');
+}
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/lightgallery/lightgallery.es5.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/lightgallery/lightgallery.es5.js ***!
+  \*******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/*!
+ * lightgallery | 2.4.0 | January 29th 2022
+ * http://www.lightgalleryjs.com/
+ * Copyright (c) 2020 Sachin Neravath;
+ * @license GPLv3
+ */
+
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
+function __spreadArrays() {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+}
+
+/**
+ * List of lightGallery events
+ * All events should be documented here
+ * Below interfaces are used to build the website documentations
+ * */
+var lGEvents = {
+    afterAppendSlide: 'lgAfterAppendSlide',
+    init: 'lgInit',
+    hasVideo: 'lgHasVideo',
+    containerResize: 'lgContainerResize',
+    updateSlides: 'lgUpdateSlides',
+    afterAppendSubHtml: 'lgAfterAppendSubHtml',
+    beforeOpen: 'lgBeforeOpen',
+    afterOpen: 'lgAfterOpen',
+    slideItemLoad: 'lgSlideItemLoad',
+    beforeSlide: 'lgBeforeSlide',
+    afterSlide: 'lgAfterSlide',
+    posterClick: 'lgPosterClick',
+    dragStart: 'lgDragStart',
+    dragMove: 'lgDragMove',
+    dragEnd: 'lgDragEnd',
+    beforeNextSlide: 'lgBeforeNextSlide',
+    beforePrevSlide: 'lgBeforePrevSlide',
+    beforeClose: 'lgBeforeClose',
+    afterClose: 'lgAfterClose',
+    rotateLeft: 'lgRotateLeft',
+    rotateRight: 'lgRotateRight',
+    flipHorizontal: 'lgFlipHorizontal',
+    flipVertical: 'lgFlipVertical',
+    autoplay: 'lgAutoplay',
+    autoplayStart: 'lgAutoplayStart',
+    autoplayStop: 'lgAutoplayStop',
+};
+
+var lightGalleryCoreSettings = {
+    mode: 'lg-slide',
+    easing: 'ease',
+    speed: 400,
+    licenseKey: '0000-0000-000-0000',
+    height: '100%',
+    width: '100%',
+    addClass: '',
+    startClass: 'lg-start-zoom',
+    backdropDuration: 300,
+    container: '',
+    startAnimationDuration: 400,
+    zoomFromOrigin: true,
+    hideBarsDelay: 0,
+    showBarsAfter: 10000,
+    slideDelay: 0,
+    supportLegacyBrowser: true,
+    allowMediaOverlap: false,
+    videoMaxSize: '1280-720',
+    loadYouTubePoster: true,
+    defaultCaptionHeight: 0,
+    ariaLabelledby: '',
+    ariaDescribedby: '',
+    closable: true,
+    swipeToClose: true,
+    closeOnTap: true,
+    showCloseIcon: true,
+    showMaximizeIcon: false,
+    loop: true,
+    escKey: true,
+    keyPress: true,
+    controls: true,
+    slideEndAnimation: true,
+    hideControlOnEnd: false,
+    mousewheel: false,
+    getCaptionFromTitleOrAlt: true,
+    appendSubHtmlTo: '.lg-sub-html',
+    subHtmlSelectorRelative: false,
+    preload: 2,
+    numberOfSlideItemsInDom: 10,
+    selector: '',
+    selectWithin: '',
+    nextHtml: '',
+    prevHtml: '',
+    index: 0,
+    iframeWidth: '100%',
+    iframeHeight: '100%',
+    iframeMaxWidth: '100%',
+    iframeMaxHeight: '100%',
+    download: true,
+    counter: true,
+    appendCounterTo: '.lg-toolbar',
+    swipeThreshold: 50,
+    enableSwipe: true,
+    enableDrag: true,
+    dynamic: false,
+    dynamicEl: [],
+    extraProps: [],
+    exThumbImage: '',
+    isMobile: undefined,
+    mobileSettings: {
+        controls: false,
+        showCloseIcon: false,
+        download: false,
+    },
+    plugins: [],
+    strings: {
+        closeGallery: 'Close gallery',
+        toggleMaximize: 'Toggle maximize',
+        previousSlide: 'Previous slide',
+        nextSlide: 'Next slide',
+        download: 'Download',
+        playVideo: 'Play video',
+    },
+};
+
+function initLgPolyfills() {
+    (function () {
+        if (typeof window.CustomEvent === 'function')
+            return false;
+        function CustomEvent(event, params) {
+            params = params || {
+                bubbles: false,
+                cancelable: false,
+                detail: null,
+            };
+            var evt = document.createEvent('CustomEvent');
+            evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+            return evt;
+        }
+        window.CustomEvent = CustomEvent;
+    })();
+    (function () {
+        if (!Element.prototype.matches) {
+            Element.prototype.matches =
+                Element.prototype.msMatchesSelector ||
+                    Element.prototype.webkitMatchesSelector;
+        }
+    })();
+}
+var lgQuery = /** @class */ (function () {
+    function lgQuery(selector) {
+        this.cssVenderPrefixes = [
+            'TransitionDuration',
+            'TransitionTimingFunction',
+            'Transform',
+            'Transition',
+        ];
+        this.selector = this._getSelector(selector);
+        this.firstElement = this._getFirstEl();
+        return this;
+    }
+    lgQuery.generateUUID = function () {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = (Math.random() * 16) | 0, v = c == 'x' ? r : (r & 0x3) | 0x8;
+            return v.toString(16);
+        });
+    };
+    lgQuery.prototype._getSelector = function (selector, context) {
+        if (context === void 0) { context = document; }
+        if (typeof selector !== 'string') {
+            return selector;
+        }
+        context = context || document;
+        var fl = selector.substring(0, 1);
+        if (fl === '#') {
+            return context.querySelector(selector);
+        }
+        else {
+            return context.querySelectorAll(selector);
+        }
+    };
+    lgQuery.prototype._each = function (func) {
+        if (!this.selector) {
+            return this;
+        }
+        if (this.selector.length !== undefined) {
+            [].forEach.call(this.selector, func);
+        }
+        else {
+            func(this.selector, 0);
+        }
+        return this;
+    };
+    lgQuery.prototype._setCssVendorPrefix = function (el, cssProperty, value) {
+        // prettier-ignore
+        var property = cssProperty.replace(/-([a-z])/gi, function (s, group1) {
+            return group1.toUpperCase();
+        });
+        if (this.cssVenderPrefixes.indexOf(property) !== -1) {
+            el.style[property.charAt(0).toLowerCase() + property.slice(1)] = value;
+            el.style['webkit' + property] = value;
+            el.style['moz' + property] = value;
+            el.style['ms' + property] = value;
+            el.style['o' + property] = value;
+        }
+        else {
+            el.style[property] = value;
+        }
+    };
+    lgQuery.prototype._getFirstEl = function () {
+        if (this.selector && this.selector.length !== undefined) {
+            return this.selector[0];
+        }
+        else {
+            return this.selector;
+        }
+    };
+    lgQuery.prototype.isEventMatched = function (event, eventName) {
+        var eventNamespace = eventName.split('.');
+        return event
+            .split('.')
+            .filter(function (e) { return e; })
+            .every(function (e) {
+            return eventNamespace.indexOf(e) !== -1;
+        });
+    };
+    lgQuery.prototype.attr = function (attr, value) {
+        if (value === undefined) {
+            if (!this.firstElement) {
+                return '';
+            }
+            return this.firstElement.getAttribute(attr);
+        }
+        this._each(function (el) {
+            el.setAttribute(attr, value);
+        });
+        return this;
+    };
+    lgQuery.prototype.find = function (selector) {
+        return $LG(this._getSelector(selector, this.selector));
+    };
+    lgQuery.prototype.first = function () {
+        if (this.selector && this.selector.length !== undefined) {
+            return $LG(this.selector[0]);
+        }
+        else {
+            return $LG(this.selector);
+        }
+    };
+    lgQuery.prototype.eq = function (index) {
+        return $LG(this.selector[index]);
+    };
+    lgQuery.prototype.parent = function () {
+        return $LG(this.selector.parentElement);
+    };
+    lgQuery.prototype.get = function () {
+        return this._getFirstEl();
+    };
+    lgQuery.prototype.removeAttr = function (attributes) {
+        var attrs = attributes.split(' ');
+        this._each(function (el) {
+            attrs.forEach(function (attr) { return el.removeAttribute(attr); });
+        });
+        return this;
+    };
+    lgQuery.prototype.wrap = function (className) {
+        if (!this.firstElement) {
+            return this;
+        }
+        var wrapper = document.createElement('div');
+        wrapper.className = className;
+        this.firstElement.parentNode.insertBefore(wrapper, this.firstElement);
+        this.firstElement.parentNode.removeChild(this.firstElement);
+        wrapper.appendChild(this.firstElement);
+        return this;
+    };
+    lgQuery.prototype.addClass = function (classNames) {
+        if (classNames === void 0) { classNames = ''; }
+        this._each(function (el) {
+            // IE doesn't support multiple arguments
+            classNames.split(' ').forEach(function (className) {
+                if (className) {
+                    el.classList.add(className);
+                }
+            });
+        });
+        return this;
+    };
+    lgQuery.prototype.removeClass = function (classNames) {
+        this._each(function (el) {
+            // IE doesn't support multiple arguments
+            classNames.split(' ').forEach(function (className) {
+                if (className) {
+                    el.classList.remove(className);
+                }
+            });
+        });
+        return this;
+    };
+    lgQuery.prototype.hasClass = function (className) {
+        if (!this.firstElement) {
+            return false;
+        }
+        return this.firstElement.classList.contains(className);
+    };
+    lgQuery.prototype.hasAttribute = function (attribute) {
+        if (!this.firstElement) {
+            return false;
+        }
+        return this.firstElement.hasAttribute(attribute);
+    };
+    lgQuery.prototype.toggleClass = function (className) {
+        if (!this.firstElement) {
+            return this;
+        }
+        if (this.hasClass(className)) {
+            this.removeClass(className);
+        }
+        else {
+            this.addClass(className);
+        }
+        return this;
+    };
+    lgQuery.prototype.css = function (property, value) {
+        var _this = this;
+        this._each(function (el) {
+            _this._setCssVendorPrefix(el, property, value);
+        });
+        return this;
+    };
+    // Need to pass separate namespaces for separate elements
+    lgQuery.prototype.on = function (events, listener) {
+        var _this = this;
+        if (!this.selector) {
+            return this;
+        }
+        events.split(' ').forEach(function (event) {
+            if (!Array.isArray(lgQuery.eventListeners[event])) {
+                lgQuery.eventListeners[event] = [];
+            }
+            lgQuery.eventListeners[event].push(listener);
+            _this.selector.addEventListener(event.split('.')[0], listener);
+        });
+        return this;
+    };
+    // @todo - test this
+    lgQuery.prototype.once = function (event, listener) {
+        var _this = this;
+        this.on(event, function () {
+            _this.off(event);
+            listener(event);
+        });
+        return this;
+    };
+    lgQuery.prototype.off = function (event) {
+        var _this = this;
+        if (!this.selector) {
+            return this;
+        }
+        Object.keys(lgQuery.eventListeners).forEach(function (eventName) {
+            if (_this.isEventMatched(event, eventName)) {
+                lgQuery.eventListeners[eventName].forEach(function (listener) {
+                    _this.selector.removeEventListener(eventName.split('.')[0], listener);
+                });
+                lgQuery.eventListeners[eventName] = [];
+            }
+        });
+        return this;
+    };
+    lgQuery.prototype.trigger = function (event, detail) {
+        if (!this.firstElement) {
+            return this;
+        }
+        var customEvent = new CustomEvent(event.split('.')[0], {
+            detail: detail || null,
+        });
+        this.firstElement.dispatchEvent(customEvent);
+        return this;
+    };
+    // Does not support IE
+    lgQuery.prototype.load = function (url) {
+        var _this = this;
+        fetch(url)
+            .then(function (res) { return res.text(); })
+            .then(function (html) {
+            _this.selector.innerHTML = html;
+        });
+        return this;
+    };
+    lgQuery.prototype.html = function (html) {
+        if (html === undefined) {
+            if (!this.firstElement) {
+                return '';
+            }
+            return this.firstElement.innerHTML;
+        }
+        this._each(function (el) {
+            el.innerHTML = html;
+        });
+        return this;
+    };
+    lgQuery.prototype.append = function (html) {
+        this._each(function (el) {
+            if (typeof html === 'string') {
+                el.insertAdjacentHTML('beforeend', html);
+            }
+            else {
+                el.appendChild(html);
+            }
+        });
+        return this;
+    };
+    lgQuery.prototype.prepend = function (html) {
+        this._each(function (el) {
+            el.insertAdjacentHTML('afterbegin', html);
+        });
+        return this;
+    };
+    lgQuery.prototype.remove = function () {
+        this._each(function (el) {
+            el.parentNode.removeChild(el);
+        });
+        return this;
+    };
+    lgQuery.prototype.empty = function () {
+        this._each(function (el) {
+            el.innerHTML = '';
+        });
+        return this;
+    };
+    lgQuery.prototype.scrollTop = function (scrollTop) {
+        if (scrollTop !== undefined) {
+            document.body.scrollTop = scrollTop;
+            document.documentElement.scrollTop = scrollTop;
+            return this;
+        }
+        else {
+            return (window.pageYOffset ||
+                document.documentElement.scrollTop ||
+                document.body.scrollTop ||
+                0);
+        }
+    };
+    lgQuery.prototype.scrollLeft = function (scrollLeft) {
+        if (scrollLeft !== undefined) {
+            document.body.scrollLeft = scrollLeft;
+            document.documentElement.scrollLeft = scrollLeft;
+            return this;
+        }
+        else {
+            return (window.pageXOffset ||
+                document.documentElement.scrollLeft ||
+                document.body.scrollLeft ||
+                0);
+        }
+    };
+    lgQuery.prototype.offset = function () {
+        if (!this.firstElement) {
+            return {
+                left: 0,
+                top: 0,
+            };
+        }
+        var rect = this.firstElement.getBoundingClientRect();
+        var bodyMarginLeft = $LG('body').style().marginLeft;
+        // Minus body margin - https://stackoverflow.com/questions/30711548/is-getboundingclientrect-left-returning-a-wrong-value
+        return {
+            left: rect.left - parseFloat(bodyMarginLeft) + this.scrollLeft(),
+            top: rect.top + this.scrollTop(),
+        };
+    };
+    lgQuery.prototype.style = function () {
+        if (!this.firstElement) {
+            return {};
+        }
+        return (this.firstElement.currentStyle ||
+            window.getComputedStyle(this.firstElement));
+    };
+    // Width without padding and border even if box-sizing is used.
+    lgQuery.prototype.width = function () {
+        var style = this.style();
+        return (this.firstElement.clientWidth -
+            parseFloat(style.paddingLeft) -
+            parseFloat(style.paddingRight));
+    };
+    // Height without padding and border even if box-sizing is used.
+    lgQuery.prototype.height = function () {
+        var style = this.style();
+        return (this.firstElement.clientHeight -
+            parseFloat(style.paddingTop) -
+            parseFloat(style.paddingBottom));
+    };
+    lgQuery.eventListeners = {};
+    return lgQuery;
+}());
+function $LG(selector) {
+    initLgPolyfills();
+    return new lgQuery(selector);
+}
+
+var defaultDynamicOptions = [
+    'src',
+    'sources',
+    'subHtml',
+    'subHtmlUrl',
+    'html',
+    'video',
+    'poster',
+    'slideName',
+    'responsive',
+    'srcset',
+    'sizes',
+    'iframe',
+    'downloadUrl',
+    'download',
+    'width',
+    'facebookShareUrl',
+    'tweetText',
+    'iframeTitle',
+    'twitterShareUrl',
+    'pinterestShareUrl',
+    'pinterestText',
+    'fbHtml',
+    'disqusIdentifier',
+    'disqusUrl',
+];
+// Convert html data-attribute to camalcase
+function convertToData(attr) {
+    // FInd a way for lgsize
+    if (attr === 'href') {
+        return 'src';
+    }
+    attr = attr.replace('data-', '');
+    attr = attr.charAt(0).toLowerCase() + attr.slice(1);
+    attr = attr.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); });
+    return attr;
+}
+var utils = {
+    /**
+     * get possible width and height from the lgSize attribute. Used for ZoomFromOrigin option
+     */
+    getSize: function (el, container, spacing, defaultLgSize) {
+        if (spacing === void 0) { spacing = 0; }
+        var LGel = $LG(el);
+        var lgSize = LGel.attr('data-lg-size') || defaultLgSize;
+        if (!lgSize) {
+            return;
+        }
+        var isResponsiveSizes = lgSize.split(',');
+        // if at-least two viewport sizes are available
+        if (isResponsiveSizes[1]) {
+            var wWidth = window.innerWidth;
+            for (var i = 0; i < isResponsiveSizes.length; i++) {
+                var size_1 = isResponsiveSizes[i];
+                var responsiveWidth = parseInt(size_1.split('-')[2], 10);
+                if (responsiveWidth > wWidth) {
+                    lgSize = size_1;
+                    break;
+                }
+                // take last item as last option
+                if (i === isResponsiveSizes.length - 1) {
+                    lgSize = size_1;
+                }
+            }
+        }
+        var size = lgSize.split('-');
+        var width = parseInt(size[0], 10);
+        var height = parseInt(size[1], 10);
+        var cWidth = container.width();
+        var cHeight = container.height() - spacing;
+        var maxWidth = Math.min(cWidth, width);
+        var maxHeight = Math.min(cHeight, height);
+        var ratio = Math.min(maxWidth / width, maxHeight / height);
+        return { width: width * ratio, height: height * ratio };
+    },
+    /**
+     * @desc Get transform value based on the imageSize. Used for ZoomFromOrigin option
+     * @param {jQuery Element}
+     * @returns {String} Transform CSS string
+     */
+    getTransform: function (el, container, top, bottom, imageSize) {
+        if (!imageSize) {
+            return;
+        }
+        var LGel = $LG(el).find('img').first();
+        if (!LGel.get()) {
+            return;
+        }
+        var containerRect = container.get().getBoundingClientRect();
+        var wWidth = containerRect.width;
+        // using innerWidth to include mobile safari bottom bar
+        var wHeight = container.height() - (top + bottom);
+        var elWidth = LGel.width();
+        var elHeight = LGel.height();
+        var elStyle = LGel.style();
+        var x = (wWidth - elWidth) / 2 -
+            LGel.offset().left +
+            (parseFloat(elStyle.paddingLeft) || 0) +
+            (parseFloat(elStyle.borderLeft) || 0) +
+            $LG(window).scrollLeft() +
+            containerRect.left;
+        var y = (wHeight - elHeight) / 2 -
+            LGel.offset().top +
+            (parseFloat(elStyle.paddingTop) || 0) +
+            (parseFloat(elStyle.borderTop) || 0) +
+            $LG(window).scrollTop() +
+            top;
+        var scX = elWidth / imageSize.width;
+        var scY = elHeight / imageSize.height;
+        var transform = 'translate3d(' +
+            (x *= -1) +
+            'px, ' +
+            (y *= -1) +
+            'px, 0) scale3d(' +
+            scX +
+            ', ' +
+            scY +
+            ', 1)';
+        return transform;
+    },
+    getIframeMarkup: function (iframeWidth, iframeHeight, iframeMaxWidth, iframeMaxHeight, src, iframeTitle) {
+        var title = iframeTitle ? 'title="' + iframeTitle + '"' : '';
+        return "<div class=\"lg-video-cont lg-has-iframe\" style=\"width:" + iframeWidth + "; max-width:" + iframeMaxWidth + "; height: " + iframeHeight + "; max-height:" + iframeMaxHeight + "\">\n                    <iframe class=\"lg-object\" frameborder=\"0\" " + title + " src=\"" + src + "\"  allowfullscreen=\"true\"></iframe>\n                </div>";
+    },
+    getImgMarkup: function (index, src, altAttr, srcset, sizes, sources) {
+        var srcsetAttr = srcset ? "srcset=\"" + srcset + "\"" : '';
+        var sizesAttr = sizes ? "sizes=\"" + sizes + "\"" : '';
+        var imgMarkup = "<img " + altAttr + " " + srcsetAttr + "  " + sizesAttr + " class=\"lg-object lg-image\" data-index=\"" + index + "\" src=\"" + src + "\" />";
+        var sourceTag = '';
+        if (sources) {
+            var sourceObj = typeof sources === 'string' ? JSON.parse(sources) : sources;
+            sourceTag = sourceObj.map(function (source) {
+                var attrs = '';
+                Object.keys(source).forEach(function (key) {
+                    // Do not remove the first space as it is required to separate the attributes
+                    attrs += " " + key + "=\"" + source[key] + "\"";
+                });
+                return "<source " + attrs + "></source>";
+            });
+        }
+        return "" + sourceTag + imgMarkup;
+    },
+    // Get src from responsive src
+    getResponsiveSrc: function (srcItms) {
+        var rsWidth = [];
+        var rsSrc = [];
+        var src = '';
+        for (var i = 0; i < srcItms.length; i++) {
+            var _src = srcItms[i].split(' ');
+            // Manage empty space
+            if (_src[0] === '') {
+                _src.splice(0, 1);
+            }
+            rsSrc.push(_src[0]);
+            rsWidth.push(_src[1]);
+        }
+        var wWidth = window.innerWidth;
+        for (var j = 0; j < rsWidth.length; j++) {
+            if (parseInt(rsWidth[j], 10) > wWidth) {
+                src = rsSrc[j];
+                break;
+            }
+        }
+        return src;
+    },
+    isImageLoaded: function (img) {
+        if (!img)
+            return false;
+        // During the onload event, IE correctly identifies any images that
+        // weren’t downloaded as not complete. Others should too. Gecko-based
+        // browsers act like NS4 in that they report this incorrectly.
+        if (!img.complete) {
+            return false;
+        }
+        // However, they do have two very useful properties: naturalWidth and
+        // naturalHeight. These give the true size of the image. If it failed
+        // to load, either of these should be zero.
+        if (img.naturalWidth === 0) {
+            return false;
+        }
+        // No other way of checking: assume it’s ok.
+        return true;
+    },
+    getVideoPosterMarkup: function (_poster, dummyImg, videoContStyle, playVideoString, _isVideo) {
+        var videoClass = '';
+        if (_isVideo && _isVideo.youtube) {
+            videoClass = 'lg-has-youtube';
+        }
+        else if (_isVideo && _isVideo.vimeo) {
+            videoClass = 'lg-has-vimeo';
+        }
+        else {
+            videoClass = 'lg-has-html5';
+        }
+        return "<div class=\"lg-video-cont " + videoClass + "\" style=\"" + videoContStyle + "\">\n                <div class=\"lg-video-play-button\">\n                <svg\n                    viewBox=\"0 0 20 20\"\n                    preserveAspectRatio=\"xMidYMid\"\n                    focusable=\"false\"\n                    aria-labelledby=\"" + playVideoString + "\"\n                    role=\"img\"\n                    class=\"lg-video-play-icon\"\n                >\n                    <title>" + playVideoString + "</title>\n                    <polygon class=\"lg-video-play-icon-inner\" points=\"1,0 20,10 1,20\"></polygon>\n                </svg>\n                <svg class=\"lg-video-play-icon-bg\" viewBox=\"0 0 50 50\" focusable=\"false\">\n                    <circle cx=\"50%\" cy=\"50%\" r=\"20\"></circle></svg>\n                <svg class=\"lg-video-play-icon-circle\" viewBox=\"0 0 50 50\" focusable=\"false\">\n                    <circle cx=\"50%\" cy=\"50%\" r=\"20\"></circle>\n                </svg>\n            </div>\n            " + (dummyImg || '') + "\n            <img class=\"lg-object lg-video-poster\" src=\"" + _poster + "\" />\n        </div>";
+    },
+    /**
+     * @desc Create dynamic elements array from gallery items when dynamic option is false
+     * It helps to avoid frequent DOM interaction
+     * and avoid multiple checks for dynamic elments
+     *
+     * @returns {Array} dynamicEl
+     */
+    getDynamicOptions: function (items, extraProps, getCaptionFromTitleOrAlt, exThumbImage) {
+        var dynamicElements = [];
+        var availableDynamicOptions = __spreadArrays(defaultDynamicOptions, extraProps);
+        [].forEach.call(items, function (item) {
+            var dynamicEl = {};
+            for (var i = 0; i < item.attributes.length; i++) {
+                var attr = item.attributes[i];
+                if (attr.specified) {
+                    var dynamicAttr = convertToData(attr.name);
+                    var label = '';
+                    if (availableDynamicOptions.indexOf(dynamicAttr) > -1) {
+                        label = dynamicAttr;
+                    }
+                    if (label) {
+                        dynamicEl[label] = attr.value;
+                    }
+                }
+            }
+            var currentItem = $LG(item);
+            var alt = currentItem.find('img').first().attr('alt');
+            var title = currentItem.attr('title');
+            var thumb = exThumbImage
+                ? currentItem.attr(exThumbImage)
+                : currentItem.find('img').first().attr('src');
+            dynamicEl.thumb = thumb;
+            if (getCaptionFromTitleOrAlt && !dynamicEl.subHtml) {
+                dynamicEl.subHtml = title || alt || '';
+            }
+            dynamicEl.alt = alt || title || '';
+            dynamicElements.push(dynamicEl);
+        });
+        return dynamicElements;
+    },
+    isMobile: function () {
+        return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    },
+    /**
+     * @desc Check the given src is video
+     * @param {String} src
+     * @return {Object} video type
+     * Ex:{ youtube  :  ["//www.youtube.com/watch?v=c0asJgSyxcY", "c0asJgSyxcY"] }
+     *
+     * @todo - this information can be moved to dynamicEl to avoid frequent calls
+     */
+    isVideo: function (src, isHTML5VIdeo, index) {
+        if (!src) {
+            if (isHTML5VIdeo) {
+                return {
+                    html5: true,
+                };
+            }
+            else {
+                console.error('lightGallery :- data-src is not provided on slide item ' +
+                    (index + 1) +
+                    '. Please make sure the selector property is properly configured. More info - https://www.lightgalleryjs.com/demos/html-markup/');
+                return;
+            }
+        }
+        var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com|be-nocookie\.com)\/(?:watch\?v=|embed\/)?([a-z0-9\-\_\%]+)([\&|?][\S]*)*/i);
+        var vimeo = src.match(/\/\/(?:www\.)?(?:player\.)?vimeo.com\/(?:video\/)?([0-9a-z\-_]+)(.*)?/i);
+        var wistia = src.match(/https?:\/\/(.+)?(wistia\.com|wi\.st)\/(medias|embed)\/([0-9a-z\-_]+)(.*)/);
+        if (youtube) {
+            return {
+                youtube: youtube,
+            };
+        }
+        else if (vimeo) {
+            return {
+                vimeo: vimeo,
+            };
+        }
+        else if (wistia) {
+            return {
+                wistia: wistia,
+            };
+        }
+    },
+};
+
+// @ref - https://stackoverflow.com/questions/3971841/how-to-resize-images-proportionally-keeping-the-aspect-ratio
+// @ref - https://2ality.com/2017/04/setting-up-multi-platform-packages.html
+// Unique id for each gallery
+var lgId = 0;
+var LightGallery = /** @class */ (function () {
+    function LightGallery(element, options) {
+        this.lgOpened = false;
+        this.index = 0;
+        // lightGallery modules
+        this.plugins = [];
+        // false when lightGallery load first slide content;
+        this.lGalleryOn = false;
+        // True when a slide animation is in progress
+        this.lgBusy = false;
+        this.currentItemsInDom = [];
+        // Scroll top value before lightGallery is opened
+        this.prevScrollTop = 0;
+        this.isDummyImageRemoved = false;
+        this.dragOrSwipeEnabled = false;
+        this.mediaContainerPosition = {
+            top: 0,
+            bottom: 0,
+        };
+        if (!element) {
+            return this;
+        }
+        lgId++;
+        this.lgId = lgId;
+        this.el = element;
+        this.LGel = $LG(element);
+        this.generateSettings(options);
+        this.buildModules();
+        // When using dynamic mode, ensure dynamicEl is an array
+        if (this.settings.dynamic &&
+            this.settings.dynamicEl !== undefined &&
+            !Array.isArray(this.settings.dynamicEl)) {
+            throw 'When using dynamic mode, you must also define dynamicEl as an Array.';
+        }
+        this.galleryItems = this.getItems();
+        this.normalizeSettings();
+        // Gallery items
+        this.init();
+        this.validateLicense();
+        return this;
+    }
+    LightGallery.prototype.generateSettings = function (options) {
+        // lightGallery settings
+        this.settings = __assign(__assign({}, lightGalleryCoreSettings), options);
+        if (this.settings.isMobile &&
+            typeof this.settings.isMobile === 'function'
+            ? this.settings.isMobile()
+            : utils.isMobile()) {
+            var mobileSettings = __assign(__assign({}, this.settings.mobileSettings), this.settings.mobileSettings);
+            this.settings = __assign(__assign({}, this.settings), mobileSettings);
+        }
+    };
+    LightGallery.prototype.normalizeSettings = function () {
+        if (this.settings.slideEndAnimation) {
+            this.settings.hideControlOnEnd = false;
+        }
+        if (!this.settings.closable) {
+            this.settings.swipeToClose = false;
+        }
+        // And reset it on close to get the correct value next time
+        this.zoomFromOrigin = this.settings.zoomFromOrigin;
+        // At the moment, Zoom from image doesn't support dynamic options
+        // @todo add zoomFromOrigin support for dynamic images
+        if (this.settings.dynamic) {
+            this.zoomFromOrigin = false;
+        }
+        if (!this.settings.container) {
+            this.settings.container = document.body;
+        }
+        // settings.preload should not be grater than $item.length
+        this.settings.preload = Math.min(this.settings.preload, this.galleryItems.length);
+    };
+    LightGallery.prototype.init = function () {
+        var _this = this;
+        this.addSlideVideoInfo(this.galleryItems);
+        this.buildStructure();
+        this.LGel.trigger(lGEvents.init, {
+            instance: this,
+        });
+        if (this.settings.keyPress) {
+            this.keyPress();
+        }
+        setTimeout(function () {
+            _this.enableDrag();
+            _this.enableSwipe();
+            _this.triggerPosterClick();
+        }, 50);
+        this.arrow();
+        if (this.settings.mousewheel) {
+            this.mousewheel();
+        }
+        if (!this.settings.dynamic) {
+            this.openGalleryOnItemClick();
+        }
+    };
+    LightGallery.prototype.openGalleryOnItemClick = function () {
+        var _this = this;
+        var _loop_1 = function (index) {
+            var element = this_1.items[index];
+            var $element = $LG(element);
+            // Using different namespace for click because click event should not unbind if selector is same object('this')
+            // @todo manage all event listners - should have namespace that represent element
+            var uuid = lgQuery.generateUUID();
+            $element
+                .attr('data-lg-id', uuid)
+                .on("click.lgcustom-item-" + uuid, function (e) {
+                e.preventDefault();
+                var currentItemIndex = _this.settings.index || index;
+                _this.openGallery(currentItemIndex, element);
+            });
+        };
+        var this_1 = this;
+        // Using for loop instead of using bubbling as the items can be any html element.
+        for (var index = 0; index < this.items.length; index++) {
+            _loop_1(index);
+        }
+    };
+    /**
+     * Module constructor
+     * Modules are build incrementally.
+     * Gallery should be opened only once all the modules are initialized.
+     * use moduleBuildTimeout to make sure this
+     */
+    LightGallery.prototype.buildModules = function () {
+        var _this = this;
+        this.settings.plugins.forEach(function (plugin) {
+            _this.plugins.push(new plugin(_this, $LG));
+        });
+    };
+    LightGallery.prototype.validateLicense = function () {
+        if (!this.settings.licenseKey) {
+            console.error('Please provide a valid license key');
+        }
+        else if (this.settings.licenseKey === '0000-0000-000-0000') {
+            console.warn("lightGallery: " + this.settings.licenseKey + " license key is not valid for production use");
+        }
+    };
+    LightGallery.prototype.getSlideItem = function (index) {
+        return $LG(this.getSlideItemId(index));
+    };
+    LightGallery.prototype.getSlideItemId = function (index) {
+        return "#lg-item-" + this.lgId + "-" + index;
+    };
+    LightGallery.prototype.getIdName = function (id) {
+        return id + "-" + this.lgId;
+    };
+    LightGallery.prototype.getElementById = function (id) {
+        return $LG("#" + this.getIdName(id));
+    };
+    LightGallery.prototype.manageSingleSlideClassName = function () {
+        if (this.galleryItems.length < 2) {
+            this.outer.addClass('lg-single-item');
+        }
+        else {
+            this.outer.removeClass('lg-single-item');
+        }
+    };
+    LightGallery.prototype.buildStructure = function () {
+        var _this = this;
+        var container = this.$container && this.$container.get();
+        if (container) {
+            return;
+        }
+        var controls = '';
+        var subHtmlCont = '';
+        // Create controls
+        if (this.settings.controls) {
+            controls = "<button type=\"button\" id=\"" + this.getIdName('lg-prev') + "\" aria-label=\"" + this.settings.strings['previousSlide'] + "\" class=\"lg-prev lg-icon\"> " + this.settings.prevHtml + " </button>\n                <button type=\"button\" id=\"" + this.getIdName('lg-next') + "\" aria-label=\"" + this.settings.strings['nextSlide'] + "\" class=\"lg-next lg-icon\"> " + this.settings.nextHtml + " </button>";
+        }
+        if (this.settings.appendSubHtmlTo !== '.lg-item') {
+            subHtmlCont =
+                '<div class="lg-sub-html" role="status" aria-live="polite"></div>';
+        }
+        var addClasses = '';
+        if (this.settings.allowMediaOverlap) {
+            // Do not remove space before last single quote
+            addClasses += 'lg-media-overlap ';
+        }
+        var ariaLabelledby = this.settings.ariaLabelledby
+            ? 'aria-labelledby="' + this.settings.ariaLabelledby + '"'
+            : '';
+        var ariaDescribedby = this.settings.ariaDescribedby
+            ? 'aria-describedby="' + this.settings.ariaDescribedby + '"'
+            : '';
+        var containerClassName = "lg-container " + this.settings.addClass + " " + (document.body !== this.settings.container ? 'lg-inline' : '');
+        var closeIcon = this.settings.closable && this.settings.showCloseIcon
+            ? "<button type=\"button\" aria-label=\"" + this.settings.strings['closeGallery'] + "\" id=\"" + this.getIdName('lg-close') + "\" class=\"lg-close lg-icon\"></button>"
+            : '';
+        var maximizeIcon = this.settings.showMaximizeIcon
+            ? "<button type=\"button\" aria-label=\"" + this.settings.strings['toggleMaximize'] + "\" id=\"" + this.getIdName('lg-maximize') + "\" class=\"lg-maximize lg-icon\"></button>"
+            : '';
+        var template = "\n        <div class=\"" + containerClassName + "\" id=\"" + this.getIdName('lg-container') + "\" tabindex=\"-1\" aria-modal=\"true\" " + ariaLabelledby + " " + ariaDescribedby + " role=\"dialog\"\n        >\n            <div id=\"" + this.getIdName('lg-backdrop') + "\" class=\"lg-backdrop\"></div>\n\n            <div id=\"" + this.getIdName('lg-outer') + "\" class=\"lg-outer lg-use-css3 lg-css3 lg-hide-items " + addClasses + " \">\n\n              <div id=\"" + this.getIdName('lg-content') + "\" class=\"lg-content\">\n                <div id=\"" + this.getIdName('lg-inner') + "\" class=\"lg-inner\">\n                </div>\n                " + controls + "\n              </div>\n                <div id=\"" + this.getIdName('lg-toolbar') + "\" class=\"lg-toolbar lg-group\">\n                    " + maximizeIcon + "\n                    " + closeIcon + "\n                    </div>\n                    " + (this.settings.appendSubHtmlTo === '.lg-outer'
+            ? subHtmlCont
+            : '') + "\n                <div id=\"" + this.getIdName('lg-components') + "\" class=\"lg-components\">\n                    " + (this.settings.appendSubHtmlTo === '.lg-sub-html'
+            ? subHtmlCont
+            : '') + "\n                </div>\n            </div>\n        </div>\n        ";
+        $LG(this.settings.container).append(template);
+        if (document.body !== this.settings.container) {
+            $LG(this.settings.container).css('position', 'relative');
+        }
+        this.outer = this.getElementById('lg-outer');
+        this.$lgComponents = this.getElementById('lg-components');
+        this.$backdrop = this.getElementById('lg-backdrop');
+        this.$container = this.getElementById('lg-container');
+        this.$inner = this.getElementById('lg-inner');
+        this.$content = this.getElementById('lg-content');
+        this.$toolbar = this.getElementById('lg-toolbar');
+        this.$backdrop.css('transition-duration', this.settings.backdropDuration + 'ms');
+        var outerClassNames = this.settings.mode + " ";
+        this.manageSingleSlideClassName();
+        if (this.settings.enableDrag) {
+            outerClassNames += 'lg-grab ';
+        }
+        this.outer.addClass(outerClassNames);
+        this.$inner.css('transition-timing-function', this.settings.easing);
+        this.$inner.css('transition-duration', this.settings.speed + 'ms');
+        if (this.settings.download) {
+            this.$toolbar.append("<a id=\"" + this.getIdName('lg-download') + "\" target=\"_blank\" rel=\"noopener\" aria-label=\"" + this.settings.strings['download'] + "\" download class=\"lg-download lg-icon\"></a>");
+        }
+        this.counter();
+        $LG(window).on("resize.lg.global" + this.lgId + " orientationchange.lg.global" + this.lgId, function () {
+            _this.refreshOnResize();
+        });
+        this.hideBars();
+        this.manageCloseGallery();
+        this.toggleMaximize();
+        this.initModules();
+    };
+    LightGallery.prototype.refreshOnResize = function () {
+        if (this.lgOpened) {
+            var currentGalleryItem = this.galleryItems[this.index];
+            var __slideVideoInfo = currentGalleryItem.__slideVideoInfo;
+            this.mediaContainerPosition = this.getMediaContainerPosition();
+            var _a = this.mediaContainerPosition, top_1 = _a.top, bottom = _a.bottom;
+            this.currentImageSize = utils.getSize(this.items[this.index], this.outer, top_1 + bottom, __slideVideoInfo && this.settings.videoMaxSize);
+            if (__slideVideoInfo) {
+                this.resizeVideoSlide(this.index, this.currentImageSize);
+            }
+            if (this.zoomFromOrigin && !this.isDummyImageRemoved) {
+                var imgStyle = this.getDummyImgStyles(this.currentImageSize);
+                this.outer
+                    .find('.lg-current .lg-dummy-img')
+                    .first()
+                    .attr('style', imgStyle);
+            }
+            this.LGel.trigger(lGEvents.containerResize);
+        }
+    };
+    LightGallery.prototype.resizeVideoSlide = function (index, imageSize) {
+        var lgVideoStyle = this.getVideoContStyle(imageSize);
+        var currentSlide = this.getSlideItem(index);
+        currentSlide.find('.lg-video-cont').attr('style', lgVideoStyle);
+    };
+    /**
+     * Update slides dynamically.
+     * Add, edit or delete slides dynamically when lightGallery is opened.
+     * Modify the current gallery items and pass it via updateSlides method
+     * @note
+     * - Do not mutate existing lightGallery items directly.
+     * - Always pass new list of gallery items
+     * - You need to take care of thumbnails outside the gallery if any
+     * - user this method only if you want to update slides when the gallery is opened. Otherwise, use `refresh()` method.
+     * @param items Gallery items
+     * @param index After the update operation, which slide gallery should navigate to
+     * @category lGPublicMethods
+     * @example
+     * const plugin = lightGallery();
+     *
+     * // Adding slides dynamically
+     * let galleryItems = [
+     * // Access existing lightGallery items
+     * // galleryItems are automatically generated internally from the gallery HTML markup
+     * // or directly from galleryItems when dynamic gallery is used
+     *   ...plugin.galleryItems,
+     *     ...[
+     *       {
+     *         src: 'img/img-1.png',
+     *           thumb: 'img/thumb1.png',
+     *         },
+     *     ],
+     *   ];
+     *   plugin.updateSlides(
+     *     galleryItems,
+     *     plugin.index,
+     *   );
+     *
+     *
+     * // Remove slides dynamically
+     * galleryItems = JSON.parse(
+     *   JSON.stringify(updateSlideInstance.galleryItems),
+     * );
+     * galleryItems.shift();
+     * updateSlideInstance.updateSlides(galleryItems, 1);
+     * @see <a href="/demos/update-slides/">Demo</a>
+     */
+    LightGallery.prototype.updateSlides = function (items, index) {
+        if (this.index > items.length - 1) {
+            this.index = items.length - 1;
+        }
+        if (items.length === 1) {
+            this.index = 0;
+        }
+        if (!items.length) {
+            this.closeGallery();
+            return;
+        }
+        var currentSrc = this.galleryItems[index].src;
+        this.galleryItems = items;
+        this.updateControls();
+        this.$inner.empty();
+        this.currentItemsInDom = [];
+        var _index = 0;
+        // Find the current index based on source value of the slide
+        this.galleryItems.some(function (galleryItem, itemIndex) {
+            if (galleryItem.src === currentSrc) {
+                _index = itemIndex;
+                return true;
+            }
+            return false;
+        });
+        this.currentItemsInDom = this.organizeSlideItems(_index, -1);
+        this.loadContent(_index, true);
+        this.getSlideItem(_index).addClass('lg-current');
+        this.index = _index;
+        this.updateCurrentCounter(_index);
+        this.LGel.trigger(lGEvents.updateSlides);
+    };
+    // Get gallery items based on multiple conditions
+    LightGallery.prototype.getItems = function () {
+        // Gallery items
+        this.items = [];
+        if (!this.settings.dynamic) {
+            if (this.settings.selector === 'this') {
+                this.items.push(this.el);
+            }
+            else if (this.settings.selector) {
+                if (typeof this.settings.selector === 'string') {
+                    if (this.settings.selectWithin) {
+                        var selectWithin = $LG(this.settings.selectWithin);
+                        this.items = selectWithin
+                            .find(this.settings.selector)
+                            .get();
+                    }
+                    else {
+                        this.items = this.el.querySelectorAll(this.settings.selector);
+                    }
+                }
+                else {
+                    this.items = this.settings.selector;
+                }
+            }
+            else {
+                this.items = this.el.children;
+            }
+            return utils.getDynamicOptions(this.items, this.settings.extraProps, this.settings.getCaptionFromTitleOrAlt, this.settings.exThumbImage);
+        }
+        else {
+            return this.settings.dynamicEl || [];
+        }
+    };
+    /**
+     * Open lightGallery.
+     * Open gallery with specific slide by passing index of the slide as parameter.
+     * @category lGPublicMethods
+     * @param {Number} index  - index of the slide
+     * @param {HTMLElement} element - Which image lightGallery should zoom from
+     *
+     * @example
+     * const $dynamicGallery = document.getElementById('dynamic-gallery-demo');
+     * const dynamicGallery = lightGallery($dynamicGallery, {
+     *     dynamic: true,
+     *     dynamicEl: [
+     *         {
+     *              src: 'img/1.jpg',
+     *              thumb: 'img/thumb-1.jpg',
+     *              subHtml: '<h4>Image 1 title</h4><p>Image 1 descriptions.</p>',
+     *         },
+     *         ...
+     *     ],
+     * });
+     * $dynamicGallery.addEventListener('click', function () {
+     *     // Starts with third item.(Optional).
+     *     // This is useful if you want use dynamic mode with
+     *     // custom thumbnails (thumbnails outside gallery),
+     *     dynamicGallery.openGallery(2);
+     * });
+     *
+     */
+    LightGallery.prototype.openGallery = function (index, element) {
+        var _this = this;
+        if (index === void 0) { index = this.settings.index; }
+        // prevent accidental double execution
+        if (this.lgOpened)
+            return;
+        this.lgOpened = true;
+        this.outer.get().focus();
+        this.outer.removeClass('lg-hide-items');
+        // Add display block, but still has opacity 0
+        this.$container.addClass('lg-show');
+        var itemsToBeInsertedToDom = this.getItemsToBeInsertedToDom(index, index);
+        this.currentItemsInDom = itemsToBeInsertedToDom;
+        var items = '';
+        itemsToBeInsertedToDom.forEach(function (item) {
+            items = items + ("<div id=\"" + item + "\" class=\"lg-item\"></div>");
+        });
+        this.$inner.append(items);
+        this.addHtml(index);
+        var transform = '';
+        this.mediaContainerPosition = this.getMediaContainerPosition();
+        var _a = this.mediaContainerPosition, top = _a.top, bottom = _a.bottom;
+        if (!this.settings.allowMediaOverlap) {
+            this.setMediaContainerPosition(top, bottom);
+        }
+        var __slideVideoInfo = this.galleryItems[index].__slideVideoInfo;
+        if (this.zoomFromOrigin && element) {
+            this.currentImageSize = utils.getSize(element, this.outer, top + bottom, __slideVideoInfo && this.settings.videoMaxSize);
+            transform = utils.getTransform(element, this.outer, top, bottom, this.currentImageSize);
+        }
+        if (!this.zoomFromOrigin || !transform) {
+            this.outer.addClass(this.settings.startClass);
+            this.getSlideItem(index).removeClass('lg-complete');
+        }
+        var timeout = this.settings.zoomFromOrigin
+            ? 100
+            : this.settings.backdropDuration;
+        setTimeout(function () {
+            _this.outer.addClass('lg-components-open');
+        }, timeout);
+        this.index = index;
+        this.LGel.trigger(lGEvents.beforeOpen);
+        // add class lg-current to remove initial transition
+        this.getSlideItem(index).addClass('lg-current');
+        this.lGalleryOn = false;
+        // Store the current scroll top value to scroll back after closing the gallery..
+        this.prevScrollTop = $LG(window).scrollTop();
+        setTimeout(function () {
+            // Need to check both zoomFromOrigin and transform values as we need to set set the
+            // default opening animation if user missed to add the lg-size attribute
+            if (_this.zoomFromOrigin && transform) {
+                var currentSlide_1 = _this.getSlideItem(index);
+                currentSlide_1.css('transform', transform);
+                setTimeout(function () {
+                    currentSlide_1
+                        .addClass('lg-start-progress lg-start-end-progress')
+                        .css('transition-duration', _this.settings.startAnimationDuration + 'ms');
+                    _this.outer.addClass('lg-zoom-from-image');
+                });
+                setTimeout(function () {
+                    currentSlide_1.css('transform', 'translate3d(0, 0, 0)');
+                }, 100);
+            }
+            setTimeout(function () {
+                _this.$backdrop.addClass('in');
+                _this.$container.addClass('lg-show-in');
+            }, 10);
+            // lg-visible class resets gallery opacity to 1
+            if (!_this.zoomFromOrigin || !transform) {
+                setTimeout(function () {
+                    _this.outer.addClass('lg-visible');
+                }, _this.settings.backdropDuration);
+            }
+            // initiate slide function
+            _this.slide(index, false, false, false);
+            _this.LGel.trigger(lGEvents.afterOpen);
+        });
+        if (document.body === this.settings.container) {
+            $LG('html').addClass('lg-on');
+        }
+    };
+    /**
+     * Note - Changing the position of the media on every slide transition creates a flickering effect.
+     * Therefore, The height of the caption is calculated dynamically, only once based on the first slide caption.
+     * if you have dynamic captions for each media,
+     * you can provide an appropriate height for the captions via allowMediaOverlap option
+     */
+    LightGallery.prototype.getMediaContainerPosition = function () {
+        if (this.settings.allowMediaOverlap) {
+            return {
+                top: 0,
+                bottom: 0,
+            };
+        }
+        var top = this.$toolbar.get().clientHeight || 0;
+        var subHtml = this.outer.find('.lg-components .lg-sub-html').get();
+        var captionHeight = this.settings.defaultCaptionHeight ||
+            (subHtml && subHtml.clientHeight) ||
+            0;
+        var thumbContainer = this.outer.find('.lg-thumb-outer').get();
+        var thumbHeight = thumbContainer ? thumbContainer.clientHeight : 0;
+        var bottom = thumbHeight + captionHeight;
+        return {
+            top: top,
+            bottom: bottom,
+        };
+    };
+    LightGallery.prototype.setMediaContainerPosition = function (top, bottom) {
+        if (top === void 0) { top = 0; }
+        if (bottom === void 0) { bottom = 0; }
+        this.$content.css('top', top + 'px').css('bottom', bottom + 'px');
+    };
+    LightGallery.prototype.hideBars = function () {
+        var _this = this;
+        // Hide controllers if mouse doesn't move for some period
+        setTimeout(function () {
+            _this.outer.removeClass('lg-hide-items');
+            if (_this.settings.hideBarsDelay > 0) {
+                _this.outer.on('mousemove.lg click.lg touchstart.lg', function () {
+                    _this.outer.removeClass('lg-hide-items');
+                    clearTimeout(_this.hideBarTimeout);
+                    // Timeout will be cleared on each slide movement also
+                    _this.hideBarTimeout = setTimeout(function () {
+                        _this.outer.addClass('lg-hide-items');
+                    }, _this.settings.hideBarsDelay);
+                });
+                _this.outer.trigger('mousemove.lg');
+            }
+        }, this.settings.showBarsAfter);
+    };
+    LightGallery.prototype.initPictureFill = function ($img) {
+        if (this.settings.supportLegacyBrowser) {
+            try {
+                picturefill({
+                    elements: [$img.get()],
+                });
+            }
+            catch (e) {
+                console.warn('lightGallery :- If you want srcset or picture tag to be supported for older browser please include picturefil javascript library in your document.');
+            }
+        }
+    };
+    /**
+     *  @desc Create image counter
+     *  Ex: 1/10
+     */
+    LightGallery.prototype.counter = function () {
+        if (this.settings.counter) {
+            var counterHtml = "<div class=\"lg-counter\" role=\"status\" aria-live=\"polite\">\n                <span id=\"" + this.getIdName('lg-counter-current') + "\" class=\"lg-counter-current\">" + (this.index + 1) + " </span> /\n                <span id=\"" + this.getIdName('lg-counter-all') + "\" class=\"lg-counter-all\">" + this.galleryItems.length + " </span></div>";
+            this.outer.find(this.settings.appendCounterTo).append(counterHtml);
+        }
+    };
+    /**
+     *  @desc add sub-html into the slide
+     *  @param {Number} index - index of the slide
+     */
+    LightGallery.prototype.addHtml = function (index) {
+        var subHtml;
+        var subHtmlUrl;
+        if (this.galleryItems[index].subHtmlUrl) {
+            subHtmlUrl = this.galleryItems[index].subHtmlUrl;
+        }
+        else {
+            subHtml = this.galleryItems[index].subHtml;
+        }
+        if (!subHtmlUrl) {
+            if (subHtml) {
+                // get first letter of sub-html
+                // if first letter starts with . or # get the html form the jQuery object
+                var fL = subHtml.substring(0, 1);
+                if (fL === '.' || fL === '#') {
+                    if (this.settings.subHtmlSelectorRelative &&
+                        !this.settings.dynamic) {
+                        subHtml = $LG(this.items)
+                            .eq(index)
+                            .find(subHtml)
+                            .first()
+                            .html();
+                    }
+                    else {
+                        subHtml = $LG(subHtml).first().html();
+                    }
+                }
+            }
+            else {
+                subHtml = '';
+            }
+        }
+        if (this.settings.appendSubHtmlTo !== '.lg-item') {
+            if (subHtmlUrl) {
+                this.outer.find('.lg-sub-html').load(subHtmlUrl);
+            }
+            else {
+                this.outer.find('.lg-sub-html').html(subHtml);
+            }
+        }
+        else {
+            var currentSlide = $LG(this.getSlideItemId(index));
+            if (subHtmlUrl) {
+                currentSlide.load(subHtmlUrl);
+            }
+            else {
+                currentSlide.append("<div class=\"lg-sub-html\">" + subHtml + "</div>");
+            }
+        }
+        // Add lg-empty-html class if title doesn't exist
+        if (typeof subHtml !== 'undefined' && subHtml !== null) {
+            if (subHtml === '') {
+                this.outer
+                    .find(this.settings.appendSubHtmlTo)
+                    .addClass('lg-empty-html');
+            }
+            else {
+                this.outer
+                    .find(this.settings.appendSubHtmlTo)
+                    .removeClass('lg-empty-html');
+            }
+        }
+        this.LGel.trigger(lGEvents.afterAppendSubHtml, {
+            index: index,
+        });
+    };
+    /**
+     *  @desc Preload slides
+     *  @param {Number} index - index of the slide
+     * @todo preload not working for the first slide, Also, should work for the first and last slide as well
+     */
+    LightGallery.prototype.preload = function (index) {
+        for (var i = 1; i <= this.settings.preload; i++) {
+            if (i >= this.galleryItems.length - index) {
+                break;
+            }
+            this.loadContent(index + i, false);
+        }
+        for (var j = 1; j <= this.settings.preload; j++) {
+            if (index - j < 0) {
+                break;
+            }
+            this.loadContent(index - j, false);
+        }
+    };
+    LightGallery.prototype.getDummyImgStyles = function (imageSize) {
+        if (!imageSize)
+            return '';
+        return "width:" + imageSize.width + "px;\n                margin-left: -" + imageSize.width / 2 + "px;\n                margin-top: -" + imageSize.height / 2 + "px;\n                height:" + imageSize.height + "px";
+    };
+    LightGallery.prototype.getVideoContStyle = function (imageSize) {
+        if (!imageSize)
+            return '';
+        return "width:" + imageSize.width + "px;\n                height:" + imageSize.height + "px";
+    };
+    LightGallery.prototype.getDummyImageContent = function ($currentSlide, index, alt) {
+        var $currentItem;
+        if (!this.settings.dynamic) {
+            $currentItem = $LG(this.items).eq(index);
+        }
+        if ($currentItem) {
+            var _dummyImgSrc = void 0;
+            if (!this.settings.exThumbImage) {
+                _dummyImgSrc = $currentItem.find('img').first().attr('src');
+            }
+            else {
+                _dummyImgSrc = $currentItem.attr(this.settings.exThumbImage);
+            }
+            if (!_dummyImgSrc)
+                return '';
+            var imgStyle = this.getDummyImgStyles(this.currentImageSize);
+            var dummyImgContent = "<img " + alt + " style=\"" + imgStyle + "\" class=\"lg-dummy-img\" src=\"" + _dummyImgSrc + "\" />";
+            $currentSlide.addClass('lg-first-slide');
+            this.outer.addClass('lg-first-slide-loading');
+            return dummyImgContent;
+        }
+        return '';
+    };
+    LightGallery.prototype.setImgMarkup = function (src, $currentSlide, index) {
+        var currentGalleryItem = this.galleryItems[index];
+        var alt = currentGalleryItem.alt, srcset = currentGalleryItem.srcset, sizes = currentGalleryItem.sizes, sources = currentGalleryItem.sources;
+        // Use the thumbnail as dummy image which will be resized to actual image size and
+        // displayed on top of actual image
+        var imgContent = '';
+        var altAttr = alt ? 'alt="' + alt + '"' : '';
+        if (this.isFirstSlideWithZoomAnimation()) {
+            imgContent = this.getDummyImageContent($currentSlide, index, altAttr);
+        }
+        else {
+            imgContent = utils.getImgMarkup(index, src, altAttr, srcset, sizes, sources);
+        }
+        var imgMarkup = "<picture class=\"lg-img-wrap\"> " + imgContent + "</picture>";
+        $currentSlide.prepend(imgMarkup);
+    };
+    LightGallery.prototype.onSlideObjectLoad = function ($slide, isHTML5VideoWithoutPoster, onLoad, onError) {
+        var mediaObject = $slide.find('.lg-object').first();
+        if (utils.isImageLoaded(mediaObject.get()) ||
+            isHTML5VideoWithoutPoster) {
+            onLoad();
+        }
+        else {
+            mediaObject.on('load.lg error.lg', function () {
+                onLoad && onLoad();
+            });
+            mediaObject.on('error.lg', function () {
+                onError && onError();
+            });
+        }
+    };
+    /**
+     *
+     * @param $el Current slide item
+     * @param index
+     * @param delay Delay is 0 except first time
+     * @param speed Speed is same as delay, except it is 0 if gallery is opened via hash plugin
+     * @param isFirstSlide
+     */
+    LightGallery.prototype.onLgObjectLoad = function (currentSlide, index, delay, speed, isFirstSlide, isHTML5VideoWithoutPoster) {
+        var _this = this;
+        this.onSlideObjectLoad(currentSlide, isHTML5VideoWithoutPoster, function () {
+            _this.triggerSlideItemLoad(currentSlide, index, delay, speed, isFirstSlide);
+        }, function () {
+            currentSlide.addClass('lg-complete lg-complete_');
+            currentSlide.html('<span class="lg-error-msg">Oops... Failed to load content...</span>');
+        });
+    };
+    LightGallery.prototype.triggerSlideItemLoad = function ($currentSlide, index, delay, speed, isFirstSlide) {
+        var _this = this;
+        var currentGalleryItem = this.galleryItems[index];
+        // Adding delay for video slides without poster for better performance and user experience
+        // Videos should start playing once once the gallery is completely loaded
+        var _speed = isFirstSlide &&
+            this.getSlideType(currentGalleryItem) === 'video' &&
+            !currentGalleryItem.poster
+            ? speed
+            : 0;
+        setTimeout(function () {
+            $currentSlide.addClass('lg-complete lg-complete_');
+            _this.LGel.trigger(lGEvents.slideItemLoad, {
+                index: index,
+                delay: delay || 0,
+                isFirstSlide: isFirstSlide,
+            });
+        }, _speed);
+    };
+    LightGallery.prototype.isFirstSlideWithZoomAnimation = function () {
+        return !!(!this.lGalleryOn &&
+            this.zoomFromOrigin &&
+            this.currentImageSize);
+    };
+    // Add video slideInfo
+    LightGallery.prototype.addSlideVideoInfo = function (items) {
+        var _this = this;
+        items.forEach(function (element, index) {
+            element.__slideVideoInfo = utils.isVideo(element.src, !!element.video, index);
+            if (element.__slideVideoInfo &&
+                _this.settings.loadYouTubePoster &&
+                !element.poster &&
+                element.__slideVideoInfo.youtube) {
+                element.poster = "//img.youtube.com/vi/" + element.__slideVideoInfo.youtube[1] + "/maxresdefault.jpg";
+            }
+        });
+    };
+    /**
+     *  Load slide content into slide.
+     *  This is used to load content into slides that is not visible too
+     *  @param {Number} index - index of the slide.
+     *  @param {Boolean} rec - if true call loadcontent() function again.
+     */
+    LightGallery.prototype.loadContent = function (index, rec) {
+        var _this = this;
+        var currentGalleryItem = this.galleryItems[index];
+        var $currentSlide = $LG(this.getSlideItemId(index));
+        var poster = currentGalleryItem.poster, srcset = currentGalleryItem.srcset, sizes = currentGalleryItem.sizes, sources = currentGalleryItem.sources;
+        var src = currentGalleryItem.src;
+        var video = currentGalleryItem.video;
+        var _html5Video = video && typeof video === 'string' ? JSON.parse(video) : video;
+        if (currentGalleryItem.responsive) {
+            var srcDyItms = currentGalleryItem.responsive.split(',');
+            src = utils.getResponsiveSrc(srcDyItms) || src;
+        }
+        var videoInfo = currentGalleryItem.__slideVideoInfo;
+        var lgVideoStyle = '';
+        var iframe = !!currentGalleryItem.iframe;
+        var isFirstSlide = !this.lGalleryOn;
+        // delay for adding complete class. it is 0 except first time.
+        var delay = 0;
+        if (isFirstSlide) {
+            if (this.zoomFromOrigin && this.currentImageSize) {
+                delay = this.settings.startAnimationDuration + 10;
+            }
+            else {
+                delay = this.settings.backdropDuration + 10;
+            }
+        }
+        if (!$currentSlide.hasClass('lg-loaded')) {
+            if (videoInfo) {
+                var _a = this.mediaContainerPosition, top_2 = _a.top, bottom = _a.bottom;
+                var videoSize = utils.getSize(this.items[index], this.outer, top_2 + bottom, videoInfo && this.settings.videoMaxSize);
+                lgVideoStyle = this.getVideoContStyle(videoSize);
+            }
+            if (iframe) {
+                var markup = utils.getIframeMarkup(this.settings.iframeWidth, this.settings.iframeHeight, this.settings.iframeMaxWidth, this.settings.iframeMaxHeight, src, currentGalleryItem.iframeTitle);
+                $currentSlide.prepend(markup);
+            }
+            else if (poster) {
+                var dummyImg = '';
+                var hasStartAnimation = isFirstSlide &&
+                    this.zoomFromOrigin &&
+                    this.currentImageSize;
+                if (hasStartAnimation) {
+                    dummyImg = this.getDummyImageContent($currentSlide, index, '');
+                }
+                var markup = utils.getVideoPosterMarkup(poster, dummyImg || '', lgVideoStyle, this.settings.strings['playVideo'], videoInfo);
+                $currentSlide.prepend(markup);
+            }
+            else if (videoInfo) {
+                var markup = "<div class=\"lg-video-cont \" style=\"" + lgVideoStyle + "\"></div>";
+                $currentSlide.prepend(markup);
+            }
+            else {
+                this.setImgMarkup(src, $currentSlide, index);
+                if (srcset || sources) {
+                    var $img = $currentSlide.find('.lg-object');
+                    this.initPictureFill($img);
+                }
+            }
+            if (poster || videoInfo) {
+                this.LGel.trigger(lGEvents.hasVideo, {
+                    index: index,
+                    src: src,
+                    html5Video: _html5Video,
+                    hasPoster: !!poster,
+                });
+            }
+            this.LGel.trigger(lGEvents.afterAppendSlide, { index: index });
+            if (this.lGalleryOn &&
+                this.settings.appendSubHtmlTo === '.lg-item') {
+                this.addHtml(index);
+            }
+        }
+        // For first time add some delay for displaying the start animation.
+        var _speed = 0;
+        // Do not change the delay value because it is required for zoom plugin.
+        // If gallery opened from direct url (hash) speed value should be 0
+        if (delay && !$LG(document.body).hasClass('lg-from-hash')) {
+            _speed = delay;
+        }
+        // Only for first slide and zoomFromOrigin is enabled
+        if (this.isFirstSlideWithZoomAnimation()) {
+            setTimeout(function () {
+                $currentSlide
+                    .removeClass('lg-start-end-progress lg-start-progress')
+                    .removeAttr('style');
+            }, this.settings.startAnimationDuration + 100);
+            if (!$currentSlide.hasClass('lg-loaded')) {
+                setTimeout(function () {
+                    if (_this.getSlideType(currentGalleryItem) === 'image') {
+                        $currentSlide
+                            .find('.lg-img-wrap')
+                            .append(utils.getImgMarkup(index, src, '', srcset, sizes, currentGalleryItem.sources));
+                        if (srcset || sources) {
+                            var $img = $currentSlide.find('.lg-object');
+                            _this.initPictureFill($img);
+                        }
+                    }
+                    if (_this.getSlideType(currentGalleryItem) === 'image' ||
+                        (_this.getSlideType(currentGalleryItem) === 'video' &&
+                            poster)) {
+                        _this.onLgObjectLoad($currentSlide, index, delay, _speed, true, false);
+                        // load remaining slides once the slide is completely loaded
+                        _this.onSlideObjectLoad($currentSlide, !!(videoInfo && videoInfo.html5 && !poster), function () {
+                            _this.loadContentOnFirstSlideLoad(index, $currentSlide, _speed);
+                        }, function () {
+                            _this.loadContentOnFirstSlideLoad(index, $currentSlide, _speed);
+                        });
+                    }
+                }, this.settings.startAnimationDuration + 100);
+            }
+        }
+        // SLide content has been added to dom
+        $currentSlide.addClass('lg-loaded');
+        if (!this.isFirstSlideWithZoomAnimation() ||
+            (this.getSlideType(currentGalleryItem) === 'video' && !poster)) {
+            this.onLgObjectLoad($currentSlide, index, delay, _speed, isFirstSlide, !!(videoInfo && videoInfo.html5 && !poster));
+        }
+        // When gallery is opened once content is loaded (second time) need to add lg-complete class for css styling
+        if ((!this.zoomFromOrigin || !this.currentImageSize) &&
+            $currentSlide.hasClass('lg-complete_') &&
+            !this.lGalleryOn) {
+            setTimeout(function () {
+                $currentSlide.addClass('lg-complete');
+            }, this.settings.backdropDuration);
+        }
+        // Content loaded
+        // Need to set lGalleryOn before calling preload function
+        this.lGalleryOn = true;
+        if (rec === true) {
+            if (!$currentSlide.hasClass('lg-complete_')) {
+                $currentSlide
+                    .find('.lg-object')
+                    .first()
+                    .on('load.lg error.lg', function () {
+                    _this.preload(index);
+                });
+            }
+            else {
+                this.preload(index);
+            }
+        }
+    };
+    /**
+     * @desc Remove dummy image content and load next slides
+     * Called only for the first time if zoomFromOrigin animation is enabled
+     * @param index
+     * @param $currentSlide
+     * @param speed
+     */
+    LightGallery.prototype.loadContentOnFirstSlideLoad = function (index, $currentSlide, speed) {
+        var _this = this;
+        setTimeout(function () {
+            $currentSlide.find('.lg-dummy-img').remove();
+            $currentSlide.removeClass('lg-first-slide');
+            _this.outer.removeClass('lg-first-slide-loading');
+            _this.isDummyImageRemoved = true;
+            _this.preload(index);
+        }, speed + 300);
+    };
+    LightGallery.prototype.getItemsToBeInsertedToDom = function (index, prevIndex, numberOfItems) {
+        var _this = this;
+        if (numberOfItems === void 0) { numberOfItems = 0; }
+        var itemsToBeInsertedToDom = [];
+        // Minimum 2 items should be there
+        var possibleNumberOfItems = Math.max(numberOfItems, 3);
+        possibleNumberOfItems = Math.min(possibleNumberOfItems, this.galleryItems.length);
+        var prevIndexItem = "lg-item-" + this.lgId + "-" + prevIndex;
+        if (this.galleryItems.length <= 3) {
+            this.galleryItems.forEach(function (_element, index) {
+                itemsToBeInsertedToDom.push("lg-item-" + _this.lgId + "-" + index);
+            });
+            return itemsToBeInsertedToDom;
+        }
+        if (index < (this.galleryItems.length - 1) / 2) {
+            for (var idx = index; idx > index - possibleNumberOfItems / 2 && idx >= 0; idx--) {
+                itemsToBeInsertedToDom.push("lg-item-" + this.lgId + "-" + idx);
+            }
+            var numberOfExistingItems = itemsToBeInsertedToDom.length;
+            for (var idx = 0; idx < possibleNumberOfItems - numberOfExistingItems; idx++) {
+                itemsToBeInsertedToDom.push("lg-item-" + this.lgId + "-" + (index + idx + 1));
+            }
+        }
+        else {
+            for (var idx = index; idx <= this.galleryItems.length - 1 &&
+                idx < index + possibleNumberOfItems / 2; idx++) {
+                itemsToBeInsertedToDom.push("lg-item-" + this.lgId + "-" + idx);
+            }
+            var numberOfExistingItems = itemsToBeInsertedToDom.length;
+            for (var idx = 0; idx < possibleNumberOfItems - numberOfExistingItems; idx++) {
+                itemsToBeInsertedToDom.push("lg-item-" + this.lgId + "-" + (index - idx - 1));
+            }
+        }
+        if (this.settings.loop) {
+            if (index === this.galleryItems.length - 1) {
+                itemsToBeInsertedToDom.push("lg-item-" + this.lgId + "-" + 0);
+            }
+            else if (index === 0) {
+                itemsToBeInsertedToDom.push("lg-item-" + this.lgId + "-" + (this.galleryItems.length - 1));
+            }
+        }
+        if (itemsToBeInsertedToDom.indexOf(prevIndexItem) === -1) {
+            itemsToBeInsertedToDom.push("lg-item-" + this.lgId + "-" + prevIndex);
+        }
+        return itemsToBeInsertedToDom;
+    };
+    LightGallery.prototype.organizeSlideItems = function (index, prevIndex) {
+        var _this = this;
+        var itemsToBeInsertedToDom = this.getItemsToBeInsertedToDom(index, prevIndex, this.settings.numberOfSlideItemsInDom);
+        itemsToBeInsertedToDom.forEach(function (item) {
+            if (_this.currentItemsInDom.indexOf(item) === -1) {
+                _this.$inner.append("<div id=\"" + item + "\" class=\"lg-item\"></div>");
+            }
+        });
+        this.currentItemsInDom.forEach(function (item) {
+            if (itemsToBeInsertedToDom.indexOf(item) === -1) {
+                $LG("#" + item).remove();
+            }
+        });
+        return itemsToBeInsertedToDom;
+    };
+    /**
+     * Get previous index of the slide
+     */
+    LightGallery.prototype.getPreviousSlideIndex = function () {
+        var prevIndex = 0;
+        try {
+            var currentItemId = this.outer
+                .find('.lg-current')
+                .first()
+                .attr('id');
+            prevIndex = parseInt(currentItemId.split('-')[3]) || 0;
+        }
+        catch (error) {
+            prevIndex = 0;
+        }
+        return prevIndex;
+    };
+    LightGallery.prototype.setDownloadValue = function (index) {
+        if (this.settings.download) {
+            var currentGalleryItem = this.galleryItems[index];
+            var hideDownloadBtn = currentGalleryItem.downloadUrl === false ||
+                currentGalleryItem.downloadUrl === 'false';
+            if (hideDownloadBtn) {
+                this.outer.addClass('lg-hide-download');
+            }
+            else {
+                var $download = this.getElementById('lg-download');
+                this.outer.removeClass('lg-hide-download');
+                $download.attr('href', currentGalleryItem.downloadUrl ||
+                    currentGalleryItem.src);
+                if (currentGalleryItem.download) {
+                    $download.attr('download', currentGalleryItem.download);
+                }
+            }
+        }
+    };
+    LightGallery.prototype.makeSlideAnimation = function (direction, currentSlideItem, previousSlideItem) {
+        var _this = this;
+        if (this.lGalleryOn) {
+            previousSlideItem.addClass('lg-slide-progress');
+        }
+        setTimeout(function () {
+            // remove all transitions
+            _this.outer.addClass('lg-no-trans');
+            _this.outer
+                .find('.lg-item')
+                .removeClass('lg-prev-slide lg-next-slide');
+            if (direction === 'prev') {
+                //prevslide
+                currentSlideItem.addClass('lg-prev-slide');
+                previousSlideItem.addClass('lg-next-slide');
+            }
+            else {
+                // next slide
+                currentSlideItem.addClass('lg-next-slide');
+                previousSlideItem.addClass('lg-prev-slide');
+            }
+            // give 50 ms for browser to add/remove class
+            setTimeout(function () {
+                _this.outer.find('.lg-item').removeClass('lg-current');
+                currentSlideItem.addClass('lg-current');
+                // reset all transitions
+                _this.outer.removeClass('lg-no-trans');
+            }, 50);
+        }, this.lGalleryOn ? this.settings.slideDelay : 0);
+    };
+    /**
+     * Goto a specific slide.
+     * @param {Number} index - index of the slide
+     * @param {Boolean} fromTouch - true if slide function called via touch event or mouse drag
+     * @param {Boolean} fromThumb - true if slide function called via thumbnail click
+     * @param {String} direction - Direction of the slide(next/prev)
+     * @category lGPublicMethods
+     * @example
+     *  const plugin = lightGallery();
+     *  // to go to 3rd slide
+     *  plugin.slide(2);
+     *
+     */
+    LightGallery.prototype.slide = function (index, fromTouch, fromThumb, direction) {
+        var _this = this;
+        var prevIndex = this.getPreviousSlideIndex();
+        this.currentItemsInDom = this.organizeSlideItems(index, prevIndex);
+        // Prevent multiple call, Required for hsh plugin
+        if (this.lGalleryOn && prevIndex === index) {
+            return;
+        }
+        var numberOfGalleryItems = this.galleryItems.length;
+        if (!this.lgBusy) {
+            if (this.settings.counter) {
+                this.updateCurrentCounter(index);
+            }
+            var currentSlideItem = this.getSlideItem(index);
+            var previousSlideItem_1 = this.getSlideItem(prevIndex);
+            var currentGalleryItem = this.galleryItems[index];
+            var videoInfo = currentGalleryItem.__slideVideoInfo;
+            this.outer.attr('data-lg-slide-type', this.getSlideType(currentGalleryItem));
+            this.setDownloadValue(index);
+            if (videoInfo) {
+                var _a = this.mediaContainerPosition, top_3 = _a.top, bottom = _a.bottom;
+                var videoSize = utils.getSize(this.items[index], this.outer, top_3 + bottom, videoInfo && this.settings.videoMaxSize);
+                this.resizeVideoSlide(index, videoSize);
+            }
+            this.LGel.trigger(lGEvents.beforeSlide, {
+                prevIndex: prevIndex,
+                index: index,
+                fromTouch: !!fromTouch,
+                fromThumb: !!fromThumb,
+            });
+            this.lgBusy = true;
+            clearTimeout(this.hideBarTimeout);
+            this.arrowDisable(index);
+            if (!direction) {
+                if (index < prevIndex) {
+                    direction = 'prev';
+                }
+                else if (index > prevIndex) {
+                    direction = 'next';
+                }
+            }
+            if (!fromTouch) {
+                this.makeSlideAnimation(direction, currentSlideItem, previousSlideItem_1);
+            }
+            else {
+                this.outer
+                    .find('.lg-item')
+                    .removeClass('lg-prev-slide lg-current lg-next-slide');
+                var touchPrev = void 0;
+                var touchNext = void 0;
+                if (numberOfGalleryItems > 2) {
+                    touchPrev = index - 1;
+                    touchNext = index + 1;
+                    if (index === 0 && prevIndex === numberOfGalleryItems - 1) {
+                        // next slide
+                        touchNext = 0;
+                        touchPrev = numberOfGalleryItems - 1;
+                    }
+                    else if (index === numberOfGalleryItems - 1 &&
+                        prevIndex === 0) {
+                        // prev slide
+                        touchNext = 0;
+                        touchPrev = numberOfGalleryItems - 1;
+                    }
+                }
+                else {
+                    touchPrev = 0;
+                    touchNext = 1;
+                }
+                if (direction === 'prev') {
+                    this.getSlideItem(touchNext).addClass('lg-next-slide');
+                }
+                else {
+                    this.getSlideItem(touchPrev).addClass('lg-prev-slide');
+                }
+                currentSlideItem.addClass('lg-current');
+            }
+            // Do not put load content in set timeout as it needs to load immediately when the gallery is opened
+            if (!this.lGalleryOn) {
+                this.loadContent(index, true);
+            }
+            else {
+                setTimeout(function () {
+                    _this.loadContent(index, true);
+                    // Add title if this.settings.appendSubHtmlTo === lg-sub-html
+                    if (_this.settings.appendSubHtmlTo !== '.lg-item') {
+                        _this.addHtml(index);
+                    }
+                }, this.settings.speed + 50 + (fromTouch ? 0 : this.settings.slideDelay));
+            }
+            setTimeout(function () {
+                _this.lgBusy = false;
+                previousSlideItem_1.removeClass('lg-slide-progress');
+                _this.LGel.trigger(lGEvents.afterSlide, {
+                    prevIndex: prevIndex,
+                    index: index,
+                    fromTouch: fromTouch,
+                    fromThumb: fromThumb,
+                });
+            }, (this.lGalleryOn ? this.settings.speed + 100 : 100) + (fromTouch ? 0 : this.settings.slideDelay));
+        }
+        this.index = index;
+    };
+    LightGallery.prototype.updateCurrentCounter = function (index) {
+        this.getElementById('lg-counter-current').html(index + 1 + '');
+    };
+    LightGallery.prototype.updateCounterTotal = function () {
+        this.getElementById('lg-counter-all').html(this.galleryItems.length + '');
+    };
+    LightGallery.prototype.getSlideType = function (item) {
+        if (item.__slideVideoInfo) {
+            return 'video';
+        }
+        else if (item.iframe) {
+            return 'iframe';
+        }
+        else {
+            return 'image';
+        }
+    };
+    LightGallery.prototype.touchMove = function (startCoords, endCoords, e) {
+        var distanceX = endCoords.pageX - startCoords.pageX;
+        var distanceY = endCoords.pageY - startCoords.pageY;
+        var allowSwipe = false;
+        if (this.swipeDirection) {
+            allowSwipe = true;
+        }
+        else {
+            if (Math.abs(distanceX) > 15) {
+                this.swipeDirection = 'horizontal';
+                allowSwipe = true;
+            }
+            else if (Math.abs(distanceY) > 15) {
+                this.swipeDirection = 'vertical';
+                allowSwipe = true;
+            }
+        }
+        if (!allowSwipe) {
+            return;
+        }
+        var $currentSlide = this.getSlideItem(this.index);
+        if (this.swipeDirection === 'horizontal') {
+            e === null || e === void 0 ? void 0 : e.preventDefault();
+            // reset opacity and transition duration
+            this.outer.addClass('lg-dragging');
+            // move current slide
+            this.setTranslate($currentSlide, distanceX, 0);
+            // move next and prev slide with current slide
+            var width = $currentSlide.get().offsetWidth;
+            var slideWidthAmount = (width * 15) / 100;
+            var gutter = slideWidthAmount - Math.abs((distanceX * 10) / 100);
+            this.setTranslate(this.outer.find('.lg-prev-slide').first(), -width + distanceX - gutter, 0);
+            this.setTranslate(this.outer.find('.lg-next-slide').first(), width + distanceX + gutter, 0);
+        }
+        else if (this.swipeDirection === 'vertical') {
+            if (this.settings.swipeToClose) {
+                e === null || e === void 0 ? void 0 : e.preventDefault();
+                this.$container.addClass('lg-dragging-vertical');
+                var opacity = 1 - Math.abs(distanceY) / window.innerHeight;
+                this.$backdrop.css('opacity', opacity);
+                var scale = 1 - Math.abs(distanceY) / (window.innerWidth * 2);
+                this.setTranslate($currentSlide, 0, distanceY, scale, scale);
+                if (Math.abs(distanceY) > 100) {
+                    this.outer
+                        .addClass('lg-hide-items')
+                        .removeClass('lg-components-open');
+                }
+            }
+        }
+    };
+    LightGallery.prototype.touchEnd = function (endCoords, startCoords, event) {
+        var _this = this;
+        var distance;
+        // keep slide animation for any mode while dragg/swipe
+        if (this.settings.mode !== 'lg-slide') {
+            this.outer.addClass('lg-slide');
+        }
+        // set transition duration
+        setTimeout(function () {
+            _this.$container.removeClass('lg-dragging-vertical');
+            _this.outer
+                .removeClass('lg-dragging lg-hide-items')
+                .addClass('lg-components-open');
+            var triggerClick = true;
+            if (_this.swipeDirection === 'horizontal') {
+                distance = endCoords.pageX - startCoords.pageX;
+                var distanceAbs = Math.abs(endCoords.pageX - startCoords.pageX);
+                if (distance < 0 &&
+                    distanceAbs > _this.settings.swipeThreshold) {
+                    _this.goToNextSlide(true);
+                    triggerClick = false;
+                }
+                else if (distance > 0 &&
+                    distanceAbs > _this.settings.swipeThreshold) {
+                    _this.goToPrevSlide(true);
+                    triggerClick = false;
+                }
+            }
+            else if (_this.swipeDirection === 'vertical') {
+                distance = Math.abs(endCoords.pageY - startCoords.pageY);
+                if (_this.settings.closable &&
+                    _this.settings.swipeToClose &&
+                    distance > 100) {
+                    _this.closeGallery();
+                    return;
+                }
+                else {
+                    _this.$backdrop.css('opacity', 1);
+                }
+            }
+            _this.outer.find('.lg-item').removeAttr('style');
+            if (triggerClick &&
+                Math.abs(endCoords.pageX - startCoords.pageX) < 5) {
+                // Trigger click if distance is less than 5 pix
+                var target = $LG(event.target);
+                if (_this.isPosterElement(target)) {
+                    _this.LGel.trigger(lGEvents.posterClick);
+                }
+            }
+            _this.swipeDirection = undefined;
+        });
+        // remove slide class once drag/swipe is completed if mode is not slide
+        setTimeout(function () {
+            if (!_this.outer.hasClass('lg-dragging') &&
+                _this.settings.mode !== 'lg-slide') {
+                _this.outer.removeClass('lg-slide');
+            }
+        }, this.settings.speed + 100);
+    };
+    LightGallery.prototype.enableSwipe = function () {
+        var _this = this;
+        var startCoords = {};
+        var endCoords = {};
+        var isMoved = false;
+        var isSwiping = false;
+        if (this.settings.enableSwipe) {
+            this.$inner.on('touchstart.lg', function (e) {
+                _this.dragOrSwipeEnabled = true;
+                var $item = _this.getSlideItem(_this.index);
+                if (($LG(e.target).hasClass('lg-item') ||
+                    $item.get().contains(e.target)) &&
+                    !_this.outer.hasClass('lg-zoomed') &&
+                    !_this.lgBusy &&
+                    e.targetTouches.length === 1) {
+                    isSwiping = true;
+                    _this.touchAction = 'swipe';
+                    _this.manageSwipeClass();
+                    startCoords = {
+                        pageX: e.targetTouches[0].pageX,
+                        pageY: e.targetTouches[0].pageY,
+                    };
+                }
+            });
+            this.$inner.on('touchmove.lg', function (e) {
+                if (isSwiping &&
+                    _this.touchAction === 'swipe' &&
+                    e.targetTouches.length === 1) {
+                    endCoords = {
+                        pageX: e.targetTouches[0].pageX,
+                        pageY: e.targetTouches[0].pageY,
+                    };
+                    _this.touchMove(startCoords, endCoords, e);
+                    isMoved = true;
+                }
+            });
+            this.$inner.on('touchend.lg', function (event) {
+                if (_this.touchAction === 'swipe') {
+                    if (isMoved) {
+                        isMoved = false;
+                        _this.touchEnd(endCoords, startCoords, event);
+                    }
+                    else if (isSwiping) {
+                        var target = $LG(event.target);
+                        if (_this.isPosterElement(target)) {
+                            _this.LGel.trigger(lGEvents.posterClick);
+                        }
+                    }
+                    _this.touchAction = undefined;
+                    isSwiping = false;
+                }
+            });
+        }
+    };
+    LightGallery.prototype.enableDrag = function () {
+        var _this = this;
+        var startCoords = {};
+        var endCoords = {};
+        var isDraging = false;
+        var isMoved = false;
+        if (this.settings.enableDrag) {
+            this.outer.on('mousedown.lg', function (e) {
+                _this.dragOrSwipeEnabled = true;
+                var $item = _this.getSlideItem(_this.index);
+                if ($LG(e.target).hasClass('lg-item') ||
+                    $item.get().contains(e.target)) {
+                    if (!_this.outer.hasClass('lg-zoomed') && !_this.lgBusy) {
+                        e.preventDefault();
+                        if (!_this.lgBusy) {
+                            _this.manageSwipeClass();
+                            startCoords = {
+                                pageX: e.pageX,
+                                pageY: e.pageY,
+                            };
+                            isDraging = true;
+                            // ** Fix for webkit cursor issue https://code.google.com/p/chromium/issues/detail?id=26723
+                            _this.outer.get().scrollLeft += 1;
+                            _this.outer.get().scrollLeft -= 1;
+                            // *
+                            _this.outer
+                                .removeClass('lg-grab')
+                                .addClass('lg-grabbing');
+                            _this.LGel.trigger(lGEvents.dragStart);
+                        }
+                    }
+                }
+            });
+            $LG(window).on("mousemove.lg.global" + this.lgId, function (e) {
+                if (isDraging && _this.lgOpened) {
+                    isMoved = true;
+                    endCoords = {
+                        pageX: e.pageX,
+                        pageY: e.pageY,
+                    };
+                    _this.touchMove(startCoords, endCoords);
+                    _this.LGel.trigger(lGEvents.dragMove);
+                }
+            });
+            $LG(window).on("mouseup.lg.global" + this.lgId, function (event) {
+                if (!_this.lgOpened) {
+                    return;
+                }
+                var target = $LG(event.target);
+                if (isMoved) {
+                    isMoved = false;
+                    _this.touchEnd(endCoords, startCoords, event);
+                    _this.LGel.trigger(lGEvents.dragEnd);
+                }
+                else if (_this.isPosterElement(target)) {
+                    _this.LGel.trigger(lGEvents.posterClick);
+                }
+                // Prevent execution on click
+                if (isDraging) {
+                    isDraging = false;
+                    _this.outer.removeClass('lg-grabbing').addClass('lg-grab');
+                }
+            });
+        }
+    };
+    LightGallery.prototype.triggerPosterClick = function () {
+        var _this = this;
+        this.$inner.on('click.lg', function (event) {
+            if (!_this.dragOrSwipeEnabled &&
+                _this.isPosterElement($LG(event.target))) {
+                _this.LGel.trigger(lGEvents.posterClick);
+            }
+        });
+    };
+    LightGallery.prototype.manageSwipeClass = function () {
+        var _touchNext = this.index + 1;
+        var _touchPrev = this.index - 1;
+        if (this.settings.loop && this.galleryItems.length > 2) {
+            if (this.index === 0) {
+                _touchPrev = this.galleryItems.length - 1;
+            }
+            else if (this.index === this.galleryItems.length - 1) {
+                _touchNext = 0;
+            }
+        }
+        this.outer.find('.lg-item').removeClass('lg-next-slide lg-prev-slide');
+        if (_touchPrev > -1) {
+            this.getSlideItem(_touchPrev).addClass('lg-prev-slide');
+        }
+        this.getSlideItem(_touchNext).addClass('lg-next-slide');
+    };
+    /**
+     * Go to next slide
+     * @param {Boolean} fromTouch - true if slide function called via touch event
+     * @category lGPublicMethods
+     * @example
+     *  const plugin = lightGallery();
+     *  plugin.goToNextSlide();
+     * @see <a href="/demos/methods/">Demo</a>
+     */
+    LightGallery.prototype.goToNextSlide = function (fromTouch) {
+        var _this = this;
+        var _loop = this.settings.loop;
+        if (fromTouch && this.galleryItems.length < 3) {
+            _loop = false;
+        }
+        if (!this.lgBusy) {
+            if (this.index + 1 < this.galleryItems.length) {
+                this.index++;
+                this.LGel.trigger(lGEvents.beforeNextSlide, {
+                    index: this.index,
+                });
+                this.slide(this.index, !!fromTouch, false, 'next');
+            }
+            else {
+                if (_loop) {
+                    this.index = 0;
+                    this.LGel.trigger(lGEvents.beforeNextSlide, {
+                        index: this.index,
+                    });
+                    this.slide(this.index, !!fromTouch, false, 'next');
+                }
+                else if (this.settings.slideEndAnimation && !fromTouch) {
+                    this.outer.addClass('lg-right-end');
+                    setTimeout(function () {
+                        _this.outer.removeClass('lg-right-end');
+                    }, 400);
+                }
+            }
+        }
+    };
+    /**
+     * Go to previous slides
+     * @param {Boolean} fromTouch - true if slide function called via touch event
+     * @category lGPublicMethods
+     * @example
+     *  const plugin = lightGallery({});
+     *  plugin.goToPrevSlide();
+     * @see <a href="/demos/methods/">Demo</a>
+     *
+     */
+    LightGallery.prototype.goToPrevSlide = function (fromTouch) {
+        var _this = this;
+        var _loop = this.settings.loop;
+        if (fromTouch && this.galleryItems.length < 3) {
+            _loop = false;
+        }
+        if (!this.lgBusy) {
+            if (this.index > 0) {
+                this.index--;
+                this.LGel.trigger(lGEvents.beforePrevSlide, {
+                    index: this.index,
+                    fromTouch: fromTouch,
+                });
+                this.slide(this.index, !!fromTouch, false, 'prev');
+            }
+            else {
+                if (_loop) {
+                    this.index = this.galleryItems.length - 1;
+                    this.LGel.trigger(lGEvents.beforePrevSlide, {
+                        index: this.index,
+                        fromTouch: fromTouch,
+                    });
+                    this.slide(this.index, !!fromTouch, false, 'prev');
+                }
+                else if (this.settings.slideEndAnimation && !fromTouch) {
+                    this.outer.addClass('lg-left-end');
+                    setTimeout(function () {
+                        _this.outer.removeClass('lg-left-end');
+                    }, 400);
+                }
+            }
+        }
+    };
+    LightGallery.prototype.keyPress = function () {
+        var _this = this;
+        $LG(window).on("keydown.lg.global" + this.lgId, function (e) {
+            if (_this.lgOpened &&
+                _this.settings.escKey === true &&
+                e.keyCode === 27) {
+                e.preventDefault();
+                if (_this.settings.allowMediaOverlap &&
+                    _this.outer.hasClass('lg-can-toggle') &&
+                    _this.outer.hasClass('lg-components-open')) {
+                    _this.outer.removeClass('lg-components-open');
+                }
+                else {
+                    _this.closeGallery();
+                }
+            }
+            if (_this.lgOpened && _this.galleryItems.length > 1) {
+                if (e.keyCode === 37) {
+                    e.preventDefault();
+                    _this.goToPrevSlide();
+                }
+                if (e.keyCode === 39) {
+                    e.preventDefault();
+                    _this.goToNextSlide();
+                }
+            }
+        });
+    };
+    LightGallery.prototype.arrow = function () {
+        var _this = this;
+        this.getElementById('lg-prev').on('click.lg', function () {
+            _this.goToPrevSlide();
+        });
+        this.getElementById('lg-next').on('click.lg', function () {
+            _this.goToNextSlide();
+        });
+    };
+    LightGallery.prototype.arrowDisable = function (index) {
+        // Disable arrows if settings.hideControlOnEnd is true
+        if (!this.settings.loop && this.settings.hideControlOnEnd) {
+            var $prev = this.getElementById('lg-prev');
+            var $next = this.getElementById('lg-next');
+            if (index + 1 === this.galleryItems.length) {
+                $next.attr('disabled', 'disabled').addClass('disabled');
+            }
+            else {
+                $next.removeAttr('disabled').removeClass('disabled');
+            }
+            if (index === 0) {
+                $prev.attr('disabled', 'disabled').addClass('disabled');
+            }
+            else {
+                $prev.removeAttr('disabled').removeClass('disabled');
+            }
+        }
+    };
+    LightGallery.prototype.setTranslate = function ($el, xValue, yValue, scaleX, scaleY) {
+        if (scaleX === void 0) { scaleX = 1; }
+        if (scaleY === void 0) { scaleY = 1; }
+        $el.css('transform', 'translate3d(' +
+            xValue +
+            'px, ' +
+            yValue +
+            'px, 0px) scale3d(' +
+            scaleX +
+            ', ' +
+            scaleY +
+            ', 1)');
+    };
+    LightGallery.prototype.mousewheel = function () {
+        var _this = this;
+        var lastCall = 0;
+        this.outer.on('wheel.lg', function (e) {
+            if (!e.deltaY || _this.galleryItems.length < 2) {
+                return;
+            }
+            e.preventDefault();
+            var now = new Date().getTime();
+            if (now - lastCall < 1000) {
+                return;
+            }
+            lastCall = now;
+            if (e.deltaY > 0) {
+                _this.goToNextSlide();
+            }
+            else if (e.deltaY < 0) {
+                _this.goToPrevSlide();
+            }
+        });
+    };
+    LightGallery.prototype.isSlideElement = function (target) {
+        return (target.hasClass('lg-outer') ||
+            target.hasClass('lg-item') ||
+            target.hasClass('lg-img-wrap'));
+    };
+    LightGallery.prototype.isPosterElement = function (target) {
+        var playButton = this.getSlideItem(this.index)
+            .find('.lg-video-play-button')
+            .get();
+        return (target.hasClass('lg-video-poster') ||
+            target.hasClass('lg-video-play-button') ||
+            (playButton && playButton.contains(target.get())));
+    };
+    /**
+     * Maximize minimize inline gallery.
+     * @category lGPublicMethods
+     */
+    LightGallery.prototype.toggleMaximize = function () {
+        var _this = this;
+        this.getElementById('lg-maximize').on('click.lg', function () {
+            _this.$container.toggleClass('lg-inline');
+            _this.refreshOnResize();
+        });
+    };
+    LightGallery.prototype.invalidateItems = function () {
+        for (var index = 0; index < this.items.length; index++) {
+            var element = this.items[index];
+            var $element = $LG(element);
+            $element.off("click.lgcustom-item-" + $element.attr('data-lg-id'));
+        }
+    };
+    LightGallery.prototype.manageCloseGallery = function () {
+        var _this = this;
+        if (!this.settings.closable)
+            return;
+        var mousedown = false;
+        this.getElementById('lg-close').on('click.lg', function () {
+            _this.closeGallery();
+        });
+        if (this.settings.closeOnTap) {
+            // If you drag the slide and release outside gallery gets close on chrome
+            // for preventing this check mousedown and mouseup happened on .lg-item or lg-outer
+            this.outer.on('mousedown.lg', function (e) {
+                var target = $LG(e.target);
+                if (_this.isSlideElement(target)) {
+                    mousedown = true;
+                }
+                else {
+                    mousedown = false;
+                }
+            });
+            this.outer.on('mousemove.lg', function () {
+                mousedown = false;
+            });
+            this.outer.on('mouseup.lg', function (e) {
+                var target = $LG(e.target);
+                if (_this.isSlideElement(target) && mousedown) {
+                    if (!_this.outer.hasClass('lg-dragging')) {
+                        _this.closeGallery();
+                    }
+                }
+            });
+        }
+    };
+    /**
+     * Close lightGallery if it is opened.
+     *
+     * @description If closable is false in the settings, you need to pass true via closeGallery method to force close gallery
+     * @return returns the estimated time to close gallery completely including the close animation duration
+     * @category lGPublicMethods
+     * @example
+     *  const plugin = lightGallery();
+     *  plugin.closeGallery();
+     *
+     */
+    LightGallery.prototype.closeGallery = function (force) {
+        var _this = this;
+        if (!this.lgOpened || (!this.settings.closable && !force)) {
+            return 0;
+        }
+        this.LGel.trigger(lGEvents.beforeClose);
+        $LG(window).scrollTop(this.prevScrollTop);
+        var currentItem = this.items[this.index];
+        var transform;
+        if (this.zoomFromOrigin && currentItem) {
+            var _a = this.mediaContainerPosition, top_4 = _a.top, bottom = _a.bottom;
+            var _b = this.galleryItems[this.index], __slideVideoInfo = _b.__slideVideoInfo, poster = _b.poster;
+            var imageSize = utils.getSize(currentItem, this.outer, top_4 + bottom, __slideVideoInfo && poster && this.settings.videoMaxSize);
+            transform = utils.getTransform(currentItem, this.outer, top_4, bottom, imageSize);
+        }
+        if (this.zoomFromOrigin && transform) {
+            this.outer.addClass('lg-closing lg-zoom-from-image');
+            this.getSlideItem(this.index)
+                .addClass('lg-start-end-progress')
+                .css('transition-duration', this.settings.startAnimationDuration + 'ms')
+                .css('transform', transform);
+        }
+        else {
+            this.outer.addClass('lg-hide-items');
+            // lg-zoom-from-image is used for setting the opacity to 1 if zoomFromOrigin is true
+            // If the closing item doesn't have the lg-size attribute, remove this class to avoid the closing css conflicts
+            this.outer.removeClass('lg-zoom-from-image');
+        }
+        // Unbind all events added by lightGallery
+        // @todo
+        //this.$el.off('.lg.tm');
+        this.destroyModules();
+        this.lGalleryOn = false;
+        this.isDummyImageRemoved = false;
+        this.zoomFromOrigin = this.settings.zoomFromOrigin;
+        clearTimeout(this.hideBarTimeout);
+        this.hideBarTimeout = false;
+        $LG('html').removeClass('lg-on');
+        this.outer.removeClass('lg-visible lg-components-open');
+        // Resetting opacity to 0 isd required as  vertical swipe to close function adds inline opacity.
+        this.$backdrop.removeClass('in').css('opacity', 0);
+        var removeTimeout = this.zoomFromOrigin && transform
+            ? Math.max(this.settings.startAnimationDuration, this.settings.backdropDuration)
+            : this.settings.backdropDuration;
+        this.$container.removeClass('lg-show-in');
+        // Once the closign animation is completed and gallery is invisible
+        setTimeout(function () {
+            if (_this.zoomFromOrigin && transform) {
+                _this.outer.removeClass('lg-zoom-from-image');
+            }
+            _this.$container.removeClass('lg-show');
+            // Need to remove inline opacity as it is used in the stylesheet as well
+            _this.$backdrop
+                .removeAttr('style')
+                .css('transition-duration', _this.settings.backdropDuration + 'ms');
+            _this.outer.removeClass("lg-closing " + _this.settings.startClass);
+            _this.getSlideItem(_this.index).removeClass('lg-start-end-progress');
+            _this.$inner.empty();
+            if (_this.lgOpened) {
+                _this.LGel.trigger(lGEvents.afterClose, {
+                    instance: _this,
+                });
+            }
+            if (_this.outer.get()) {
+                _this.outer.get().blur();
+            }
+            _this.lgOpened = false;
+        }, removeTimeout + 100);
+        return removeTimeout + 100;
+    };
+    LightGallery.prototype.initModules = function () {
+        this.plugins.forEach(function (module) {
+            try {
+                module.init();
+            }
+            catch (err) {
+                console.warn("lightGallery:- make sure lightGallery module is properly initiated");
+            }
+        });
+    };
+    LightGallery.prototype.destroyModules = function (destroy) {
+        this.plugins.forEach(function (module) {
+            try {
+                if (destroy) {
+                    module.destroy();
+                }
+                else {
+                    module.closeGallery && module.closeGallery();
+                }
+            }
+            catch (err) {
+                console.warn("lightGallery:- make sure lightGallery module is properly destroyed");
+            }
+        });
+    };
+    /**
+     * Refresh lightGallery with new set of children.
+     *
+     * @description This is useful to update the gallery when the child elements are changed without calling destroy method.
+     *
+     * If you are using dynamic mode, you can pass the modified array of dynamicEl as the first parameter to refresh the dynamic gallery
+     * @see <a href="/demos/dynamic-mode/">Demo</a>
+     * @category lGPublicMethods
+     * @example
+     *  const plugin = lightGallery();
+     *  // Delete or add children, then call
+     *  plugin.refresh();
+     *
+     */
+    LightGallery.prototype.refresh = function (galleryItems) {
+        if (!this.settings.dynamic) {
+            this.invalidateItems();
+        }
+        if (galleryItems) {
+            this.galleryItems = galleryItems;
+        }
+        else {
+            this.galleryItems = this.getItems();
+        }
+        this.updateControls();
+        this.openGalleryOnItemClick();
+        this.LGel.trigger(lGEvents.updateSlides);
+    };
+    LightGallery.prototype.updateControls = function () {
+        this.addSlideVideoInfo(this.galleryItems);
+        this.updateCounterTotal();
+        this.manageSingleSlideClassName();
+    };
+    /**
+     * Destroy lightGallery.
+     * Destroy lightGallery and its plugin instances completely
+     *
+     * @description This method also calls CloseGallery function internally. Returns the time takes to completely close and destroy the instance.
+     * In case if you want to re-initialize lightGallery right after destroying it, initialize it only once the destroy process is completed.
+     * You can use refresh method most of the times.
+     * @category lGPublicMethods
+     * @example
+     *  const plugin = lightGallery();
+     *  plugin.destroy();
+     *
+     */
+    LightGallery.prototype.destroy = function () {
+        var _this = this;
+        var closeTimeout = this.closeGallery(true);
+        setTimeout(function () {
+            _this.destroyModules(true);
+            if (!_this.settings.dynamic) {
+                _this.invalidateItems();
+            }
+            $LG(window).off(".lg.global" + _this.lgId);
+            _this.LGel.off('.lg');
+            _this.$container.remove();
+        }, closeTimeout);
+        return closeTimeout;
+    };
+    return LightGallery;
+}());
+
+function lightGallery(el, options) {
+    return new LightGallery(el, options);
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (lightGallery);
+//# sourceMappingURL=lightgallery.es5.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/lightgallery/plugins/thumbnail/lg-thumbnail.es5.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/lightgallery/plugins/thumbnail/lg-thumbnail.es5.js ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/*!
+ * lightgallery | 2.4.0 | January 29th 2022
+ * http://www.lightgalleryjs.com/
+ * Copyright (c) 2020 Sachin Neravath;
+ * @license GPLv3
+ */
+
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
+var thumbnailsSettings = {
+    thumbnail: true,
+    animateThumb: true,
+    currentPagerPosition: 'middle',
+    alignThumbnails: 'middle',
+    thumbWidth: 100,
+    thumbHeight: '80px',
+    thumbMargin: 5,
+    appendThumbnailsTo: '.lg-components',
+    toggleThumb: false,
+    enableThumbDrag: true,
+    enableThumbSwipe: true,
+    thumbnailSwipeThreshold: 10,
+    loadYouTubeThumbnail: true,
+    youTubeThumbSize: 1,
+    thumbnailPluginStrings: {
+        toggleThumbnails: 'Toggle thumbnails',
+    },
+};
+
+/**
+ * List of lightGallery events
+ * All events should be documented here
+ * Below interfaces are used to build the website documentations
+ * */
+var lGEvents = {
+    afterAppendSlide: 'lgAfterAppendSlide',
+    init: 'lgInit',
+    hasVideo: 'lgHasVideo',
+    containerResize: 'lgContainerResize',
+    updateSlides: 'lgUpdateSlides',
+    afterAppendSubHtml: 'lgAfterAppendSubHtml',
+    beforeOpen: 'lgBeforeOpen',
+    afterOpen: 'lgAfterOpen',
+    slideItemLoad: 'lgSlideItemLoad',
+    beforeSlide: 'lgBeforeSlide',
+    afterSlide: 'lgAfterSlide',
+    posterClick: 'lgPosterClick',
+    dragStart: 'lgDragStart',
+    dragMove: 'lgDragMove',
+    dragEnd: 'lgDragEnd',
+    beforeNextSlide: 'lgBeforeNextSlide',
+    beforePrevSlide: 'lgBeforePrevSlide',
+    beforeClose: 'lgBeforeClose',
+    afterClose: 'lgAfterClose',
+    rotateLeft: 'lgRotateLeft',
+    rotateRight: 'lgRotateRight',
+    flipHorizontal: 'lgFlipHorizontal',
+    flipVertical: 'lgFlipVertical',
+    autoplay: 'lgAutoplay',
+    autoplayStart: 'lgAutoplayStart',
+    autoplayStop: 'lgAutoplayStop',
+};
+
+var Thumbnail = /** @class */ (function () {
+    function Thumbnail(instance, $LG) {
+        this.thumbOuterWidth = 0;
+        this.thumbTotalWidth = 0;
+        this.translateX = 0;
+        this.thumbClickable = false;
+        // get lightGallery core plugin instance
+        this.core = instance;
+        this.$LG = $LG;
+        return this;
+    }
+    Thumbnail.prototype.init = function () {
+        // extend module default settings with lightGallery core settings
+        this.settings = __assign(__assign({}, thumbnailsSettings), this.core.settings);
+        this.thumbOuterWidth = 0;
+        this.thumbTotalWidth =
+            this.core.galleryItems.length *
+                (this.settings.thumbWidth + this.settings.thumbMargin);
+        // Thumbnail animation value
+        this.translateX = 0;
+        this.setAnimateThumbStyles();
+        if (!this.core.settings.allowMediaOverlap) {
+            this.settings.toggleThumb = false;
+        }
+        if (this.settings.thumbnail) {
+            this.build();
+            if (this.settings.animateThumb) {
+                if (this.settings.enableThumbDrag) {
+                    this.enableThumbDrag();
+                }
+                if (this.settings.enableThumbSwipe) {
+                    this.enableThumbSwipe();
+                }
+                this.thumbClickable = false;
+            }
+            else {
+                this.thumbClickable = true;
+            }
+            this.toggleThumbBar();
+            this.thumbKeyPress();
+        }
+    };
+    Thumbnail.prototype.build = function () {
+        var _this = this;
+        this.setThumbMarkup();
+        this.manageActiveClassOnSlideChange();
+        this.$lgThumb.first().on('click.lg touchend.lg', function (e) {
+            var $target = _this.$LG(e.target);
+            if (!$target.hasAttribute('data-lg-item-id')) {
+                return;
+            }
+            setTimeout(function () {
+                // In IE9 and bellow touch does not support
+                // Go to slide if browser does not support css transitions
+                if (_this.thumbClickable && !_this.core.lgBusy) {
+                    var index = parseInt($target.attr('data-lg-item-id'));
+                    _this.core.slide(index, false, true, false);
+                }
+            }, 50);
+        });
+        this.core.LGel.on(lGEvents.beforeSlide + ".thumb", function (event) {
+            var index = event.detail.index;
+            _this.animateThumb(index);
+        });
+        this.core.LGel.on(lGEvents.beforeOpen + ".thumb", function () {
+            _this.thumbOuterWidth = _this.core.outer.get().offsetWidth;
+        });
+        this.core.LGel.on(lGEvents.updateSlides + ".thumb", function () {
+            _this.rebuildThumbnails();
+        });
+        this.core.LGel.on(lGEvents.containerResize + ".thumb", function () {
+            if (!_this.core.lgOpened)
+                return;
+            setTimeout(function () {
+                _this.thumbOuterWidth = _this.core.outer.get().offsetWidth;
+                _this.animateThumb(_this.core.index);
+                _this.thumbOuterWidth = _this.core.outer.get().offsetWidth;
+            }, 50);
+        });
+    };
+    Thumbnail.prototype.setThumbMarkup = function () {
+        var thumbOuterClassNames = 'lg-thumb-outer ';
+        if (this.settings.alignThumbnails) {
+            thumbOuterClassNames += "lg-thumb-align-" + this.settings.alignThumbnails;
+        }
+        var html = "<div class=\"" + thumbOuterClassNames + "\">\n        <div class=\"lg-thumb lg-group\">\n        </div>\n        </div>";
+        this.core.outer.addClass('lg-has-thumb');
+        if (this.settings.appendThumbnailsTo === '.lg-components') {
+            this.core.$lgComponents.append(html);
+        }
+        else {
+            this.core.outer.append(html);
+        }
+        this.$thumbOuter = this.core.outer.find('.lg-thumb-outer').first();
+        this.$lgThumb = this.core.outer.find('.lg-thumb').first();
+        if (this.settings.animateThumb) {
+            this.core.outer
+                .find('.lg-thumb')
+                .css('transition-duration', this.core.settings.speed + 'ms')
+                .css('width', this.thumbTotalWidth + 'px')
+                .css('position', 'relative');
+        }
+        this.setThumbItemHtml(this.core.galleryItems);
+    };
+    Thumbnail.prototype.enableThumbDrag = function () {
+        var _this = this;
+        var thumbDragUtils = {
+            cords: {
+                startX: 0,
+                endX: 0,
+            },
+            isMoved: false,
+            newTranslateX: 0,
+            startTime: new Date(),
+            endTime: new Date(),
+            touchMoveTime: 0,
+        };
+        var isDragging = false;
+        this.$thumbOuter.addClass('lg-grab');
+        this.core.outer
+            .find('.lg-thumb')
+            .first()
+            .on('mousedown.lg.thumb', function (e) {
+            if (_this.thumbTotalWidth > _this.thumbOuterWidth) {
+                // execute only on .lg-object
+                e.preventDefault();
+                thumbDragUtils.cords.startX = e.pageX;
+                thumbDragUtils.startTime = new Date();
+                _this.thumbClickable = false;
+                isDragging = true;
+                // ** Fix for webkit cursor issue https://code.google.com/p/chromium/issues/detail?id=26723
+                _this.core.outer.get().scrollLeft += 1;
+                _this.core.outer.get().scrollLeft -= 1;
+                // *
+                _this.$thumbOuter
+                    .removeClass('lg-grab')
+                    .addClass('lg-grabbing');
+            }
+        });
+        this.$LG(window).on("mousemove.lg.thumb.global" + this.core.lgId, function (e) {
+            if (!_this.core.lgOpened)
+                return;
+            if (isDragging) {
+                thumbDragUtils.cords.endX = e.pageX;
+                thumbDragUtils = _this.onThumbTouchMove(thumbDragUtils);
+            }
+        });
+        this.$LG(window).on("mouseup.lg.thumb.global" + this.core.lgId, function () {
+            if (!_this.core.lgOpened)
+                return;
+            if (thumbDragUtils.isMoved) {
+                thumbDragUtils = _this.onThumbTouchEnd(thumbDragUtils);
+            }
+            else {
+                _this.thumbClickable = true;
+            }
+            if (isDragging) {
+                isDragging = false;
+                _this.$thumbOuter.removeClass('lg-grabbing').addClass('lg-grab');
+            }
+        });
+    };
+    Thumbnail.prototype.enableThumbSwipe = function () {
+        var _this = this;
+        var thumbDragUtils = {
+            cords: {
+                startX: 0,
+                endX: 0,
+            },
+            isMoved: false,
+            newTranslateX: 0,
+            startTime: new Date(),
+            endTime: new Date(),
+            touchMoveTime: 0,
+        };
+        this.$lgThumb.on('touchstart.lg', function (e) {
+            if (_this.thumbTotalWidth > _this.thumbOuterWidth) {
+                e.preventDefault();
+                thumbDragUtils.cords.startX = e.targetTouches[0].pageX;
+                _this.thumbClickable = false;
+                thumbDragUtils.startTime = new Date();
+            }
+        });
+        this.$lgThumb.on('touchmove.lg', function (e) {
+            if (_this.thumbTotalWidth > _this.thumbOuterWidth) {
+                e.preventDefault();
+                thumbDragUtils.cords.endX = e.targetTouches[0].pageX;
+                thumbDragUtils = _this.onThumbTouchMove(thumbDragUtils);
+            }
+        });
+        this.$lgThumb.on('touchend.lg', function () {
+            if (thumbDragUtils.isMoved) {
+                thumbDragUtils = _this.onThumbTouchEnd(thumbDragUtils);
+            }
+            else {
+                _this.thumbClickable = true;
+            }
+        });
+    };
+    // Rebuild thumbnails
+    Thumbnail.prototype.rebuildThumbnails = function () {
+        var _this = this;
+        // Remove transitions
+        this.$thumbOuter.addClass('lg-rebuilding-thumbnails');
+        setTimeout(function () {
+            _this.thumbTotalWidth =
+                _this.core.galleryItems.length *
+                    (_this.settings.thumbWidth + _this.settings.thumbMargin);
+            _this.$lgThumb.css('width', _this.thumbTotalWidth + 'px');
+            _this.$lgThumb.empty();
+            _this.setThumbItemHtml(_this.core.galleryItems);
+            _this.animateThumb(_this.core.index);
+        }, 50);
+        setTimeout(function () {
+            _this.$thumbOuter.removeClass('lg-rebuilding-thumbnails');
+        }, 200);
+    };
+    // @ts-check
+    Thumbnail.prototype.setTranslate = function (value) {
+        this.$lgThumb.css('transform', 'translate3d(-' + value + 'px, 0px, 0px)');
+    };
+    Thumbnail.prototype.getPossibleTransformX = function (left) {
+        if (left > this.thumbTotalWidth - this.thumbOuterWidth) {
+            left = this.thumbTotalWidth - this.thumbOuterWidth;
+        }
+        if (left < 0) {
+            left = 0;
+        }
+        return left;
+    };
+    Thumbnail.prototype.animateThumb = function (index) {
+        this.$lgThumb.css('transition-duration', this.core.settings.speed + 'ms');
+        if (this.settings.animateThumb) {
+            var position = 0;
+            switch (this.settings.currentPagerPosition) {
+                case 'left':
+                    position = 0;
+                    break;
+                case 'middle':
+                    position =
+                        this.thumbOuterWidth / 2 - this.settings.thumbWidth / 2;
+                    break;
+                case 'right':
+                    position = this.thumbOuterWidth - this.settings.thumbWidth;
+            }
+            this.translateX =
+                (this.settings.thumbWidth + this.settings.thumbMargin) * index -
+                    1 -
+                    position;
+            if (this.translateX > this.thumbTotalWidth - this.thumbOuterWidth) {
+                this.translateX = this.thumbTotalWidth - this.thumbOuterWidth;
+            }
+            if (this.translateX < 0) {
+                this.translateX = 0;
+            }
+            this.setTranslate(this.translateX);
+        }
+    };
+    Thumbnail.prototype.onThumbTouchMove = function (thumbDragUtils) {
+        thumbDragUtils.newTranslateX = this.translateX;
+        thumbDragUtils.isMoved = true;
+        thumbDragUtils.touchMoveTime = new Date().valueOf();
+        thumbDragUtils.newTranslateX -=
+            thumbDragUtils.cords.endX - thumbDragUtils.cords.startX;
+        thumbDragUtils.newTranslateX = this.getPossibleTransformX(thumbDragUtils.newTranslateX);
+        // move current slide
+        this.setTranslate(thumbDragUtils.newTranslateX);
+        this.$thumbOuter.addClass('lg-dragging');
+        return thumbDragUtils;
+    };
+    Thumbnail.prototype.onThumbTouchEnd = function (thumbDragUtils) {
+        thumbDragUtils.isMoved = false;
+        thumbDragUtils.endTime = new Date();
+        this.$thumbOuter.removeClass('lg-dragging');
+        var touchDuration = thumbDragUtils.endTime.valueOf() -
+            thumbDragUtils.startTime.valueOf();
+        var distanceXnew = thumbDragUtils.cords.endX - thumbDragUtils.cords.startX;
+        var speedX = Math.abs(distanceXnew) / touchDuration;
+        // Some magical numbers
+        // Can be improved
+        if (speedX > 0.15 &&
+            thumbDragUtils.endTime.valueOf() - thumbDragUtils.touchMoveTime < 30) {
+            speedX += 1;
+            if (speedX > 2) {
+                speedX += 1;
+            }
+            speedX =
+                speedX +
+                    speedX * (Math.abs(distanceXnew) / this.thumbOuterWidth);
+            this.$lgThumb.css('transition-duration', Math.min(speedX - 1, 2) + 'settings');
+            distanceXnew = distanceXnew * speedX;
+            this.translateX = this.getPossibleTransformX(this.translateX - distanceXnew);
+            this.setTranslate(this.translateX);
+        }
+        else {
+            this.translateX = thumbDragUtils.newTranslateX;
+        }
+        if (Math.abs(thumbDragUtils.cords.endX - thumbDragUtils.cords.startX) <
+            this.settings.thumbnailSwipeThreshold) {
+            this.thumbClickable = true;
+        }
+        return thumbDragUtils;
+    };
+    Thumbnail.prototype.getThumbHtml = function (thumb, index) {
+        var slideVideoInfo = this.core.galleryItems[index].__slideVideoInfo || {};
+        var thumbImg;
+        if (slideVideoInfo.youtube) {
+            if (this.settings.loadYouTubeThumbnail) {
+                thumbImg =
+                    '//img.youtube.com/vi/' +
+                        slideVideoInfo.youtube[1] +
+                        '/' +
+                        this.settings.youTubeThumbSize +
+                        '.jpg';
+            }
+            else {
+                thumbImg = thumb;
+            }
+        }
+        else {
+            thumbImg = thumb;
+        }
+        return "<div data-lg-item-id=\"" + index + "\" class=\"lg-thumb-item " + (index === this.core.index ? ' active' : '') + "\" \n        style=\"width:" + this.settings.thumbWidth + "px; height: " + this.settings.thumbHeight + ";\n            margin-right: " + this.settings.thumbMargin + "px;\">\n            <img data-lg-item-id=\"" + index + "\" src=\"" + thumbImg + "\" />\n        </div>";
+    };
+    Thumbnail.prototype.getThumbItemHtml = function (items) {
+        var thumbList = '';
+        for (var i = 0; i < items.length; i++) {
+            thumbList += this.getThumbHtml(items[i].thumb, i);
+        }
+        return thumbList;
+    };
+    Thumbnail.prototype.setThumbItemHtml = function (items) {
+        var thumbList = this.getThumbItemHtml(items);
+        this.$lgThumb.html(thumbList);
+    };
+    Thumbnail.prototype.setAnimateThumbStyles = function () {
+        if (this.settings.animateThumb) {
+            this.core.outer.addClass('lg-animate-thumb');
+        }
+    };
+    // Manage thumbnail active calss
+    Thumbnail.prototype.manageActiveClassOnSlideChange = function () {
+        var _this = this;
+        // manage active class for thumbnail
+        this.core.LGel.on(lGEvents.beforeSlide + ".thumb", function (event) {
+            var $thumb = _this.core.outer.find('.lg-thumb-item');
+            var index = event.detail.index;
+            $thumb.removeClass('active');
+            $thumb.eq(index).addClass('active');
+        });
+    };
+    // Toggle thumbnail bar
+    Thumbnail.prototype.toggleThumbBar = function () {
+        var _this = this;
+        if (this.settings.toggleThumb) {
+            this.core.outer.addClass('lg-can-toggle');
+            this.core.$toolbar.append('<button type="button" aria-label="' +
+                this.settings.thumbnailPluginStrings['toggleThumbnails'] +
+                '" class="lg-toggle-thumb lg-icon"></button>');
+            this.core.outer
+                .find('.lg-toggle-thumb')
+                .first()
+                .on('click.lg', function () {
+                _this.core.outer.toggleClass('lg-components-open');
+            });
+        }
+    };
+    Thumbnail.prototype.thumbKeyPress = function () {
+        var _this = this;
+        this.$LG(window).on("keydown.lg.thumb.global" + this.core.lgId, function (e) {
+            if (!_this.core.lgOpened || !_this.settings.toggleThumb)
+                return;
+            if (e.keyCode === 38) {
+                e.preventDefault();
+                _this.core.outer.addClass('lg-components-open');
+            }
+            else if (e.keyCode === 40) {
+                e.preventDefault();
+                _this.core.outer.removeClass('lg-components-open');
+            }
+        });
+    };
+    Thumbnail.prototype.destroy = function () {
+        if (this.settings.thumbnail) {
+            this.$LG(window).off(".lg.thumb.global" + this.core.lgId);
+            this.core.LGel.off('.lg.thumb');
+            this.core.LGel.off('.thumb');
+            this.$thumbOuter.remove();
+            this.core.outer.removeClass('lg-has-thumb');
+        }
+    };
+    return Thumbnail;
+}());
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Thumbnail);
+//# sourceMappingURL=lg-thumbnail.es5.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/lightgallery/plugins/zoom/lg-zoom.es5.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/lightgallery/plugins/zoom/lg-zoom.es5.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/*!
+ * lightgallery | 2.4.0 | January 29th 2022
+ * http://www.lightgalleryjs.com/
+ * Copyright (c) 2020 Sachin Neravath;
+ * @license GPLv3
+ */
+
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
+var zoomSettings = {
+    scale: 1,
+    zoom: true,
+    actualSize: true,
+    showZoomInOutIcons: false,
+    actualSizeIcons: {
+        zoomIn: 'lg-zoom-in',
+        zoomOut: 'lg-zoom-out',
+    },
+    enableZoomAfter: 300,
+    zoomPluginStrings: {
+        zoomIn: 'Zoom in',
+        zoomOut: 'Zoom out',
+        viewActualSize: 'View actual size',
+    },
+};
+
+/**
+ * List of lightGallery events
+ * All events should be documented here
+ * Below interfaces are used to build the website documentations
+ * */
+var lGEvents = {
+    afterAppendSlide: 'lgAfterAppendSlide',
+    init: 'lgInit',
+    hasVideo: 'lgHasVideo',
+    containerResize: 'lgContainerResize',
+    updateSlides: 'lgUpdateSlides',
+    afterAppendSubHtml: 'lgAfterAppendSubHtml',
+    beforeOpen: 'lgBeforeOpen',
+    afterOpen: 'lgAfterOpen',
+    slideItemLoad: 'lgSlideItemLoad',
+    beforeSlide: 'lgBeforeSlide',
+    afterSlide: 'lgAfterSlide',
+    posterClick: 'lgPosterClick',
+    dragStart: 'lgDragStart',
+    dragMove: 'lgDragMove',
+    dragEnd: 'lgDragEnd',
+    beforeNextSlide: 'lgBeforeNextSlide',
+    beforePrevSlide: 'lgBeforePrevSlide',
+    beforeClose: 'lgBeforeClose',
+    afterClose: 'lgAfterClose',
+    rotateLeft: 'lgRotateLeft',
+    rotateRight: 'lgRotateRight',
+    flipHorizontal: 'lgFlipHorizontal',
+    flipVertical: 'lgFlipVertical',
+    autoplay: 'lgAutoplay',
+    autoplayStart: 'lgAutoplayStart',
+    autoplayStop: 'lgAutoplayStop',
+};
+
+var Zoom = /** @class */ (function () {
+    function Zoom(instance, $LG) {
+        // get lightGallery core plugin instance
+        this.core = instance;
+        this.$LG = $LG;
+        this.settings = __assign(__assign({}, zoomSettings), this.core.settings);
+        return this;
+    }
+    // Append Zoom controls. Actual size, Zoom-in, Zoom-out
+    Zoom.prototype.buildTemplates = function () {
+        var zoomIcons = this.settings.showZoomInOutIcons
+            ? "<button id=\"" + this.core.getIdName('lg-zoom-in') + "\" type=\"button\" aria-label=\"" + this.settings.zoomPluginStrings['zoomIn'] + "\" class=\"lg-zoom-in lg-icon\"></button><button id=\"" + this.core.getIdName('lg-zoom-out') + "\" type=\"button\" aria-label=\"" + this.settings.zoomPluginStrings['zoomIn'] + "\" class=\"lg-zoom-out lg-icon\"></button>"
+            : '';
+        if (this.settings.actualSize) {
+            zoomIcons += "<button id=\"" + this.core.getIdName('lg-actual-size') + "\" type=\"button\" aria-label=\"" + this.settings.zoomPluginStrings['viewActualSize'] + "\" class=\"" + this.settings.actualSizeIcons.zoomIn + " lg-icon\"></button>";
+        }
+        this.core.outer.addClass('lg-use-transition-for-zoom');
+        this.core.$toolbar.first().append(zoomIcons);
+    };
+    /**
+     * @desc Enable zoom option only once the image is completely loaded
+     * If zoomFromOrigin is true, Zoom is enabled once the dummy image has been inserted
+     *
+     * Zoom styles are defined under lg-zoomable CSS class.
+     */
+    Zoom.prototype.enableZoom = function (event) {
+        var _this = this;
+        // delay will be 0 except first time
+        var _speed = this.settings.enableZoomAfter + event.detail.delay;
+        // set _speed value 0 if gallery opened from direct url and if it is first slide
+        if (this.$LG('body').first().hasClass('lg-from-hash') &&
+            event.detail.delay) {
+            // will execute only once
+            _speed = 0;
+        }
+        else {
+            // Remove lg-from-hash to enable starting animation.
+            this.$LG('body').first().removeClass('lg-from-hash');
+        }
+        this.zoomableTimeout = setTimeout(function () {
+            if (!_this.isImageSlide()) {
+                return;
+            }
+            _this.core.getSlideItem(event.detail.index).addClass('lg-zoomable');
+            if (event.detail.index === _this.core.index) {
+                _this.setZoomEssentials();
+            }
+        }, _speed + 30);
+    };
+    Zoom.prototype.enableZoomOnSlideItemLoad = function () {
+        // Add zoomable class
+        this.core.LGel.on(lGEvents.slideItemLoad + ".zoom", this.enableZoom.bind(this));
+    };
+    Zoom.prototype.getModifier = function (rotateValue, axis, el) {
+        var originalRotate = rotateValue;
+        rotateValue = Math.abs(rotateValue);
+        var transformValues = this.getCurrentTransform(el);
+        if (!transformValues) {
+            return 1;
+        }
+        var modifier = 1;
+        if (axis === 'X') {
+            var flipHorizontalValue = Math.sign(parseFloat(transformValues[0]));
+            if (rotateValue === 0 || rotateValue === 180) {
+                modifier = 1;
+            }
+            else if (rotateValue === 90) {
+                if ((originalRotate === -90 && flipHorizontalValue === 1) ||
+                    (originalRotate === 90 && flipHorizontalValue === -1)) {
+                    modifier = -1;
+                }
+                else {
+                    modifier = 1;
+                }
+            }
+            modifier = modifier * flipHorizontalValue;
+        }
+        else {
+            var flipVerticalValue = Math.sign(parseFloat(transformValues[3]));
+            if (rotateValue === 0 || rotateValue === 180) {
+                modifier = 1;
+            }
+            else if (rotateValue === 90) {
+                var sinX = parseFloat(transformValues[1]);
+                var sinMinusX = parseFloat(transformValues[2]);
+                modifier = Math.sign(sinX * sinMinusX * originalRotate * flipVerticalValue);
+            }
+            modifier = modifier * flipVerticalValue;
+        }
+        return modifier;
+    };
+    Zoom.prototype.getImageSize = function ($image, rotateValue, axis) {
+        var imageSizes = {
+            y: 'offsetHeight',
+            x: 'offsetWidth',
+        };
+        if (Math.abs(rotateValue) === 90) {
+            // Swap axis
+            if (axis === 'x') {
+                axis = 'y';
+            }
+            else {
+                axis = 'x';
+            }
+        }
+        return $image[imageSizes[axis]];
+    };
+    Zoom.prototype.getDragCords = function (e, rotateValue) {
+        if (rotateValue === 90) {
+            return {
+                x: e.pageY,
+                y: e.pageX,
+            };
+        }
+        else {
+            return {
+                x: e.pageX,
+                y: e.pageY,
+            };
+        }
+    };
+    Zoom.prototype.getSwipeCords = function (e, rotateValue) {
+        var x = e.targetTouches[0].pageX;
+        var y = e.targetTouches[0].pageY;
+        if (rotateValue === 90) {
+            return {
+                x: y,
+                y: x,
+            };
+        }
+        else {
+            return {
+                x: x,
+                y: y,
+            };
+        }
+    };
+    Zoom.prototype.getDragAllowedAxises = function (rotateValue, scale) {
+        scale = scale || this.scale || 1;
+        var allowY = this.imageYSize * scale > this.containerRect.height;
+        var allowX = this.imageXSize * scale > this.containerRect.width;
+        if (rotateValue === 90) {
+            return {
+                allowX: allowY,
+                allowY: allowX,
+            };
+        }
+        else {
+            return {
+                allowX: allowX,
+                allowY: allowY,
+            };
+        }
+    };
+    /**
+     *
+     * @param {Element} el
+     * @return matrix(cos(X), sin(X), -sin(X), cos(X), 0, 0);
+     * Get the current transform value
+     */
+    Zoom.prototype.getCurrentTransform = function (el) {
+        if (!el) {
+            return;
+        }
+        var st = window.getComputedStyle(el, null);
+        var tm = st.getPropertyValue('-webkit-transform') ||
+            st.getPropertyValue('-moz-transform') ||
+            st.getPropertyValue('-ms-transform') ||
+            st.getPropertyValue('-o-transform') ||
+            st.getPropertyValue('transform') ||
+            'none';
+        if (tm !== 'none') {
+            return tm.split('(')[1].split(')')[0].split(',');
+        }
+        return;
+    };
+    Zoom.prototype.getCurrentRotation = function (el) {
+        if (!el) {
+            return 0;
+        }
+        var values = this.getCurrentTransform(el);
+        if (values) {
+            return Math.round(Math.atan2(parseFloat(values[1]), parseFloat(values[0])) *
+                (180 / Math.PI));
+            // If you want rotate in 360
+            //return (angle < 0 ? angle + 360 : angle);
+        }
+        return 0;
+    };
+    Zoom.prototype.setZoomEssentials = function () {
+        var $image = this.core
+            .getSlideItem(this.core.index)
+            .find('.lg-image')
+            .first();
+        var rotateEl = this.core
+            .getSlideItem(this.core.index)
+            .find('.lg-img-rotate')
+            .first()
+            .get();
+        this.rotateValue = this.getCurrentRotation(rotateEl);
+        this.imageYSize = this.getImageSize($image.get(), this.rotateValue, 'y');
+        this.imageXSize = this.getImageSize($image.get(), this.rotateValue, 'x');
+        this.containerRect = this.core.outer.get().getBoundingClientRect();
+        this.modifierX = this.getModifier(this.rotateValue, 'X', rotateEl);
+        this.modifierY = this.getModifier(this.rotateValue, 'Y', rotateEl);
+    };
+    /**
+     * @desc Image zoom
+     * Translate the wrap and scale the image to get better user experience
+     *
+     * @param {String} scale - Zoom decrement/increment value
+     */
+    Zoom.prototype.zoomImage = function (scale) {
+        // Find offset manually to avoid issue after zoom
+        var offsetX = (this.containerRect.width - this.imageXSize) / 2 +
+            this.containerRect.left;
+        var _a = this.core.mediaContainerPosition, top = _a.top, bottom = _a.bottom;
+        var topBottomSpacing = Math.abs(top - bottom) / 2;
+        var offsetY = (this.containerRect.height -
+            this.imageYSize -
+            topBottomSpacing * this.modifierX) /
+            2 +
+            this.scrollTop +
+            this.containerRect.top;
+        var originalX;
+        var originalY;
+        if (scale === 1) {
+            this.positionChanged = false;
+        }
+        var dragAllowedAxises = this.getDragAllowedAxises(Math.abs(this.rotateValue), scale);
+        var allowY = dragAllowedAxises.allowY, allowX = dragAllowedAxises.allowX;
+        if (this.positionChanged) {
+            originalX = this.left / (this.scale - 1);
+            originalY = this.top / (this.scale - 1);
+            this.pageX = Math.abs(originalX) + offsetX;
+            this.pageY = Math.abs(originalY) + offsetY;
+            this.positionChanged = false;
+        }
+        var possibleSwipeCords = this.getPossibleSwipeDragCords(this.rotateValue, scale);
+        var _x = offsetX - this.pageX;
+        var _y = offsetY - this.pageY;
+        var x = (scale - 1) * _x;
+        var y = (scale - 1) * _y;
+        if (allowX) {
+            if (this.isBeyondPossibleLeft(x, possibleSwipeCords.minX)) {
+                x = possibleSwipeCords.minX;
+            }
+            else if (this.isBeyondPossibleRight(x, possibleSwipeCords.maxX)) {
+                x = possibleSwipeCords.maxX;
+            }
+        }
+        else {
+            if (scale > 1) {
+                if (x < possibleSwipeCords.minX) {
+                    x = possibleSwipeCords.minX;
+                }
+                else if (x > possibleSwipeCords.maxX) {
+                    x = possibleSwipeCords.maxX;
+                }
+            }
+        }
+        if (allowY) {
+            if (this.isBeyondPossibleTop(y, possibleSwipeCords.minY)) {
+                y = possibleSwipeCords.minY;
+            }
+            else if (this.isBeyondPossibleBottom(y, possibleSwipeCords.maxY)) {
+                y = possibleSwipeCords.maxY;
+            }
+        }
+        else {
+            // If the translate value based on index of beyond the viewport, utilize the available space to prevent image being cut out
+            if (scale > 1) {
+                //If image goes beyond viewport top, use the minim possible translate value
+                if (y < possibleSwipeCords.minY) {
+                    y = possibleSwipeCords.minY;
+                }
+                else if (y > possibleSwipeCords.maxY) {
+                    y = possibleSwipeCords.maxY;
+                }
+            }
+        }
+        this.setZoomStyles({
+            x: x,
+            y: y,
+            scale: scale,
+        });
+    };
+    /**
+     * @desc apply scale3d to image and translate to image wrap
+     * @param {style} X,Y and scale
+     */
+    Zoom.prototype.setZoomStyles = function (style) {
+        var $image = this.core
+            .getSlideItem(this.core.index)
+            .find('.lg-image')
+            .first();
+        var $dummyImage = this.core.outer
+            .find('.lg-current .lg-dummy-img')
+            .first();
+        var $imageWrap = $image.parent();
+        this.scale = style.scale;
+        $image.css('transform', 'scale3d(' + style.scale + ', ' + style.scale + ', 1)');
+        $dummyImage.css('transform', 'scale3d(' + style.scale + ', ' + style.scale + ', 1)');
+        var transform = 'translate3d(' + style.x + 'px, ' + style.y + 'px, 0)';
+        $imageWrap.css('transform', transform);
+        this.left = style.x;
+        this.top = style.y;
+    };
+    /**
+     * @param index - Index of the current slide
+     * @param event - event will be available only if the function is called on clicking/taping the imags
+     */
+    Zoom.prototype.setActualSize = function (index, event) {
+        var _this = this;
+        // Allow zoom only on image
+        if (!this.isImageSlide() ||
+            this.core.outer.hasClass('lg-first-slide-loading')) {
+            return;
+        }
+        var scale = this.getCurrentImageActualSizeScale();
+        if (this.core.outer.hasClass('lg-zoomed')) {
+            this.scale = 1;
+        }
+        else {
+            this.scale = this.getScale(scale);
+        }
+        this.setPageCords(event);
+        this.beginZoom(this.scale);
+        this.zoomImage(this.scale);
+        setTimeout(function () {
+            _this.core.outer.removeClass('lg-grabbing').addClass('lg-grab');
+        }, 10);
+    };
+    Zoom.prototype.getNaturalWidth = function (index) {
+        var $image = this.core.getSlideItem(index).find('.lg-image').first();
+        var naturalWidth = this.core.galleryItems[index].width;
+        return naturalWidth
+            ? parseFloat(naturalWidth)
+            : $image.get().naturalWidth;
+    };
+    Zoom.prototype.getActualSizeScale = function (naturalWidth, width) {
+        var _scale;
+        var scale;
+        if (naturalWidth > width) {
+            _scale = naturalWidth / width;
+            scale = _scale || 2;
+        }
+        else {
+            scale = 1;
+        }
+        return scale;
+    };
+    Zoom.prototype.getCurrentImageActualSizeScale = function () {
+        var $image = this.core
+            .getSlideItem(this.core.index)
+            .find('.lg-image')
+            .first();
+        var width = $image.get().offsetWidth;
+        var naturalWidth = this.getNaturalWidth(this.core.index) || width;
+        return this.getActualSizeScale(naturalWidth, width);
+    };
+    Zoom.prototype.getPageCords = function (event) {
+        var cords = {};
+        if (event) {
+            cords.x = event.pageX || event.targetTouches[0].pageX;
+            cords.y = event.pageY || event.targetTouches[0].pageY;
+        }
+        else {
+            var containerRect = this.core.outer.get().getBoundingClientRect();
+            cords.x = containerRect.width / 2 + containerRect.left;
+            cords.y =
+                containerRect.height / 2 + this.scrollTop + containerRect.top;
+        }
+        return cords;
+    };
+    Zoom.prototype.setPageCords = function (event) {
+        var pageCords = this.getPageCords(event);
+        this.pageX = pageCords.x;
+        this.pageY = pageCords.y;
+    };
+    // If true, zoomed - in else zoomed out
+    Zoom.prototype.beginZoom = function (scale) {
+        this.core.outer.removeClass('lg-zoom-drag-transition lg-zoom-dragging');
+        if (scale > 1) {
+            this.core.outer.addClass('lg-zoomed');
+            var $actualSize = this.core.getElementById('lg-actual-size');
+            $actualSize
+                .removeClass(this.settings.actualSizeIcons.zoomIn)
+                .addClass(this.settings.actualSizeIcons.zoomOut);
+        }
+        else {
+            this.resetZoom();
+        }
+        return scale > 1;
+    };
+    Zoom.prototype.getScale = function (scale) {
+        var actualSizeScale = this.getCurrentImageActualSizeScale();
+        if (scale < 1) {
+            scale = 1;
+        }
+        else if (scale > actualSizeScale) {
+            scale = actualSizeScale;
+        }
+        return scale;
+    };
+    Zoom.prototype.init = function () {
+        var _this = this;
+        if (!this.settings.zoom) {
+            return;
+        }
+        this.buildTemplates();
+        this.enableZoomOnSlideItemLoad();
+        var tapped = null;
+        this.core.outer.on('dblclick.lg', function (event) {
+            if (!_this.$LG(event.target).hasClass('lg-image')) {
+                return;
+            }
+            _this.setActualSize(_this.core.index, event);
+        });
+        this.core.outer.on('touchstart.lg', function (event) {
+            var $target = _this.$LG(event.target);
+            if (event.targetTouches.length === 1 &&
+                $target.hasClass('lg-image')) {
+                if (!tapped) {
+                    tapped = setTimeout(function () {
+                        tapped = null;
+                    }, 300);
+                }
+                else {
+                    clearTimeout(tapped);
+                    tapped = null;
+                    event.preventDefault();
+                    _this.setActualSize(_this.core.index, event);
+                }
+            }
+        });
+        // Update zoom on resize and orientationchange
+        this.core.LGel.on(lGEvents.containerResize + ".zoom " + lGEvents.rotateRight + ".zoom " + lGEvents.rotateLeft + ".zoom " + lGEvents.flipHorizontal + ".zoom " + lGEvents.flipVertical + ".zoom", function () {
+            if (!_this.core.lgOpened || !_this.isImageSlide())
+                return;
+            _this.setPageCords();
+            _this.setZoomEssentials();
+            _this.zoomImage(_this.scale);
+        });
+        // Update zoom on resize and orientationchange
+        this.$LG(window).on("scroll.lg.zoom.global" + this.core.lgId, function () {
+            if (!_this.core.lgOpened)
+                return;
+            _this.scrollTop = _this.$LG(window).scrollTop();
+        });
+        this.core.getElementById('lg-zoom-out').on('click.lg', function () {
+            if (_this.core.outer.find('.lg-current .lg-image').get()) {
+                _this.scale -= _this.settings.scale;
+                _this.scale = _this.getScale(_this.scale);
+                _this.beginZoom(_this.scale);
+                _this.zoomImage(_this.scale);
+            }
+        });
+        this.core.getElementById('lg-zoom-in').on('click.lg', function () {
+            _this.zoomIn();
+        });
+        this.core.getElementById('lg-actual-size').on('click.lg', function () {
+            _this.setActualSize(_this.core.index);
+        });
+        this.core.LGel.on(lGEvents.beforeOpen + ".zoom", function () {
+            _this.core.outer.find('.lg-item').removeClass('lg-zoomable');
+        });
+        this.core.LGel.on(lGEvents.afterOpen + ".zoom", function () {
+            _this.scrollTop = _this.$LG(window).scrollTop();
+            // Set the initial value center
+            _this.pageX = _this.core.outer.width() / 2;
+            _this.pageY = _this.core.outer.height() / 2 + _this.scrollTop;
+            _this.scale = 1;
+        });
+        // Reset zoom on slide change
+        this.core.LGel.on(lGEvents.afterSlide + ".zoom", function (event) {
+            var prevIndex = event.detail.prevIndex;
+            _this.scale = 1;
+            _this.positionChanged = false;
+            _this.resetZoom(prevIndex);
+            if (_this.isImageSlide()) {
+                _this.setZoomEssentials();
+            }
+        });
+        // Drag option after zoom
+        this.zoomDrag();
+        this.pinchZoom();
+        this.zoomSwipe();
+        // Store the zoomable timeout value just to clear it while closing
+        this.zoomableTimeout = false;
+        this.positionChanged = false;
+    };
+    Zoom.prototype.zoomIn = function (scale) {
+        // Allow zoom only on image
+        if (!this.isImageSlide()) {
+            return;
+        }
+        if (scale) {
+            this.scale = scale;
+        }
+        else {
+            this.scale += this.settings.scale;
+        }
+        this.scale = this.getScale(this.scale);
+        this.beginZoom(this.scale);
+        this.zoomImage(this.scale);
+    };
+    // Reset zoom effect
+    Zoom.prototype.resetZoom = function (index) {
+        this.core.outer.removeClass('lg-zoomed lg-zoom-drag-transition');
+        var $actualSize = this.core.getElementById('lg-actual-size');
+        var $item = this.core.getSlideItem(index !== undefined ? index : this.core.index);
+        $actualSize
+            .removeClass(this.settings.actualSizeIcons.zoomOut)
+            .addClass(this.settings.actualSizeIcons.zoomIn);
+        $item.find('.lg-img-wrap').first().removeAttr('style');
+        $item.find('.lg-image').first().removeAttr('style');
+        this.scale = 1;
+        this.left = 0;
+        this.top = 0;
+        // Reset pagx pagy values to center
+        this.setPageCords();
+    };
+    Zoom.prototype.getTouchDistance = function (e) {
+        return Math.sqrt((e.targetTouches[0].pageX - e.targetTouches[1].pageX) *
+            (e.targetTouches[0].pageX - e.targetTouches[1].pageX) +
+            (e.targetTouches[0].pageY - e.targetTouches[1].pageY) *
+                (e.targetTouches[0].pageY - e.targetTouches[1].pageY));
+    };
+    Zoom.prototype.pinchZoom = function () {
+        var _this = this;
+        var startDist = 0;
+        var pinchStarted = false;
+        var initScale = 1;
+        var $item = this.core.getSlideItem(this.core.index);
+        this.core.$inner.on('touchstart.lg', function (e) {
+            $item = _this.core.getSlideItem(_this.core.index);
+            if (!_this.isImageSlide()) {
+                return;
+            }
+            if (e.targetTouches.length === 2 &&
+                !_this.core.outer.hasClass('lg-first-slide-loading') &&
+                (_this.$LG(e.target).hasClass('lg-item') ||
+                    $item.get().contains(e.target))) {
+                initScale = _this.scale || 1;
+                _this.core.outer.removeClass('lg-zoom-drag-transition lg-zoom-dragging');
+                _this.core.touchAction = 'pinch';
+                startDist = _this.getTouchDistance(e);
+            }
+        });
+        this.core.$inner.on('touchmove.lg', function (e) {
+            if (e.targetTouches.length === 2 &&
+                _this.core.touchAction === 'pinch' &&
+                (_this.$LG(e.target).hasClass('lg-item') ||
+                    $item.get().contains(e.target))) {
+                e.preventDefault();
+                var endDist = _this.getTouchDistance(e);
+                var distance = startDist - endDist;
+                if (!pinchStarted && Math.abs(distance) > 5) {
+                    pinchStarted = true;
+                }
+                if (pinchStarted) {
+                    _this.scale = Math.max(1, initScale + -distance * 0.008);
+                    _this.zoomImage(_this.scale);
+                }
+            }
+        });
+        this.core.$inner.on('touchend.lg', function (e) {
+            if (_this.core.touchAction === 'pinch' &&
+                (_this.$LG(e.target).hasClass('lg-item') ||
+                    $item.get().contains(e.target))) {
+                pinchStarted = false;
+                startDist = 0;
+                if (_this.scale <= 1) {
+                    _this.resetZoom();
+                }
+                else {
+                    _this.scale = _this.getScale(_this.scale);
+                    _this.zoomImage(_this.scale);
+                    _this.core.outer.addClass('lg-zoomed');
+                }
+                _this.core.touchAction = undefined;
+            }
+        });
+    };
+    Zoom.prototype.touchendZoom = function (startCoords, endCoords, allowX, allowY, touchDuration, rotateValue) {
+        var distanceXnew = endCoords.x - startCoords.x;
+        var distanceYnew = endCoords.y - startCoords.y;
+        var speedX = Math.abs(distanceXnew) / touchDuration + 1;
+        var speedY = Math.abs(distanceYnew) / touchDuration + 1;
+        if (speedX > 2) {
+            speedX += 1;
+        }
+        if (speedY > 2) {
+            speedY += 1;
+        }
+        distanceXnew = distanceXnew * speedX;
+        distanceYnew = distanceYnew * speedY;
+        var _LGel = this.core
+            .getSlideItem(this.core.index)
+            .find('.lg-img-wrap')
+            .first();
+        var distance = {};
+        distance.x = this.left + distanceXnew * this.modifierX;
+        distance.y = this.top + distanceYnew * this.modifierY;
+        var possibleSwipeCords = this.getPossibleSwipeDragCords(rotateValue);
+        if (Math.abs(distanceXnew) > 15 || Math.abs(distanceYnew) > 15) {
+            if (allowY) {
+                if (this.isBeyondPossibleTop(distance.y, possibleSwipeCords.minY)) {
+                    distance.y = possibleSwipeCords.minY;
+                }
+                else if (this.isBeyondPossibleBottom(distance.y, possibleSwipeCords.maxY)) {
+                    distance.y = possibleSwipeCords.maxY;
+                }
+            }
+            if (allowX) {
+                if (this.isBeyondPossibleLeft(distance.x, possibleSwipeCords.minX)) {
+                    distance.x = possibleSwipeCords.minX;
+                }
+                else if (this.isBeyondPossibleRight(distance.x, possibleSwipeCords.maxX)) {
+                    distance.x = possibleSwipeCords.maxX;
+                }
+            }
+            if (allowY) {
+                this.top = distance.y;
+            }
+            else {
+                distance.y = this.top;
+            }
+            if (allowX) {
+                this.left = distance.x;
+            }
+            else {
+                distance.x = this.left;
+            }
+            this.setZoomSwipeStyles(_LGel, distance);
+            this.positionChanged = true;
+        }
+    };
+    Zoom.prototype.getZoomSwipeCords = function (startCoords, endCoords, allowX, allowY, possibleSwipeCords) {
+        var distance = {};
+        if (allowY) {
+            distance.y =
+                this.top + (endCoords.y - startCoords.y) * this.modifierY;
+            if (this.isBeyondPossibleTop(distance.y, possibleSwipeCords.minY)) {
+                var diffMinY = possibleSwipeCords.minY - distance.y;
+                distance.y = possibleSwipeCords.minY - diffMinY / 6;
+            }
+            else if (this.isBeyondPossibleBottom(distance.y, possibleSwipeCords.maxY)) {
+                var diffMaxY = distance.y - possibleSwipeCords.maxY;
+                distance.y = possibleSwipeCords.maxY + diffMaxY / 6;
+            }
+        }
+        else {
+            distance.y = this.top;
+        }
+        if (allowX) {
+            distance.x =
+                this.left + (endCoords.x - startCoords.x) * this.modifierX;
+            if (this.isBeyondPossibleLeft(distance.x, possibleSwipeCords.minX)) {
+                var diffMinX = possibleSwipeCords.minX - distance.x;
+                distance.x = possibleSwipeCords.minX - diffMinX / 6;
+            }
+            else if (this.isBeyondPossibleRight(distance.x, possibleSwipeCords.maxX)) {
+                var difMaxX = distance.x - possibleSwipeCords.maxX;
+                distance.x = possibleSwipeCords.maxX + difMaxX / 6;
+            }
+        }
+        else {
+            distance.x = this.left;
+        }
+        return distance;
+    };
+    Zoom.prototype.isBeyondPossibleLeft = function (x, minX) {
+        return x >= minX;
+    };
+    Zoom.prototype.isBeyondPossibleRight = function (x, maxX) {
+        return x <= maxX;
+    };
+    Zoom.prototype.isBeyondPossibleTop = function (y, minY) {
+        return y >= minY;
+    };
+    Zoom.prototype.isBeyondPossibleBottom = function (y, maxY) {
+        return y <= maxY;
+    };
+    Zoom.prototype.isImageSlide = function () {
+        var currentItem = this.core.galleryItems[this.core.index];
+        return this.core.getSlideType(currentItem) === 'image';
+    };
+    Zoom.prototype.getPossibleSwipeDragCords = function (rotateValue, scale) {
+        var dataScale = scale || this.scale || 1;
+        var elDataScale = Math.abs(dataScale);
+        var _a = this.core.mediaContainerPosition, top = _a.top, bottom = _a.bottom;
+        var topBottomSpacing = Math.abs(top - bottom) / 2;
+        var minY = (this.imageYSize - this.containerRect.height) / 2 +
+            topBottomSpacing * this.modifierX;
+        var maxY = this.containerRect.height - this.imageYSize * elDataScale + minY;
+        var minX = (this.imageXSize - this.containerRect.width) / 2;
+        var maxX = this.containerRect.width - this.imageXSize * elDataScale + minX;
+        var possibleSwipeCords = {
+            minY: minY,
+            maxY: maxY,
+            minX: minX,
+            maxX: maxX,
+        };
+        if (Math.abs(rotateValue) === 90) {
+            possibleSwipeCords = {
+                minY: minX,
+                maxY: maxX,
+                minX: minY,
+                maxX: maxY,
+            };
+        }
+        return possibleSwipeCords;
+    };
+    Zoom.prototype.setZoomSwipeStyles = function (LGel, distance) {
+        LGel.css('transform', 'translate3d(' + distance.x + 'px, ' + distance.y + 'px, 0)');
+    };
+    Zoom.prototype.zoomSwipe = function () {
+        var _this = this;
+        var startCoords = {};
+        var endCoords = {};
+        var isMoved = false;
+        // Allow x direction drag
+        var allowX = false;
+        // Allow Y direction drag
+        var allowY = false;
+        var startTime = new Date();
+        var endTime = new Date();
+        var possibleSwipeCords;
+        var _LGel;
+        var $item = this.core.getSlideItem(this.core.index);
+        this.core.$inner.on('touchstart.lg', function (e) {
+            // Allow zoom only on image
+            if (!_this.isImageSlide()) {
+                return;
+            }
+            $item = _this.core.getSlideItem(_this.core.index);
+            if ((_this.$LG(e.target).hasClass('lg-item') ||
+                $item.get().contains(e.target)) &&
+                e.targetTouches.length === 1 &&
+                _this.core.outer.hasClass('lg-zoomed')) {
+                e.preventDefault();
+                startTime = new Date();
+                _this.core.touchAction = 'zoomSwipe';
+                _LGel = _this.core
+                    .getSlideItem(_this.core.index)
+                    .find('.lg-img-wrap')
+                    .first();
+                var dragAllowedAxises = _this.getDragAllowedAxises(Math.abs(_this.rotateValue));
+                allowY = dragAllowedAxises.allowY;
+                allowX = dragAllowedAxises.allowX;
+                if (allowX || allowY) {
+                    startCoords = _this.getSwipeCords(e, Math.abs(_this.rotateValue));
+                }
+                possibleSwipeCords = _this.getPossibleSwipeDragCords(_this.rotateValue);
+                // reset opacity and transition duration
+                _this.core.outer.addClass('lg-zoom-dragging lg-zoom-drag-transition');
+            }
+        });
+        this.core.$inner.on('touchmove.lg', function (e) {
+            if (e.targetTouches.length === 1 &&
+                _this.core.touchAction === 'zoomSwipe' &&
+                (_this.$LG(e.target).hasClass('lg-item') ||
+                    $item.get().contains(e.target))) {
+                e.preventDefault();
+                _this.core.touchAction = 'zoomSwipe';
+                endCoords = _this.getSwipeCords(e, Math.abs(_this.rotateValue));
+                var distance = _this.getZoomSwipeCords(startCoords, endCoords, allowX, allowY, possibleSwipeCords);
+                if (Math.abs(endCoords.x - startCoords.x) > 15 ||
+                    Math.abs(endCoords.y - startCoords.y) > 15) {
+                    isMoved = true;
+                    _this.setZoomSwipeStyles(_LGel, distance);
+                }
+            }
+        });
+        this.core.$inner.on('touchend.lg', function (e) {
+            if (_this.core.touchAction === 'zoomSwipe' &&
+                (_this.$LG(e.target).hasClass('lg-item') ||
+                    $item.get().contains(e.target))) {
+                _this.core.touchAction = undefined;
+                _this.core.outer.removeClass('lg-zoom-dragging');
+                if (!isMoved) {
+                    return;
+                }
+                isMoved = false;
+                endTime = new Date();
+                var touchDuration = endTime.valueOf() - startTime.valueOf();
+                _this.touchendZoom(startCoords, endCoords, allowX, allowY, touchDuration, _this.rotateValue);
+            }
+        });
+    };
+    Zoom.prototype.zoomDrag = function () {
+        var _this = this;
+        var startCoords = {};
+        var endCoords = {};
+        var isDragging = false;
+        var isMoved = false;
+        // Allow x direction drag
+        var allowX = false;
+        // Allow Y direction drag
+        var allowY = false;
+        var startTime;
+        var endTime;
+        var possibleSwipeCords;
+        var _LGel;
+        this.core.outer.on('mousedown.lg.zoom', function (e) {
+            // Allow zoom only on image
+            if (!_this.isImageSlide()) {
+                return;
+            }
+            var $item = _this.core.getSlideItem(_this.core.index);
+            if (_this.$LG(e.target).hasClass('lg-item') ||
+                $item.get().contains(e.target)) {
+                startTime = new Date();
+                _LGel = _this.core
+                    .getSlideItem(_this.core.index)
+                    .find('.lg-img-wrap')
+                    .first();
+                var dragAllowedAxises = _this.getDragAllowedAxises(Math.abs(_this.rotateValue));
+                allowY = dragAllowedAxises.allowY;
+                allowX = dragAllowedAxises.allowX;
+                if (_this.core.outer.hasClass('lg-zoomed')) {
+                    if (_this.$LG(e.target).hasClass('lg-object') &&
+                        (allowX || allowY)) {
+                        e.preventDefault();
+                        startCoords = _this.getDragCords(e, Math.abs(_this.rotateValue));
+                        possibleSwipeCords = _this.getPossibleSwipeDragCords(_this.rotateValue);
+                        isDragging = true;
+                        // ** Fix for webkit cursor issue https://code.google.com/p/chromium/issues/detail?id=26723
+                        _this.core.outer.get().scrollLeft += 1;
+                        _this.core.outer.get().scrollLeft -= 1;
+                        _this.core.outer
+                            .removeClass('lg-grab')
+                            .addClass('lg-grabbing lg-zoom-drag-transition lg-zoom-dragging');
+                        // reset opacity and transition duration
+                    }
+                }
+            }
+        });
+        this.$LG(window).on("mousemove.lg.zoom.global" + this.core.lgId, function (e) {
+            if (isDragging) {
+                isMoved = true;
+                endCoords = _this.getDragCords(e, Math.abs(_this.rotateValue));
+                var distance = _this.getZoomSwipeCords(startCoords, endCoords, allowX, allowY, possibleSwipeCords);
+                _this.setZoomSwipeStyles(_LGel, distance);
+            }
+        });
+        this.$LG(window).on("mouseup.lg.zoom.global" + this.core.lgId, function (e) {
+            if (isDragging) {
+                endTime = new Date();
+                isDragging = false;
+                _this.core.outer.removeClass('lg-zoom-dragging');
+                // Fix for chrome mouse move on click
+                if (isMoved &&
+                    (startCoords.x !== endCoords.x ||
+                        startCoords.y !== endCoords.y)) {
+                    endCoords = _this.getDragCords(e, Math.abs(_this.rotateValue));
+                    var touchDuration = endTime.valueOf() - startTime.valueOf();
+                    _this.touchendZoom(startCoords, endCoords, allowX, allowY, touchDuration, _this.rotateValue);
+                }
+                isMoved = false;
+            }
+            _this.core.outer.removeClass('lg-grabbing').addClass('lg-grab');
+        });
+    };
+    Zoom.prototype.closeGallery = function () {
+        this.resetZoom();
+    };
+    Zoom.prototype.destroy = function () {
+        // Unbind all events added by lightGallery zoom plugin
+        this.$LG(window).off(".lg.zoom.global" + this.core.lgId);
+        this.core.LGel.off('.lg.zoom');
+        this.core.LGel.off('.zoom');
+        clearTimeout(this.zoomableTimeout);
+        this.zoomableTimeout = false;
+    };
+    return Zoom;
+}());
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Zoom);
+//# sourceMappingURL=lg-zoom.es5.js.map
+
+
+/***/ }),
+
 /***/ "./node_modules/lodash/lodash.js":
 /*!***************************************!*\
   !*** ./node_modules/lodash/lodash.js ***!
@@ -50642,6 +54887,2134 @@ process.umask = function() { return 0; };
 if (typeof this !== 'undefined' && this.Sweetalert2){  this.swal = this.sweetAlert = this.Swal = this.SweetAlert = this.Sweetalert2}
 
 "undefined"!=typeof document&&function(e,t){var n=e.createElement("style");if(e.getElementsByTagName("head")[0].appendChild(n),n.styleSheet)n.styleSheet.disabled||(n.styleSheet.cssText=t);else try{n.innerHTML=t}catch(e){n.innerText=t}}(document,".swal2-popup.swal2-toast{box-sizing:border-box;grid-column:1/4!important;grid-row:1/4!important;grid-template-columns:1fr 99fr 1fr;padding:1em;overflow-y:hidden;background:#fff;box-shadow:0 0 1px rgba(0,0,0,.075),0 1px 2px rgba(0,0,0,.075),1px 2px 4px rgba(0,0,0,.075),1px 3px 8px rgba(0,0,0,.075),2px 4px 16px rgba(0,0,0,.075);pointer-events:all}.swal2-popup.swal2-toast>*{grid-column:2}.swal2-popup.swal2-toast .swal2-title{margin:.5em 1em;padding:0;font-size:1em;text-align:initial}.swal2-popup.swal2-toast .swal2-loading{justify-content:center}.swal2-popup.swal2-toast .swal2-input{height:2em;margin:.5em;font-size:1em}.swal2-popup.swal2-toast .swal2-validation-message{font-size:1em}.swal2-popup.swal2-toast .swal2-footer{margin:.5em 0 0;padding:.5em 0 0;font-size:.8em}.swal2-popup.swal2-toast .swal2-close{grid-column:3/3;grid-row:1/99;align-self:center;width:.8em;height:.8em;margin:0;font-size:2em}.swal2-popup.swal2-toast .swal2-html-container{margin:.5em 1em;padding:0;font-size:1em;text-align:initial}.swal2-popup.swal2-toast .swal2-html-container:empty{padding:0}.swal2-popup.swal2-toast .swal2-loader{grid-column:1;grid-row:1/99;align-self:center;width:2em;height:2em;margin:.25em}.swal2-popup.swal2-toast .swal2-icon{grid-column:1;grid-row:1/99;align-self:center;width:2em;min-width:2em;height:2em;margin:0 .5em 0 0}.swal2-popup.swal2-toast .swal2-icon .swal2-icon-content{display:flex;align-items:center;font-size:1.8em;font-weight:700}.swal2-popup.swal2-toast .swal2-icon.swal2-success .swal2-success-ring{width:2em;height:2em}.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line]{top:.875em;width:1.375em}.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=left]{left:.3125em}.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=right]{right:.3125em}.swal2-popup.swal2-toast .swal2-actions{justify-content:flex-start;height:auto;margin:0;margin-top:.5em;padding:0 .5em}.swal2-popup.swal2-toast .swal2-styled{margin:.25em .5em;padding:.4em .6em;font-size:1em}.swal2-popup.swal2-toast .swal2-success{border-color:#a5dc86}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line]{position:absolute;width:1.6em;height:3em;transform:rotate(45deg);border-radius:50%}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=left]{top:-.8em;left:-.5em;transform:rotate(-45deg);transform-origin:2em 2em;border-radius:4em 0 0 4em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=right]{top:-.25em;left:.9375em;transform-origin:0 1.5em;border-radius:0 4em 4em 0}.swal2-popup.swal2-toast .swal2-success .swal2-success-ring{width:2em;height:2em}.swal2-popup.swal2-toast .swal2-success .swal2-success-fix{top:0;left:.4375em;width:.4375em;height:2.6875em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line]{height:.3125em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line][class$=tip]{top:1.125em;left:.1875em;width:.75em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line][class$=long]{top:.9375em;right:.1875em;width:1.375em}.swal2-popup.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-tip{-webkit-animation:swal2-toast-animate-success-line-tip .75s;animation:swal2-toast-animate-success-line-tip .75s}.swal2-popup.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-long{-webkit-animation:swal2-toast-animate-success-line-long .75s;animation:swal2-toast-animate-success-line-long .75s}.swal2-popup.swal2-toast.swal2-show{-webkit-animation:swal2-toast-show .5s;animation:swal2-toast-show .5s}.swal2-popup.swal2-toast.swal2-hide{-webkit-animation:swal2-toast-hide .1s forwards;animation:swal2-toast-hide .1s forwards}.swal2-container{display:grid;position:fixed;z-index:1060;top:0;right:0;bottom:0;left:0;box-sizing:border-box;grid-template-areas:\"top-start     top            top-end\" \"center-start  center         center-end\" \"bottom-start  bottom-center  bottom-end\";grid-template-rows:minmax(-webkit-min-content,auto) minmax(-webkit-min-content,auto) minmax(-webkit-min-content,auto);grid-template-rows:minmax(min-content,auto) minmax(min-content,auto) minmax(min-content,auto);height:100%;padding:.625em;overflow-x:hidden;transition:background-color .1s;-webkit-overflow-scrolling:touch}.swal2-container.swal2-backdrop-show,.swal2-container.swal2-noanimation{background:rgba(0,0,0,.4)}.swal2-container.swal2-backdrop-hide{background:0 0!important}.swal2-container.swal2-bottom-start,.swal2-container.swal2-center-start,.swal2-container.swal2-top-start{grid-template-columns:minmax(0,1fr) auto auto}.swal2-container.swal2-bottom,.swal2-container.swal2-center,.swal2-container.swal2-top{grid-template-columns:auto minmax(0,1fr) auto}.swal2-container.swal2-bottom-end,.swal2-container.swal2-center-end,.swal2-container.swal2-top-end{grid-template-columns:auto auto minmax(0,1fr)}.swal2-container.swal2-top-start>.swal2-popup{align-self:start}.swal2-container.swal2-top>.swal2-popup{grid-column:2;align-self:start;justify-self:center}.swal2-container.swal2-top-end>.swal2-popup,.swal2-container.swal2-top-right>.swal2-popup{grid-column:3;align-self:start;justify-self:end}.swal2-container.swal2-center-left>.swal2-popup,.swal2-container.swal2-center-start>.swal2-popup{grid-row:2;align-self:center}.swal2-container.swal2-center>.swal2-popup{grid-column:2;grid-row:2;align-self:center;justify-self:center}.swal2-container.swal2-center-end>.swal2-popup,.swal2-container.swal2-center-right>.swal2-popup{grid-column:3;grid-row:2;align-self:center;justify-self:end}.swal2-container.swal2-bottom-left>.swal2-popup,.swal2-container.swal2-bottom-start>.swal2-popup{grid-column:1;grid-row:3;align-self:end}.swal2-container.swal2-bottom>.swal2-popup{grid-column:2;grid-row:3;justify-self:center;align-self:end}.swal2-container.swal2-bottom-end>.swal2-popup,.swal2-container.swal2-bottom-right>.swal2-popup{grid-column:3;grid-row:3;align-self:end;justify-self:end}.swal2-container.swal2-grow-fullscreen>.swal2-popup,.swal2-container.swal2-grow-row>.swal2-popup{grid-column:1/4;width:100%}.swal2-container.swal2-grow-column>.swal2-popup,.swal2-container.swal2-grow-fullscreen>.swal2-popup{grid-row:1/4;align-self:stretch}.swal2-container.swal2-no-transition{transition:none!important}.swal2-popup{display:none;position:relative;box-sizing:border-box;grid-template-columns:minmax(0,100%);width:32em;max-width:100%;padding:0 0 1.25em;border:none;border-radius:5px;background:#fff;color:#545454;font-family:inherit;font-size:1rem}.swal2-popup:focus{outline:0}.swal2-popup.swal2-loading{overflow-y:hidden}.swal2-title{position:relative;max-width:100%;margin:0;padding:.8em 1em 0;color:inherit;font-size:1.875em;font-weight:600;text-align:center;text-transform:none;word-wrap:break-word}.swal2-actions{display:flex;z-index:1;box-sizing:border-box;flex-wrap:wrap;align-items:center;justify-content:center;width:auto;margin:1.25em auto 0;padding:0}.swal2-actions:not(.swal2-loading) .swal2-styled[disabled]{opacity:.4}.swal2-actions:not(.swal2-loading) .swal2-styled:hover{background-image:linear-gradient(rgba(0,0,0,.1),rgba(0,0,0,.1))}.swal2-actions:not(.swal2-loading) .swal2-styled:active{background-image:linear-gradient(rgba(0,0,0,.2),rgba(0,0,0,.2))}.swal2-loader{display:none;align-items:center;justify-content:center;width:2.2em;height:2.2em;margin:0 1.875em;-webkit-animation:swal2-rotate-loading 1.5s linear 0s infinite normal;animation:swal2-rotate-loading 1.5s linear 0s infinite normal;border-width:.25em;border-style:solid;border-radius:100%;border-color:#2778c4 transparent #2778c4 transparent}.swal2-styled{margin:.3125em;padding:.625em 1.1em;transition:box-shadow .1s;box-shadow:0 0 0 3px transparent;font-weight:500}.swal2-styled:not([disabled]){cursor:pointer}.swal2-styled.swal2-confirm{border:0;border-radius:.25em;background:initial;background-color:#7066e0;color:#fff;font-size:1em}.swal2-styled.swal2-confirm:focus{box-shadow:0 0 0 3px rgba(112,102,224,.5)}.swal2-styled.swal2-deny{border:0;border-radius:.25em;background:initial;background-color:#dc3741;color:#fff;font-size:1em}.swal2-styled.swal2-deny:focus{box-shadow:0 0 0 3px rgba(220,55,65,.5)}.swal2-styled.swal2-cancel{border:0;border-radius:.25em;background:initial;background-color:#6e7881;color:#fff;font-size:1em}.swal2-styled.swal2-cancel:focus{box-shadow:0 0 0 3px rgba(110,120,129,.5)}.swal2-styled.swal2-default-outline:focus{box-shadow:0 0 0 3px rgba(100,150,200,.5)}.swal2-styled:focus{outline:0}.swal2-styled::-moz-focus-inner{border:0}.swal2-footer{justify-content:center;margin:1em 0 0;padding:1em 1em 0;border-top:1px solid #eee;color:inherit;font-size:1em}.swal2-timer-progress-bar-container{position:absolute;right:0;bottom:0;left:0;grid-column:auto!important;height:.25em;overflow:hidden;border-bottom-right-radius:5px;border-bottom-left-radius:5px}.swal2-timer-progress-bar{width:100%;height:.25em;background:rgba(0,0,0,.2)}.swal2-image{max-width:100%;margin:2em auto 1em}.swal2-close{z-index:2;align-items:center;justify-content:center;width:1.2em;height:1.2em;margin-top:0;margin-right:0;margin-bottom:-1.2em;padding:0;overflow:hidden;transition:color .1s,box-shadow .1s;border:none;border-radius:5px;background:0 0;color:#ccc;font-family:serif;font-family:monospace;font-size:2.5em;cursor:pointer;justify-self:end}.swal2-close:hover{transform:none;background:0 0;color:#f27474}.swal2-close:focus{outline:0;box-shadow:inset 0 0 0 3px rgba(100,150,200,.5)}.swal2-close::-moz-focus-inner{border:0}.swal2-html-container{z-index:1;justify-content:center;margin:1em 1.6em .3em;padding:0;overflow:auto;color:inherit;font-size:1.125em;font-weight:400;line-height:normal;text-align:center;word-wrap:break-word;word-break:break-word}.swal2-checkbox,.swal2-file,.swal2-input,.swal2-radio,.swal2-select,.swal2-textarea{margin:1em 2em 3px}.swal2-file,.swal2-input,.swal2-textarea{box-sizing:border-box;width:auto;transition:border-color .1s,box-shadow .1s;border:1px solid #d9d9d9;border-radius:.1875em;background:inherit;box-shadow:inset 0 1px 1px rgba(0,0,0,.06),0 0 0 3px transparent;color:inherit;font-size:1.125em}.swal2-file.swal2-inputerror,.swal2-input.swal2-inputerror,.swal2-textarea.swal2-inputerror{border-color:#f27474!important;box-shadow:0 0 2px #f27474!important}.swal2-file:focus,.swal2-input:focus,.swal2-textarea:focus{border:1px solid #b4dbed;outline:0;box-shadow:inset 0 1px 1px rgba(0,0,0,.06),0 0 0 3px rgba(100,150,200,.5)}.swal2-file::-moz-placeholder,.swal2-input::-moz-placeholder,.swal2-textarea::-moz-placeholder{color:#ccc}.swal2-file:-ms-input-placeholder,.swal2-input:-ms-input-placeholder,.swal2-textarea:-ms-input-placeholder{color:#ccc}.swal2-file::placeholder,.swal2-input::placeholder,.swal2-textarea::placeholder{color:#ccc}.swal2-range{margin:1em 2em 3px;background:#fff}.swal2-range input{width:80%}.swal2-range output{width:20%;color:inherit;font-weight:600;text-align:center}.swal2-range input,.swal2-range output{height:2.625em;padding:0;font-size:1.125em;line-height:2.625em}.swal2-input{height:2.625em;padding:0 .75em}.swal2-file{width:75%;margin-right:auto;margin-left:auto;background:inherit;font-size:1.125em}.swal2-textarea{height:6.75em;padding:.75em}.swal2-select{min-width:50%;max-width:100%;padding:.375em .625em;background:inherit;color:inherit;font-size:1.125em}.swal2-checkbox,.swal2-radio{align-items:center;justify-content:center;background:#fff;color:inherit}.swal2-checkbox label,.swal2-radio label{margin:0 .6em;font-size:1.125em}.swal2-checkbox input,.swal2-radio input{flex-shrink:0;margin:0 .4em}.swal2-input-label{display:flex;justify-content:center;margin:1em auto 0}.swal2-validation-message{align-items:center;justify-content:center;margin:1em 0 0;padding:.625em;overflow:hidden;background:#f0f0f0;color:#666;font-size:1em;font-weight:300}.swal2-validation-message::before{content:\"!\";display:inline-block;width:1.5em;min-width:1.5em;height:1.5em;margin:0 .625em;border-radius:50%;background-color:#f27474;color:#fff;font-weight:600;line-height:1.5em;text-align:center}.swal2-icon{position:relative;box-sizing:content-box;justify-content:center;width:5em;height:5em;margin:2.5em auto .6em;border:.25em solid transparent;border-radius:50%;border-color:#000;font-family:inherit;line-height:5em;cursor:default;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.swal2-icon .swal2-icon-content{display:flex;align-items:center;font-size:3.75em}.swal2-icon.swal2-error{border-color:#f27474;color:#f27474}.swal2-icon.swal2-error .swal2-x-mark{position:relative;flex-grow:1}.swal2-icon.swal2-error [class^=swal2-x-mark-line]{display:block;position:absolute;top:2.3125em;width:2.9375em;height:.3125em;border-radius:.125em;background-color:#f27474}.swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=left]{left:1.0625em;transform:rotate(45deg)}.swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=right]{right:1em;transform:rotate(-45deg)}.swal2-icon.swal2-error.swal2-icon-show{-webkit-animation:swal2-animate-error-icon .5s;animation:swal2-animate-error-icon .5s}.swal2-icon.swal2-error.swal2-icon-show .swal2-x-mark{-webkit-animation:swal2-animate-error-x-mark .5s;animation:swal2-animate-error-x-mark .5s}.swal2-icon.swal2-warning{border-color:#facea8;color:#f8bb86}.swal2-icon.swal2-warning.swal2-icon-show{-webkit-animation:swal2-animate-error-icon .5s;animation:swal2-animate-error-icon .5s}.swal2-icon.swal2-warning.swal2-icon-show .swal2-icon-content{-webkit-animation:swal2-animate-i-mark .5s;animation:swal2-animate-i-mark .5s}.swal2-icon.swal2-info{border-color:#9de0f6;color:#3fc3ee}.swal2-icon.swal2-info.swal2-icon-show{-webkit-animation:swal2-animate-error-icon .5s;animation:swal2-animate-error-icon .5s}.swal2-icon.swal2-info.swal2-icon-show .swal2-icon-content{-webkit-animation:swal2-animate-i-mark .8s;animation:swal2-animate-i-mark .8s}.swal2-icon.swal2-question{border-color:#c9dae1;color:#87adbd}.swal2-icon.swal2-question.swal2-icon-show{-webkit-animation:swal2-animate-error-icon .5s;animation:swal2-animate-error-icon .5s}.swal2-icon.swal2-question.swal2-icon-show .swal2-icon-content{-webkit-animation:swal2-animate-question-mark .8s;animation:swal2-animate-question-mark .8s}.swal2-icon.swal2-success{border-color:#a5dc86;color:#a5dc86}.swal2-icon.swal2-success [class^=swal2-success-circular-line]{position:absolute;width:3.75em;height:7.5em;transform:rotate(45deg);border-radius:50%}.swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=left]{top:-.4375em;left:-2.0635em;transform:rotate(-45deg);transform-origin:3.75em 3.75em;border-radius:7.5em 0 0 7.5em}.swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=right]{top:-.6875em;left:1.875em;transform:rotate(-45deg);transform-origin:0 3.75em;border-radius:0 7.5em 7.5em 0}.swal2-icon.swal2-success .swal2-success-ring{position:absolute;z-index:2;top:-.25em;left:-.25em;box-sizing:content-box;width:100%;height:100%;border:.25em solid rgba(165,220,134,.3);border-radius:50%}.swal2-icon.swal2-success .swal2-success-fix{position:absolute;z-index:1;top:.5em;left:1.625em;width:.4375em;height:5.625em;transform:rotate(-45deg)}.swal2-icon.swal2-success [class^=swal2-success-line]{display:block;position:absolute;z-index:2;height:.3125em;border-radius:.125em;background-color:#a5dc86}.swal2-icon.swal2-success [class^=swal2-success-line][class$=tip]{top:2.875em;left:.8125em;width:1.5625em;transform:rotate(45deg)}.swal2-icon.swal2-success [class^=swal2-success-line][class$=long]{top:2.375em;right:.5em;width:2.9375em;transform:rotate(-45deg)}.swal2-icon.swal2-success.swal2-icon-show .swal2-success-line-tip{-webkit-animation:swal2-animate-success-line-tip .75s;animation:swal2-animate-success-line-tip .75s}.swal2-icon.swal2-success.swal2-icon-show .swal2-success-line-long{-webkit-animation:swal2-animate-success-line-long .75s;animation:swal2-animate-success-line-long .75s}.swal2-icon.swal2-success.swal2-icon-show .swal2-success-circular-line-right{-webkit-animation:swal2-rotate-success-circular-line 4.25s ease-in;animation:swal2-rotate-success-circular-line 4.25s ease-in}.swal2-progress-steps{flex-wrap:wrap;align-items:center;max-width:100%;margin:1.25em auto;padding:0;background:inherit;font-weight:600}.swal2-progress-steps li{display:inline-block;position:relative}.swal2-progress-steps .swal2-progress-step{z-index:20;flex-shrink:0;width:2em;height:2em;border-radius:2em;background:#2778c4;color:#fff;line-height:2em;text-align:center}.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step{background:#2778c4}.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step{background:#add8e6;color:#fff}.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step-line{background:#add8e6}.swal2-progress-steps .swal2-progress-step-line{z-index:10;flex-shrink:0;width:2.5em;height:.4em;margin:0 -1px;background:#2778c4}[class^=swal2]{-webkit-tap-highlight-color:transparent}.swal2-show{-webkit-animation:swal2-show .3s;animation:swal2-show .3s}.swal2-hide{-webkit-animation:swal2-hide .15s forwards;animation:swal2-hide .15s forwards}.swal2-noanimation{transition:none}.swal2-scrollbar-measure{position:absolute;top:-9999px;width:50px;height:50px;overflow:scroll}.swal2-rtl .swal2-close{margin-right:initial;margin-left:0}.swal2-rtl .swal2-timer-progress-bar{right:0;left:auto}@-webkit-keyframes swal2-toast-show{0%{transform:translateY(-.625em) rotateZ(2deg)}33%{transform:translateY(0) rotateZ(-2deg)}66%{transform:translateY(.3125em) rotateZ(2deg)}100%{transform:translateY(0) rotateZ(0)}}@keyframes swal2-toast-show{0%{transform:translateY(-.625em) rotateZ(2deg)}33%{transform:translateY(0) rotateZ(-2deg)}66%{transform:translateY(.3125em) rotateZ(2deg)}100%{transform:translateY(0) rotateZ(0)}}@-webkit-keyframes swal2-toast-hide{100%{transform:rotateZ(1deg);opacity:0}}@keyframes swal2-toast-hide{100%{transform:rotateZ(1deg);opacity:0}}@-webkit-keyframes swal2-toast-animate-success-line-tip{0%{top:.5625em;left:.0625em;width:0}54%{top:.125em;left:.125em;width:0}70%{top:.625em;left:-.25em;width:1.625em}84%{top:1.0625em;left:.75em;width:.5em}100%{top:1.125em;left:.1875em;width:.75em}}@keyframes swal2-toast-animate-success-line-tip{0%{top:.5625em;left:.0625em;width:0}54%{top:.125em;left:.125em;width:0}70%{top:.625em;left:-.25em;width:1.625em}84%{top:1.0625em;left:.75em;width:.5em}100%{top:1.125em;left:.1875em;width:.75em}}@-webkit-keyframes swal2-toast-animate-success-line-long{0%{top:1.625em;right:1.375em;width:0}65%{top:1.25em;right:.9375em;width:0}84%{top:.9375em;right:0;width:1.125em}100%{top:.9375em;right:.1875em;width:1.375em}}@keyframes swal2-toast-animate-success-line-long{0%{top:1.625em;right:1.375em;width:0}65%{top:1.25em;right:.9375em;width:0}84%{top:.9375em;right:0;width:1.125em}100%{top:.9375em;right:.1875em;width:1.375em}}@-webkit-keyframes swal2-show{0%{transform:scale(.7)}45%{transform:scale(1.05)}80%{transform:scale(.95)}100%{transform:scale(1)}}@keyframes swal2-show{0%{transform:scale(.7)}45%{transform:scale(1.05)}80%{transform:scale(.95)}100%{transform:scale(1)}}@-webkit-keyframes swal2-hide{0%{transform:scale(1);opacity:1}100%{transform:scale(.5);opacity:0}}@keyframes swal2-hide{0%{transform:scale(1);opacity:1}100%{transform:scale(.5);opacity:0}}@-webkit-keyframes swal2-animate-success-line-tip{0%{top:1.1875em;left:.0625em;width:0}54%{top:1.0625em;left:.125em;width:0}70%{top:2.1875em;left:-.375em;width:3.125em}84%{top:3em;left:1.3125em;width:1.0625em}100%{top:2.8125em;left:.8125em;width:1.5625em}}@keyframes swal2-animate-success-line-tip{0%{top:1.1875em;left:.0625em;width:0}54%{top:1.0625em;left:.125em;width:0}70%{top:2.1875em;left:-.375em;width:3.125em}84%{top:3em;left:1.3125em;width:1.0625em}100%{top:2.8125em;left:.8125em;width:1.5625em}}@-webkit-keyframes swal2-animate-success-line-long{0%{top:3.375em;right:2.875em;width:0}65%{top:3.375em;right:2.875em;width:0}84%{top:2.1875em;right:0;width:3.4375em}100%{top:2.375em;right:.5em;width:2.9375em}}@keyframes swal2-animate-success-line-long{0%{top:3.375em;right:2.875em;width:0}65%{top:3.375em;right:2.875em;width:0}84%{top:2.1875em;right:0;width:3.4375em}100%{top:2.375em;right:.5em;width:2.9375em}}@-webkit-keyframes swal2-rotate-success-circular-line{0%{transform:rotate(-45deg)}5%{transform:rotate(-45deg)}12%{transform:rotate(-405deg)}100%{transform:rotate(-405deg)}}@keyframes swal2-rotate-success-circular-line{0%{transform:rotate(-45deg)}5%{transform:rotate(-45deg)}12%{transform:rotate(-405deg)}100%{transform:rotate(-405deg)}}@-webkit-keyframes swal2-animate-error-x-mark{0%{margin-top:1.625em;transform:scale(.4);opacity:0}50%{margin-top:1.625em;transform:scale(.4);opacity:0}80%{margin-top:-.375em;transform:scale(1.15)}100%{margin-top:0;transform:scale(1);opacity:1}}@keyframes swal2-animate-error-x-mark{0%{margin-top:1.625em;transform:scale(.4);opacity:0}50%{margin-top:1.625em;transform:scale(.4);opacity:0}80%{margin-top:-.375em;transform:scale(1.15)}100%{margin-top:0;transform:scale(1);opacity:1}}@-webkit-keyframes swal2-animate-error-icon{0%{transform:rotateX(100deg);opacity:0}100%{transform:rotateX(0);opacity:1}}@keyframes swal2-animate-error-icon{0%{transform:rotateX(100deg);opacity:0}100%{transform:rotateX(0);opacity:1}}@-webkit-keyframes swal2-rotate-loading{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}@keyframes swal2-rotate-loading{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}@-webkit-keyframes swal2-animate-question-mark{0%{transform:rotateY(-360deg)}100%{transform:rotateY(0)}}@keyframes swal2-animate-question-mark{0%{transform:rotateY(-360deg)}100%{transform:rotateY(0)}}@-webkit-keyframes swal2-animate-i-mark{0%{transform:rotateZ(45deg);opacity:0}25%{transform:rotateZ(-25deg);opacity:.4}50%{transform:rotateZ(15deg);opacity:.8}75%{transform:rotateZ(-5deg);opacity:1}100%{transform:rotateX(0);opacity:1}}@keyframes swal2-animate-i-mark{0%{transform:rotateZ(45deg);opacity:0}25%{transform:rotateZ(-25deg);opacity:.4}50%{transform:rotateZ(15deg);opacity:.8}75%{transform:rotateZ(-5deg);opacity:1}100%{transform:rotateX(0);opacity:1}}body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown){overflow:hidden}body.swal2-height-auto{height:auto!important}body.swal2-no-backdrop .swal2-container{background-color:transparent!important;pointer-events:none}body.swal2-no-backdrop .swal2-container .swal2-popup{pointer-events:all}body.swal2-no-backdrop .swal2-container .swal2-modal{box-shadow:0 0 10px rgba(0,0,0,.4)}@media print{body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown){overflow-y:scroll!important}body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown)>[aria-hidden=true]{display:none}body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) .swal2-container{position:static!important}}body.swal2-toast-shown .swal2-container{box-sizing:border-box;width:360px;max-width:100%;background-color:transparent;pointer-events:none}body.swal2-toast-shown .swal2-container.swal2-top{top:0;right:auto;bottom:auto;left:50%;transform:translateX(-50%)}body.swal2-toast-shown .swal2-container.swal2-top-end,body.swal2-toast-shown .swal2-container.swal2-top-right{top:0;right:0;bottom:auto;left:auto}body.swal2-toast-shown .swal2-container.swal2-top-left,body.swal2-toast-shown .swal2-container.swal2-top-start{top:0;right:auto;bottom:auto;left:0}body.swal2-toast-shown .swal2-container.swal2-center-left,body.swal2-toast-shown .swal2-container.swal2-center-start{top:50%;right:auto;bottom:auto;left:0;transform:translateY(-50%)}body.swal2-toast-shown .swal2-container.swal2-center{top:50%;right:auto;bottom:auto;left:50%;transform:translate(-50%,-50%)}body.swal2-toast-shown .swal2-container.swal2-center-end,body.swal2-toast-shown .swal2-container.swal2-center-right{top:50%;right:0;bottom:auto;left:auto;transform:translateY(-50%)}body.swal2-toast-shown .swal2-container.swal2-bottom-left,body.swal2-toast-shown .swal2-container.swal2-bottom-start{top:auto;right:auto;bottom:0;left:0}body.swal2-toast-shown .swal2-container.swal2-bottom{top:auto;right:auto;bottom:0;left:50%;transform:translateX(-50%)}body.swal2-toast-shown .swal2-container.swal2-bottom-end,body.swal2-toast-shown .swal2-container.swal2-bottom-right{top:auto;right:0;bottom:0;left:auto}");
+
+/***/ }),
+
+/***/ "./node_modules/dropzone/dist/dropzone.mjs":
+/*!*************************************************!*\
+  !*** ./node_modules/dropzone/dist/dropzone.mjs ***!
+  \*************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ $3ed269f2f0fb224b$export$2e2bcd8739ae039),
+/* harmony export */   "Dropzone": () => (/* binding */ $3ed269f2f0fb224b$export$2e2bcd8739ae039)
+/* harmony export */ });
+/* harmony import */ var just_extend__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! just-extend */ "./node_modules/just-extend/index.esm.js");
+
+
+function $parcel$interopDefault(a) {
+  return a && a.__esModule ? a.default : a;
+}
+
+class $4040acfd8584338d$export$2e2bcd8739ae039 {
+    // Add an event listener for given event
+    on(event, fn) {
+        this._callbacks = this._callbacks || {
+        };
+        // Create namespace for this event
+        if (!this._callbacks[event]) this._callbacks[event] = [];
+        this._callbacks[event].push(fn);
+        return this;
+    }
+    emit(event, ...args) {
+        this._callbacks = this._callbacks || {
+        };
+        let callbacks = this._callbacks[event];
+        if (callbacks) for (let callback of callbacks)callback.apply(this, args);
+        // trigger a corresponding DOM event
+        if (this.element) this.element.dispatchEvent(this.makeEvent("dropzone:" + event, {
+            args: args
+        }));
+        return this;
+    }
+    makeEvent(eventName, detail) {
+        let params = {
+            bubbles: true,
+            cancelable: true,
+            detail: detail
+        };
+        if (typeof window.CustomEvent === "function") return new CustomEvent(eventName, params);
+        else {
+            // IE 11 support
+            // https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent
+            var evt = document.createEvent("CustomEvent");
+            evt.initCustomEvent(eventName, params.bubbles, params.cancelable, params.detail);
+            return evt;
+        }
+    }
+    // Remove event listener for given event. If fn is not provided, all event
+    // listeners for that event will be removed. If neither is provided, all
+    // event listeners will be removed.
+    off(event, fn) {
+        if (!this._callbacks || arguments.length === 0) {
+            this._callbacks = {
+            };
+            return this;
+        }
+        // specific event
+        let callbacks = this._callbacks[event];
+        if (!callbacks) return this;
+        // remove all handlers
+        if (arguments.length === 1) {
+            delete this._callbacks[event];
+            return this;
+        }
+        // remove specific handler
+        for(let i = 0; i < callbacks.length; i++){
+            let callback = callbacks[i];
+            if (callback === fn) {
+                callbacks.splice(i, 1);
+                break;
+            }
+        }
+        return this;
+    }
+}
+
+
+
+var $fd6031f88dce2e32$exports = {};
+$fd6031f88dce2e32$exports = "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-image\"><img data-dz-thumbnail=\"\"></div>\n  <div class=\"dz-details\">\n    <div class=\"dz-size\"><span data-dz-size=\"\"></span></div>\n    <div class=\"dz-filename\"><span data-dz-name=\"\"></span></div>\n  </div>\n  <div class=\"dz-progress\">\n    <span class=\"dz-upload\" data-dz-uploadprogress=\"\"></span>\n  </div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage=\"\"></span></div>\n  <div class=\"dz-success-mark\">\n    <svg width=\"54\" height=\"54\" viewBox=\"0 0 54 54\" fill=\"white\" xmlns=\"http://www.w3.org/2000/svg\">\n      <path d=\"M10.2071 29.7929L14.2929 25.7071C14.6834 25.3166 15.3166 25.3166 15.7071 25.7071L21.2929 31.2929C21.6834 31.6834 22.3166 31.6834 22.7071 31.2929L38.2929 15.7071C38.6834 15.3166 39.3166 15.3166 39.7071 15.7071L43.7929 19.7929C44.1834 20.1834 44.1834 20.8166 43.7929 21.2071L22.7071 42.2929C22.3166 42.6834 21.6834 42.6834 21.2929 42.2929L10.2071 31.2071C9.81658 30.8166 9.81658 30.1834 10.2071 29.7929Z\"></path>\n    </svg>\n  </div>\n  <div class=\"dz-error-mark\">\n    <svg width=\"54\" height=\"54\" viewBox=\"0 0 54 54\" fill=\"white\" xmlns=\"http://www.w3.org/2000/svg\">\n      <path d=\"M26.2929 20.2929L19.2071 13.2071C18.8166 12.8166 18.1834 12.8166 17.7929 13.2071L13.2071 17.7929C12.8166 18.1834 12.8166 18.8166 13.2071 19.2071L20.2929 26.2929C20.6834 26.6834 20.6834 27.3166 20.2929 27.7071L13.2071 34.7929C12.8166 35.1834 12.8166 35.8166 13.2071 36.2071L17.7929 40.7929C18.1834 41.1834 18.8166 41.1834 19.2071 40.7929L26.2929 33.7071C26.6834 33.3166 27.3166 33.3166 27.7071 33.7071L34.7929 40.7929C35.1834 41.1834 35.8166 41.1834 36.2071 40.7929L40.7929 36.2071C41.1834 35.8166 41.1834 35.1834 40.7929 34.7929L33.7071 27.7071C33.3166 27.3166 33.3166 26.6834 33.7071 26.2929L40.7929 19.2071C41.1834 18.8166 41.1834 18.1834 40.7929 17.7929L36.2071 13.2071C35.8166 12.8166 35.1834 12.8166 34.7929 13.2071L27.7071 20.2929C27.3166 20.6834 26.6834 20.6834 26.2929 20.2929Z\"></path>\n    </svg>\n  </div>\n</div>\n";
+
+
+let $4ca367182776f80b$var$defaultOptions = {
+    /**
+   * Has to be specified on elements other than form (or when the form doesn't
+   * have an `action` attribute).
+   *
+   * You can also provide a function that will be called with `files` and
+   * `dataBlocks`  and must return the url as string.
+   */ url: null,
+    /**
+   * Can be changed to `"put"` if necessary. You can also provide a function
+   * that will be called with `files` and must return the method (since `v3.12.0`).
+   */ method: "post",
+    /**
+   * Will be set on the XHRequest.
+   */ withCredentials: false,
+    /**
+   * The timeout for the XHR requests in milliseconds (since `v4.4.0`).
+   * If set to null or 0, no timeout is going to be set.
+   */ timeout: null,
+    /**
+   * How many file uploads to process in parallel (See the
+   * Enqueuing file uploads documentation section for more info)
+   */ parallelUploads: 2,
+    /**
+   * Whether to send multiple files in one request. If
+   * this it set to true, then the fallback file input element will
+   * have the `multiple` attribute as well. This option will
+   * also trigger additional events (like `processingmultiple`). See the events
+   * documentation section for more information.
+   */ uploadMultiple: false,
+    /**
+   * Whether you want files to be uploaded in chunks to your server. This can't be
+   * used in combination with `uploadMultiple`.
+   *
+   * See [chunksUploaded](#config-chunksUploaded) for the callback to finalise an upload.
+   */ chunking: false,
+    /**
+   * If `chunking` is enabled, this defines whether **every** file should be chunked,
+   * even if the file size is below chunkSize. This means, that the additional chunk
+   * form data will be submitted and the `chunksUploaded` callback will be invoked.
+   */ forceChunking: false,
+    /**
+   * If `chunking` is `true`, then this defines the chunk size in bytes.
+   */ chunkSize: 2097152,
+    /**
+   * If `true`, the individual chunks of a file are being uploaded simultaneously.
+   */ parallelChunkUploads: false,
+    /**
+   * Whether a chunk should be retried if it fails.
+   */ retryChunks: false,
+    /**
+   * If `retryChunks` is true, how many times should it be retried.
+   */ retryChunksLimit: 3,
+    /**
+   * The maximum filesize (in MiB) that is allowed to be uploaded.
+   */ maxFilesize: 256,
+    /**
+   * The name of the file param that gets transferred.
+   * **NOTE**: If you have the option  `uploadMultiple` set to `true`, then
+   * Dropzone will append `[]` to the name.
+   */ paramName: "file",
+    /**
+   * Whether thumbnails for images should be generated
+   */ createImageThumbnails: true,
+    /**
+   * In MB. When the filename exceeds this limit, the thumbnail will not be generated.
+   */ maxThumbnailFilesize: 10,
+    /**
+   * If `null`, the ratio of the image will be used to calculate it.
+   */ thumbnailWidth: 120,
+    /**
+   * The same as `thumbnailWidth`. If both are null, images will not be resized.
+   */ thumbnailHeight: 120,
+    /**
+   * How the images should be scaled down in case both, `thumbnailWidth` and `thumbnailHeight` are provided.
+   * Can be either `contain` or `crop`.
+   */ thumbnailMethod: "crop",
+    /**
+   * If set, images will be resized to these dimensions before being **uploaded**.
+   * If only one, `resizeWidth` **or** `resizeHeight` is provided, the original aspect
+   * ratio of the file will be preserved.
+   *
+   * The `options.transformFile` function uses these options, so if the `transformFile` function
+   * is overridden, these options don't do anything.
+   */ resizeWidth: null,
+    /**
+   * See `resizeWidth`.
+   */ resizeHeight: null,
+    /**
+   * The mime type of the resized image (before it gets uploaded to the server).
+   * If `null` the original mime type will be used. To force jpeg, for example, use `image/jpeg`.
+   * See `resizeWidth` for more information.
+   */ resizeMimeType: null,
+    /**
+   * The quality of the resized images. See `resizeWidth`.
+   */ resizeQuality: 0.8,
+    /**
+   * How the images should be scaled down in case both, `resizeWidth` and `resizeHeight` are provided.
+   * Can be either `contain` or `crop`.
+   */ resizeMethod: "contain",
+    /**
+   * The base that is used to calculate the **displayed** filesize. You can
+   * change this to 1024 if you would rather display kibibytes, mebibytes,
+   * etc... 1024 is technically incorrect, because `1024 bytes` are `1 kibibyte`
+   * not `1 kilobyte`. You can change this to `1024` if you don't care about
+   * validity.
+   */ filesizeBase: 1000,
+    /**
+   * If not `null` defines how many files this Dropzone handles. If it exceeds,
+   * the event `maxfilesexceeded` will be called. The dropzone element gets the
+   * class `dz-max-files-reached` accordingly so you can provide visual
+   * feedback.
+   */ maxFiles: null,
+    /**
+   * An optional object to send additional headers to the server. Eg:
+   * `{ "My-Awesome-Header": "header value" }`
+   */ headers: null,
+    /**
+   * Should the default headers be set or not?
+   * Accept: application/json <- for requesting json response
+   * Cache-Control: no-cache <- Request shouldnt be cached
+   * X-Requested-With: XMLHttpRequest <- We sent the request via XMLHttpRequest
+   */ defaultHeaders: true,
+    /**
+   * If `true`, the dropzone element itself will be clickable, if `false`
+   * nothing will be clickable.
+   *
+   * You can also pass an HTML element, a CSS selector (for multiple elements)
+   * or an array of those. In that case, all of those elements will trigger an
+   * upload when clicked.
+   */ clickable: true,
+    /**
+   * Whether hidden files in directories should be ignored.
+   */ ignoreHiddenFiles: true,
+    /**
+   * The default implementation of `accept` checks the file's mime type or
+   * extension against this list. This is a comma separated list of mime
+   * types or file extensions.
+   *
+   * Eg.: `image/*,application/pdf,.psd`
+   *
+   * If the Dropzone is `clickable` this option will also be used as
+   * [`accept`](https://developer.mozilla.org/en-US/docs/HTML/Element/input#attr-accept)
+   * parameter on the hidden file input as well.
+   */ acceptedFiles: null,
+    /**
+   * **Deprecated!**
+   * Use acceptedFiles instead.
+   */ acceptedMimeTypes: null,
+    /**
+   * If false, files will be added to the queue but the queue will not be
+   * processed automatically.
+   * This can be useful if you need some additional user input before sending
+   * files (or if you want want all files sent at once).
+   * If you're ready to send the file simply call `myDropzone.processQueue()`.
+   *
+   * See the [enqueuing file uploads](#enqueuing-file-uploads) documentation
+   * section for more information.
+   */ autoProcessQueue: true,
+    /**
+   * If false, files added to the dropzone will not be queued by default.
+   * You'll have to call `enqueueFile(file)` manually.
+   */ autoQueue: true,
+    /**
+   * If `true`, this will add a link to every file preview to remove or cancel (if
+   * already uploading) the file. The `dictCancelUpload`, `dictCancelUploadConfirmation`
+   * and `dictRemoveFile` options are used for the wording.
+   */ addRemoveLinks: false,
+    /**
+   * Defines where to display the file previews – if `null` the
+   * Dropzone element itself is used. Can be a plain `HTMLElement` or a CSS
+   * selector. The element should have the `dropzone-previews` class so
+   * the previews are displayed properly.
+   */ previewsContainer: null,
+    /**
+   * Set this to `true` if you don't want previews to be shown.
+   */ disablePreviews: false,
+    /**
+   * This is the element the hidden input field (which is used when clicking on the
+   * dropzone to trigger file selection) will be appended to. This might
+   * be important in case you use frameworks to switch the content of your page.
+   *
+   * Can be a selector string, or an element directly.
+   */ hiddenInputContainer: "body",
+    /**
+   * If null, no capture type will be specified
+   * If camera, mobile devices will skip the file selection and choose camera
+   * If microphone, mobile devices will skip the file selection and choose the microphone
+   * If camcorder, mobile devices will skip the file selection and choose the camera in video mode
+   * On apple devices multiple must be set to false.  AcceptedFiles may need to
+   * be set to an appropriate mime type (e.g. "image/*", "audio/*", or "video/*").
+   */ capture: null,
+    /**
+   * **Deprecated**. Use `renameFile` instead.
+   */ renameFilename: null,
+    /**
+   * A function that is invoked before the file is uploaded to the server and renames the file.
+   * This function gets the `File` as argument and can use the `file.name`. The actual name of the
+   * file that gets used during the upload can be accessed through `file.upload.filename`.
+   */ renameFile: null,
+    /**
+   * If `true` the fallback will be forced. This is very useful to test your server
+   * implementations first and make sure that everything works as
+   * expected without dropzone if you experience problems, and to test
+   * how your fallbacks will look.
+   */ forceFallback: false,
+    /**
+   * The text used before any files are dropped.
+   */ dictDefaultMessage: "Drop files here to upload",
+    /**
+   * The text that replaces the default message text it the browser is not supported.
+   */ dictFallbackMessage: "Your browser does not support drag'n'drop file uploads.",
+    /**
+   * The text that will be added before the fallback form.
+   * If you provide a  fallback element yourself, or if this option is `null` this will
+   * be ignored.
+   */ dictFallbackText: "Please use the fallback form below to upload your files like in the olden days.",
+    /**
+   * If the filesize is too big.
+   * `{{filesize}}` and `{{maxFilesize}}` will be replaced with the respective configuration values.
+   */ dictFileTooBig: "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.",
+    /**
+   * If the file doesn't match the file type.
+   */ dictInvalidFileType: "You can't upload files of this type.",
+    /**
+   * If the server response was invalid.
+   * `{{statusCode}}` will be replaced with the servers status code.
+   */ dictResponseError: "Server responded with {{statusCode}} code.",
+    /**
+   * If `addRemoveLinks` is true, the text to be used for the cancel upload link.
+   */ dictCancelUpload: "Cancel upload",
+    /**
+   * The text that is displayed if an upload was manually canceled
+   */ dictUploadCanceled: "Upload canceled.",
+    /**
+   * If `addRemoveLinks` is true, the text to be used for confirmation when cancelling upload.
+   */ dictCancelUploadConfirmation: "Are you sure you want to cancel this upload?",
+    /**
+   * If `addRemoveLinks` is true, the text to be used to remove a file.
+   */ dictRemoveFile: "Remove file",
+    /**
+   * If this is not null, then the user will be prompted before removing a file.
+   */ dictRemoveFileConfirmation: null,
+    /**
+   * Displayed if `maxFiles` is st and exceeded.
+   * The string `{{maxFiles}}` will be replaced by the configuration value.
+   */ dictMaxFilesExceeded: "You can not upload any more files.",
+    /**
+   * Allows you to translate the different units. Starting with `tb` for terabytes and going down to
+   * `b` for bytes.
+   */ dictFileSizeUnits: {
+        tb: "TB",
+        gb: "GB",
+        mb: "MB",
+        kb: "KB",
+        b: "b"
+    },
+    /**
+   * Called when dropzone initialized
+   * You can add event listeners here
+   */ init () {
+    },
+    /**
+   * Can be an **object** of additional parameters to transfer to the server, **or** a `Function`
+   * that gets invoked with the `files`, `xhr` and, if it's a chunked upload, `chunk` arguments. In case
+   * of a function, this needs to return a map.
+   *
+   * The default implementation does nothing for normal uploads, but adds relevant information for
+   * chunked uploads.
+   *
+   * This is the same as adding hidden input fields in the form element.
+   */ params (files, xhr, chunk) {
+        if (chunk) return {
+            dzuuid: chunk.file.upload.uuid,
+            dzchunkindex: chunk.index,
+            dztotalfilesize: chunk.file.size,
+            dzchunksize: this.options.chunkSize,
+            dztotalchunkcount: chunk.file.upload.totalChunkCount,
+            dzchunkbyteoffset: chunk.index * this.options.chunkSize
+        };
+    },
+    /**
+   * A function that gets a [file](https://developer.mozilla.org/en-US/docs/DOM/File)
+   * and a `done` function as parameters.
+   *
+   * If the done function is invoked without arguments, the file is "accepted" and will
+   * be processed. If you pass an error message, the file is rejected, and the error
+   * message will be displayed.
+   * This function will not be called if the file is too big or doesn't match the mime types.
+   */ accept (file, done) {
+        return done();
+    },
+    /**
+   * The callback that will be invoked when all chunks have been uploaded for a file.
+   * It gets the file for which the chunks have been uploaded as the first parameter,
+   * and the `done` function as second. `done()` needs to be invoked when everything
+   * needed to finish the upload process is done.
+   */ chunksUploaded: function(file, done) {
+        done();
+    },
+    /**
+   * Sends the file as binary blob in body instead of form data.
+   * If this is set, the `params` option will be ignored.
+   * It's an error to set this to `true` along with `uploadMultiple` since
+   * multiple files cannot be in a single binary body.
+   */ binaryBody: false,
+    /**
+   * Gets called when the browser is not supported.
+   * The default implementation shows the fallback input field and adds
+   * a text.
+   */ fallback () {
+        // This code should pass in IE7... :(
+        let messageElement;
+        this.element.className = `${this.element.className} dz-browser-not-supported`;
+        for (let child of this.element.getElementsByTagName("div"))if (/(^| )dz-message($| )/.test(child.className)) {
+            messageElement = child;
+            child.className = "dz-message"; // Removes the 'dz-default' class
+            break;
+        }
+        if (!messageElement) {
+            messageElement = $3ed269f2f0fb224b$export$2e2bcd8739ae039.createElement('<div class="dz-message"><span></span></div>');
+            this.element.appendChild(messageElement);
+        }
+        let span = messageElement.getElementsByTagName("span")[0];
+        if (span) {
+            if (span.textContent != null) span.textContent = this.options.dictFallbackMessage;
+            else if (span.innerText != null) span.innerText = this.options.dictFallbackMessage;
+        }
+        return this.element.appendChild(this.getFallbackForm());
+    },
+    /**
+   * Gets called to calculate the thumbnail dimensions.
+   *
+   * It gets `file`, `width` and `height` (both may be `null`) as parameters and must return an object containing:
+   *
+   *  - `srcWidth` & `srcHeight` (required)
+   *  - `trgWidth` & `trgHeight` (required)
+   *  - `srcX` & `srcY` (optional, default `0`)
+   *  - `trgX` & `trgY` (optional, default `0`)
+   *
+   * Those values are going to be used by `ctx.drawImage()`.
+   */ resize (file, width, height, resizeMethod) {
+        let info = {
+            srcX: 0,
+            srcY: 0,
+            srcWidth: file.width,
+            srcHeight: file.height
+        };
+        let srcRatio = file.width / file.height;
+        // Automatically calculate dimensions if not specified
+        if (width == null && height == null) {
+            width = info.srcWidth;
+            height = info.srcHeight;
+        } else if (width == null) width = height * srcRatio;
+        else if (height == null) height = width / srcRatio;
+        // Make sure images aren't upscaled
+        width = Math.min(width, info.srcWidth);
+        height = Math.min(height, info.srcHeight);
+        let trgRatio = width / height;
+        if (info.srcWidth > width || info.srcHeight > height) {
+            // Image is bigger and needs rescaling
+            if (resizeMethod === "crop") {
+                if (srcRatio > trgRatio) {
+                    info.srcHeight = file.height;
+                    info.srcWidth = info.srcHeight * trgRatio;
+                } else {
+                    info.srcWidth = file.width;
+                    info.srcHeight = info.srcWidth / trgRatio;
+                }
+            } else if (resizeMethod === "contain") {
+                // Method 'contain'
+                if (srcRatio > trgRatio) height = width / srcRatio;
+                else width = height * srcRatio;
+            } else throw new Error(`Unknown resizeMethod '${resizeMethod}'`);
+        }
+        info.srcX = (file.width - info.srcWidth) / 2;
+        info.srcY = (file.height - info.srcHeight) / 2;
+        info.trgWidth = width;
+        info.trgHeight = height;
+        return info;
+    },
+    /**
+   * Can be used to transform the file (for example, resize an image if necessary).
+   *
+   * The default implementation uses `resizeWidth` and `resizeHeight` (if provided) and resizes
+   * images according to those dimensions.
+   *
+   * Gets the `file` as the first parameter, and a `done()` function as the second, that needs
+   * to be invoked with the file when the transformation is done.
+   */ transformFile (file, done) {
+        if ((this.options.resizeWidth || this.options.resizeHeight) && file.type.match(/image.*/)) return this.resizeImage(file, this.options.resizeWidth, this.options.resizeHeight, this.options.resizeMethod, done);
+        else return done(file);
+    },
+    /**
+   * A string that contains the template used for each dropped
+   * file. Change it to fulfill your needs but make sure to properly
+   * provide all elements.
+   *
+   * If you want to use an actual HTML element instead of providing a String
+   * as a config option, you could create a div with the id `tpl`,
+   * put the template inside it and provide the element like this:
+   *
+   *     document
+   *       .querySelector('#tpl')
+   *       .innerHTML
+   *
+   */ previewTemplate: (/*@__PURE__*/$parcel$interopDefault($fd6031f88dce2e32$exports)),
+    /*
+   Those functions register themselves to the events on init and handle all
+   the user interface specific stuff. Overwriting them won't break the upload
+   but can break the way it's displayed.
+   You can overwrite them if you don't like the default behavior. If you just
+   want to add an additional event handler, register it on the dropzone object
+   and don't overwrite those options.
+   */ // Those are self explanatory and simply concern the DragnDrop.
+    drop (e) {
+        return this.element.classList.remove("dz-drag-hover");
+    },
+    dragstart (e) {
+    },
+    dragend (e) {
+        return this.element.classList.remove("dz-drag-hover");
+    },
+    dragenter (e) {
+        return this.element.classList.add("dz-drag-hover");
+    },
+    dragover (e) {
+        return this.element.classList.add("dz-drag-hover");
+    },
+    dragleave (e) {
+        return this.element.classList.remove("dz-drag-hover");
+    },
+    paste (e) {
+    },
+    // Called whenever there are no files left in the dropzone anymore, and the
+    // dropzone should be displayed as if in the initial state.
+    reset () {
+        return this.element.classList.remove("dz-started");
+    },
+    // Called when a file is added to the queue
+    // Receives `file`
+    addedfile (file) {
+        if (this.element === this.previewsContainer) this.element.classList.add("dz-started");
+        if (this.previewsContainer && !this.options.disablePreviews) {
+            file.previewElement = $3ed269f2f0fb224b$export$2e2bcd8739ae039.createElement(this.options.previewTemplate.trim());
+            file.previewTemplate = file.previewElement; // Backwards compatibility
+            this.previewsContainer.appendChild(file.previewElement);
+            for (var node of file.previewElement.querySelectorAll("[data-dz-name]"))node.textContent = file.name;
+            for (node of file.previewElement.querySelectorAll("[data-dz-size]"))node.innerHTML = this.filesize(file.size);
+            if (this.options.addRemoveLinks) {
+                file._removeLink = $3ed269f2f0fb224b$export$2e2bcd8739ae039.createElement(`<a class="dz-remove" href="javascript:undefined;" data-dz-remove>${this.options.dictRemoveFile}</a>`);
+                file.previewElement.appendChild(file._removeLink);
+            }
+            let removeFileEvent = (e)=>{
+                e.preventDefault();
+                e.stopPropagation();
+                if (file.status === $3ed269f2f0fb224b$export$2e2bcd8739ae039.UPLOADING) return $3ed269f2f0fb224b$export$2e2bcd8739ae039.confirm(this.options.dictCancelUploadConfirmation, ()=>this.removeFile(file)
+                );
+                else {
+                    if (this.options.dictRemoveFileConfirmation) return $3ed269f2f0fb224b$export$2e2bcd8739ae039.confirm(this.options.dictRemoveFileConfirmation, ()=>this.removeFile(file)
+                    );
+                    else return this.removeFile(file);
+                }
+            };
+            for (let removeLink of file.previewElement.querySelectorAll("[data-dz-remove]"))removeLink.addEventListener("click", removeFileEvent);
+        }
+    },
+    // Called whenever a file is removed.
+    removedfile (file) {
+        if (file.previewElement != null && file.previewElement.parentNode != null) file.previewElement.parentNode.removeChild(file.previewElement);
+        return this._updateMaxFilesReachedClass();
+    },
+    // Called when a thumbnail has been generated
+    // Receives `file` and `dataUrl`
+    thumbnail (file, dataUrl) {
+        if (file.previewElement) {
+            file.previewElement.classList.remove("dz-file-preview");
+            for (let thumbnailElement of file.previewElement.querySelectorAll("[data-dz-thumbnail]")){
+                thumbnailElement.alt = file.name;
+                thumbnailElement.src = dataUrl;
+            }
+            return setTimeout(()=>file.previewElement.classList.add("dz-image-preview")
+            , 1);
+        }
+    },
+    // Called whenever an error occurs
+    // Receives `file` and `message`
+    error (file, message) {
+        if (file.previewElement) {
+            file.previewElement.classList.add("dz-error");
+            if (typeof message !== "string" && message.error) message = message.error;
+            for (let node of file.previewElement.querySelectorAll("[data-dz-errormessage]"))node.textContent = message;
+        }
+    },
+    errormultiple () {
+    },
+    // Called when a file gets processed. Since there is a cue, not all added
+    // files are processed immediately.
+    // Receives `file`
+    processing (file) {
+        if (file.previewElement) {
+            file.previewElement.classList.add("dz-processing");
+            if (file._removeLink) return file._removeLink.innerHTML = this.options.dictCancelUpload;
+        }
+    },
+    processingmultiple () {
+    },
+    // Called whenever the upload progress gets updated.
+    // Receives `file`, `progress` (percentage 0-100) and `bytesSent`.
+    // To get the total number of bytes of the file, use `file.size`
+    uploadprogress (file, progress, bytesSent) {
+        if (file.previewElement) for (let node of file.previewElement.querySelectorAll("[data-dz-uploadprogress]"))node.nodeName === "PROGRESS" ? node.value = progress : node.style.width = `${progress}%`;
+    },
+    // Called whenever the total upload progress gets updated.
+    // Called with totalUploadProgress (0-100), totalBytes and totalBytesSent
+    totaluploadprogress () {
+    },
+    // Called just before the file is sent. Gets the `xhr` object as second
+    // parameter, so you can modify it (for example to add a CSRF token) and a
+    // `formData` object to add additional information.
+    sending () {
+    },
+    sendingmultiple () {
+    },
+    // When the complete upload is finished and successful
+    // Receives `file`
+    success (file) {
+        if (file.previewElement) return file.previewElement.classList.add("dz-success");
+    },
+    successmultiple () {
+    },
+    // When the upload is canceled.
+    canceled (file) {
+        return this.emit("error", file, this.options.dictUploadCanceled);
+    },
+    canceledmultiple () {
+    },
+    // When the upload is finished, either with success or an error.
+    // Receives `file`
+    complete (file) {
+        if (file._removeLink) file._removeLink.innerHTML = this.options.dictRemoveFile;
+        if (file.previewElement) return file.previewElement.classList.add("dz-complete");
+    },
+    completemultiple () {
+    },
+    maxfilesexceeded () {
+    },
+    maxfilesreached () {
+    },
+    queuecomplete () {
+    },
+    addedfiles () {
+    }
+};
+var $4ca367182776f80b$export$2e2bcd8739ae039 = $4ca367182776f80b$var$defaultOptions;
+
+
+class $3ed269f2f0fb224b$export$2e2bcd8739ae039 extends $4040acfd8584338d$export$2e2bcd8739ae039 {
+    static initClass() {
+        // Exposing the emitter class, mainly for tests
+        this.prototype.Emitter = $4040acfd8584338d$export$2e2bcd8739ae039;
+        /*
+     This is a list of all available events you can register on a dropzone object.
+
+     You can register an event handler like this:
+
+     dropzone.on("dragEnter", function() { });
+
+     */ this.prototype.events = [
+            "drop",
+            "dragstart",
+            "dragend",
+            "dragenter",
+            "dragover",
+            "dragleave",
+            "addedfile",
+            "addedfiles",
+            "removedfile",
+            "thumbnail",
+            "error",
+            "errormultiple",
+            "processing",
+            "processingmultiple",
+            "uploadprogress",
+            "totaluploadprogress",
+            "sending",
+            "sendingmultiple",
+            "success",
+            "successmultiple",
+            "canceled",
+            "canceledmultiple",
+            "complete",
+            "completemultiple",
+            "reset",
+            "maxfilesexceeded",
+            "maxfilesreached",
+            "queuecomplete", 
+        ];
+        this.prototype._thumbnailQueue = [];
+        this.prototype._processingThumbnail = false;
+    }
+    // Returns all files that have been accepted
+    getAcceptedFiles() {
+        return this.files.filter((file)=>file.accepted
+        ).map((file)=>file
+        );
+    }
+    // Returns all files that have been rejected
+    // Not sure when that's going to be useful, but added for completeness.
+    getRejectedFiles() {
+        return this.files.filter((file)=>!file.accepted
+        ).map((file)=>file
+        );
+    }
+    getFilesWithStatus(status) {
+        return this.files.filter((file)=>file.status === status
+        ).map((file)=>file
+        );
+    }
+    // Returns all files that are in the queue
+    getQueuedFiles() {
+        return this.getFilesWithStatus($3ed269f2f0fb224b$export$2e2bcd8739ae039.QUEUED);
+    }
+    getUploadingFiles() {
+        return this.getFilesWithStatus($3ed269f2f0fb224b$export$2e2bcd8739ae039.UPLOADING);
+    }
+    getAddedFiles() {
+        return this.getFilesWithStatus($3ed269f2f0fb224b$export$2e2bcd8739ae039.ADDED);
+    }
+    // Files that are either queued or uploading
+    getActiveFiles() {
+        return this.files.filter((file)=>file.status === $3ed269f2f0fb224b$export$2e2bcd8739ae039.UPLOADING || file.status === $3ed269f2f0fb224b$export$2e2bcd8739ae039.QUEUED
+        ).map((file)=>file
+        );
+    }
+    // The function that gets called when Dropzone is initialized. You
+    // can (and should) setup event listeners inside this function.
+    init() {
+        // In case it isn't set already
+        if (this.element.tagName === "form") this.element.setAttribute("enctype", "multipart/form-data");
+        if (this.element.classList.contains("dropzone") && !this.element.querySelector(".dz-message")) this.element.appendChild($3ed269f2f0fb224b$export$2e2bcd8739ae039.createElement(`<div class="dz-default dz-message"><button class="dz-button" type="button">${this.options.dictDefaultMessage}</button></div>`));
+        if (this.clickableElements.length) {
+            let setupHiddenFileInput = ()=>{
+                if (this.hiddenFileInput) this.hiddenFileInput.parentNode.removeChild(this.hiddenFileInput);
+                this.hiddenFileInput = document.createElement("input");
+                this.hiddenFileInput.setAttribute("type", "file");
+                if (this.options.maxFiles === null || this.options.maxFiles > 1) this.hiddenFileInput.setAttribute("multiple", "multiple");
+                this.hiddenFileInput.className = "dz-hidden-input";
+                if (this.options.acceptedFiles !== null) this.hiddenFileInput.setAttribute("accept", this.options.acceptedFiles);
+                if (this.options.capture !== null) this.hiddenFileInput.setAttribute("capture", this.options.capture);
+                // Making sure that no one can "tab" into this field.
+                this.hiddenFileInput.setAttribute("tabindex", "-1");
+                // Not setting `display="none"` because some browsers don't accept clicks
+                // on elements that aren't displayed.
+                this.hiddenFileInput.style.visibility = "hidden";
+                this.hiddenFileInput.style.position = "absolute";
+                this.hiddenFileInput.style.top = "0";
+                this.hiddenFileInput.style.left = "0";
+                this.hiddenFileInput.style.height = "0";
+                this.hiddenFileInput.style.width = "0";
+                $3ed269f2f0fb224b$export$2e2bcd8739ae039.getElement(this.options.hiddenInputContainer, "hiddenInputContainer").appendChild(this.hiddenFileInput);
+                this.hiddenFileInput.addEventListener("change", ()=>{
+                    let { files: files  } = this.hiddenFileInput;
+                    if (files.length) for (let file of files)this.addFile(file);
+                    this.emit("addedfiles", files);
+                    setupHiddenFileInput();
+                });
+            };
+            setupHiddenFileInput();
+        }
+        this.URL = window.URL !== null ? window.URL : window.webkitURL;
+        // Setup all event listeners on the Dropzone object itself.
+        // They're not in @setupEventListeners() because they shouldn't be removed
+        // again when the dropzone gets disabled.
+        for (let eventName of this.events)this.on(eventName, this.options[eventName]);
+        this.on("uploadprogress", ()=>this.updateTotalUploadProgress()
+        );
+        this.on("removedfile", ()=>this.updateTotalUploadProgress()
+        );
+        this.on("canceled", (file)=>this.emit("complete", file)
+        );
+        // Emit a `queuecomplete` event if all files finished uploading.
+        this.on("complete", (file)=>{
+            if (this.getAddedFiles().length === 0 && this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) // This needs to be deferred so that `queuecomplete` really triggers after `complete`
+            return setTimeout(()=>this.emit("queuecomplete")
+            , 0);
+        });
+        const containsFiles = function(e) {
+            if (e.dataTransfer.types) // Because e.dataTransfer.types is an Object in
+            // IE, we need to iterate like this instead of
+            // using e.dataTransfer.types.some()
+            for(var i = 0; i < e.dataTransfer.types.length; i++){
+                if (e.dataTransfer.types[i] === "Files") return true;
+            }
+            return false;
+        };
+        let noPropagation = function(e) {
+            // If there are no files, we don't want to stop
+            // propagation so we don't interfere with other
+            // drag and drop behaviour.
+            if (!containsFiles(e)) return;
+            e.stopPropagation();
+            if (e.preventDefault) return e.preventDefault();
+            else return e.returnValue = false;
+        };
+        // Create the listeners
+        this.listeners = [
+            {
+                element: this.element,
+                events: {
+                    dragstart: (e)=>{
+                        return this.emit("dragstart", e);
+                    },
+                    dragenter: (e)=>{
+                        noPropagation(e);
+                        return this.emit("dragenter", e);
+                    },
+                    dragover: (e)=>{
+                        // Makes it possible to drag files from chrome's download bar
+                        // http://stackoverflow.com/questions/19526430/drag-and-drop-file-uploads-from-chrome-downloads-bar
+                        // Try is required to prevent bug in Internet Explorer 11 (SCRIPT65535 exception)
+                        let efct;
+                        try {
+                            efct = e.dataTransfer.effectAllowed;
+                        } catch (error) {
+                        }
+                        e.dataTransfer.dropEffect = "move" === efct || "linkMove" === efct ? "move" : "copy";
+                        noPropagation(e);
+                        return this.emit("dragover", e);
+                    },
+                    dragleave: (e)=>{
+                        return this.emit("dragleave", e);
+                    },
+                    drop: (e)=>{
+                        noPropagation(e);
+                        return this.drop(e);
+                    },
+                    dragend: (e)=>{
+                        return this.emit("dragend", e);
+                    }
+                }
+            }, 
+        ];
+        this.clickableElements.forEach((clickableElement)=>{
+            return this.listeners.push({
+                element: clickableElement,
+                events: {
+                    click: (evt)=>{
+                        // Only the actual dropzone or the message element should trigger file selection
+                        if (clickableElement !== this.element || evt.target === this.element || $3ed269f2f0fb224b$export$2e2bcd8739ae039.elementInside(evt.target, this.element.querySelector(".dz-message"))) this.hiddenFileInput.click(); // Forward the click
+                        return true;
+                    }
+                }
+            });
+        });
+        this.enable();
+        return this.options.init.call(this);
+    }
+    // Not fully tested yet
+    destroy() {
+        this.disable();
+        this.removeAllFiles(true);
+        if (this.hiddenFileInput != null ? this.hiddenFileInput.parentNode : undefined) {
+            this.hiddenFileInput.parentNode.removeChild(this.hiddenFileInput);
+            this.hiddenFileInput = null;
+        }
+        delete this.element.dropzone;
+        return $3ed269f2f0fb224b$export$2e2bcd8739ae039.instances.splice($3ed269f2f0fb224b$export$2e2bcd8739ae039.instances.indexOf(this), 1);
+    }
+    updateTotalUploadProgress() {
+        let totalUploadProgress;
+        let totalBytesSent = 0;
+        let totalBytes = 0;
+        let activeFiles = this.getActiveFiles();
+        if (activeFiles.length) {
+            for (let file of this.getActiveFiles()){
+                totalBytesSent += file.upload.bytesSent;
+                totalBytes += file.upload.total;
+            }
+            totalUploadProgress = 100 * totalBytesSent / totalBytes;
+        } else totalUploadProgress = 100;
+        return this.emit("totaluploadprogress", totalUploadProgress, totalBytes, totalBytesSent);
+    }
+    // @options.paramName can be a function taking one parameter rather than a string.
+    // A parameter name for a file is obtained simply by calling this with an index number.
+    _getParamName(n) {
+        if (typeof this.options.paramName === "function") return this.options.paramName(n);
+        else return `${this.options.paramName}${this.options.uploadMultiple ? `[${n}]` : ""}`;
+    }
+    // If @options.renameFile is a function,
+    // the function will be used to rename the file.name before appending it to the formData
+    _renameFile(file) {
+        if (typeof this.options.renameFile !== "function") return file.name;
+        return this.options.renameFile(file);
+    }
+    // Returns a form that can be used as fallback if the browser does not support DragnDrop
+    //
+    // If the dropzone is already a form, only the input field and button are returned. Otherwise a complete form element is provided.
+    // This code has to pass in IE7 :(
+    getFallbackForm() {
+        let existingFallback, form;
+        if (existingFallback = this.getExistingFallback()) return existingFallback;
+        let fieldsString = '<div class="dz-fallback">';
+        if (this.options.dictFallbackText) fieldsString += `<p>${this.options.dictFallbackText}</p>`;
+        fieldsString += `<input type="file" name="${this._getParamName(0)}" ${this.options.uploadMultiple ? 'multiple="multiple"' : undefined} /><input type="submit" value="Upload!"></div>`;
+        let fields = $3ed269f2f0fb224b$export$2e2bcd8739ae039.createElement(fieldsString);
+        if (this.element.tagName !== "FORM") {
+            form = $3ed269f2f0fb224b$export$2e2bcd8739ae039.createElement(`<form action="${this.options.url}" enctype="multipart/form-data" method="${this.options.method}"></form>`);
+            form.appendChild(fields);
+        } else {
+            // Make sure that the enctype and method attributes are set properly
+            this.element.setAttribute("enctype", "multipart/form-data");
+            this.element.setAttribute("method", this.options.method);
+        }
+        return form != null ? form : fields;
+    }
+    // Returns the fallback elements if they exist already
+    //
+    // This code has to pass in IE7 :(
+    getExistingFallback() {
+        let getFallback = function(elements) {
+            for (let el of elements){
+                if (/(^| )fallback($| )/.test(el.className)) return el;
+            }
+        };
+        for (let tagName of [
+            "div",
+            "form"
+        ]){
+            var fallback;
+            if (fallback = getFallback(this.element.getElementsByTagName(tagName))) return fallback;
+        }
+    }
+    // Activates all listeners stored in @listeners
+    setupEventListeners() {
+        return this.listeners.map((elementListeners)=>(()=>{
+                let result = [];
+                for(let event in elementListeners.events){
+                    let listener = elementListeners.events[event];
+                    result.push(elementListeners.element.addEventListener(event, listener, false));
+                }
+                return result;
+            })()
+        );
+    }
+    // Deactivates all listeners stored in @listeners
+    removeEventListeners() {
+        return this.listeners.map((elementListeners)=>(()=>{
+                let result = [];
+                for(let event in elementListeners.events){
+                    let listener = elementListeners.events[event];
+                    result.push(elementListeners.element.removeEventListener(event, listener, false));
+                }
+                return result;
+            })()
+        );
+    }
+    // Removes all event listeners and cancels all files in the queue or being processed.
+    disable() {
+        this.clickableElements.forEach((element)=>element.classList.remove("dz-clickable")
+        );
+        this.removeEventListeners();
+        this.disabled = true;
+        return this.files.map((file)=>this.cancelUpload(file)
+        );
+    }
+    enable() {
+        delete this.disabled;
+        this.clickableElements.forEach((element)=>element.classList.add("dz-clickable")
+        );
+        return this.setupEventListeners();
+    }
+    // Returns a nicely formatted filesize
+    filesize(size) {
+        let selectedSize = 0;
+        let selectedUnit = "b";
+        if (size > 0) {
+            let units = [
+                "tb",
+                "gb",
+                "mb",
+                "kb",
+                "b"
+            ];
+            for(let i = 0; i < units.length; i++){
+                let unit = units[i];
+                let cutoff = Math.pow(this.options.filesizeBase, 4 - i) / 10;
+                if (size >= cutoff) {
+                    selectedSize = size / Math.pow(this.options.filesizeBase, 4 - i);
+                    selectedUnit = unit;
+                    break;
+                }
+            }
+            selectedSize = Math.round(10 * selectedSize) / 10; // Cutting of digits
+        }
+        return `<strong>${selectedSize}</strong> ${this.options.dictFileSizeUnits[selectedUnit]}`;
+    }
+    // Adds or removes the `dz-max-files-reached` class from the form.
+    _updateMaxFilesReachedClass() {
+        if (this.options.maxFiles != null && this.getAcceptedFiles().length >= this.options.maxFiles) {
+            if (this.getAcceptedFiles().length === this.options.maxFiles) this.emit("maxfilesreached", this.files);
+            return this.element.classList.add("dz-max-files-reached");
+        } else return this.element.classList.remove("dz-max-files-reached");
+    }
+    drop(e) {
+        if (!e.dataTransfer) return;
+        this.emit("drop", e);
+        // Convert the FileList to an Array
+        // This is necessary for IE11
+        let files = [];
+        for(let i = 0; i < e.dataTransfer.files.length; i++)files[i] = e.dataTransfer.files[i];
+        // Even if it's a folder, files.length will contain the folders.
+        if (files.length) {
+            let { items: items  } = e.dataTransfer;
+            if (items && items.length && items[0].webkitGetAsEntry != null) // The browser supports dropping of folders, so handle items instead of files
+            this._addFilesFromItems(items);
+            else this.handleFiles(files);
+        }
+        this.emit("addedfiles", files);
+    }
+    paste(e) {
+        if ($3ed269f2f0fb224b$var$__guard__(e != null ? e.clipboardData : undefined, (x)=>x.items
+        ) == null) return;
+        this.emit("paste", e);
+        let { items: items  } = e.clipboardData;
+        if (items.length) return this._addFilesFromItems(items);
+    }
+    handleFiles(files) {
+        for (let file of files)this.addFile(file);
+    }
+    // When a folder is dropped (or files are pasted), items must be handled
+    // instead of files.
+    _addFilesFromItems(items) {
+        return (()=>{
+            let result = [];
+            for (let item of items){
+                var entry;
+                if (item.webkitGetAsEntry != null && (entry = item.webkitGetAsEntry())) {
+                    if (entry.isFile) result.push(this.addFile(item.getAsFile()));
+                    else if (entry.isDirectory) // Append all files from that directory to files
+                    result.push(this._addFilesFromDirectory(entry, entry.name));
+                    else result.push(undefined);
+                } else if (item.getAsFile != null) {
+                    if (item.kind == null || item.kind === "file") result.push(this.addFile(item.getAsFile()));
+                    else result.push(undefined);
+                } else result.push(undefined);
+            }
+            return result;
+        })();
+    }
+    // Goes through the directory, and adds each file it finds recursively
+    _addFilesFromDirectory(directory, path) {
+        let dirReader = directory.createReader();
+        let errorHandler = (error)=>$3ed269f2f0fb224b$var$__guardMethod__(console, "log", (o)=>o.log(error)
+            )
+        ;
+        var readEntries = ()=>{
+            return dirReader.readEntries((entries)=>{
+                if (entries.length > 0) {
+                    for (let entry of entries){
+                        if (entry.isFile) entry.file((file)=>{
+                            if (this.options.ignoreHiddenFiles && file.name.substring(0, 1) === ".") return;
+                            file.fullPath = `${path}/${file.name}`;
+                            return this.addFile(file);
+                        });
+                        else if (entry.isDirectory) this._addFilesFromDirectory(entry, `${path}/${entry.name}`);
+                    }
+                    // Recursively call readEntries() again, since browser only handle
+                    // the first 100 entries.
+                    // See: https://developer.mozilla.org/en-US/docs/Web/API/DirectoryReader#readEntries
+                    readEntries();
+                }
+                return null;
+            }, errorHandler);
+        };
+        return readEntries();
+    }
+    // If `done()` is called without argument the file is accepted
+    // If you call it with an error message, the file is rejected
+    // (This allows for asynchronous validation)
+    //
+    // This function checks the filesize, and if the file.type passes the
+    // `acceptedFiles` check.
+    accept(file, done) {
+        if (this.options.maxFilesize && file.size > this.options.maxFilesize * 1048576) done(this.options.dictFileTooBig.replace("{{filesize}}", Math.round(file.size / 1024 / 10.24) / 100).replace("{{maxFilesize}}", this.options.maxFilesize));
+        else if (!$3ed269f2f0fb224b$export$2e2bcd8739ae039.isValidFile(file, this.options.acceptedFiles)) done(this.options.dictInvalidFileType);
+        else if (this.options.maxFiles != null && this.getAcceptedFiles().length >= this.options.maxFiles) {
+            done(this.options.dictMaxFilesExceeded.replace("{{maxFiles}}", this.options.maxFiles));
+            this.emit("maxfilesexceeded", file);
+        } else this.options.accept.call(this, file, done);
+    }
+    addFile(file) {
+        file.upload = {
+            uuid: $3ed269f2f0fb224b$export$2e2bcd8739ae039.uuidv4(),
+            progress: 0,
+            // Setting the total upload size to file.size for the beginning
+            // It's actual different than the size to be transmitted.
+            total: file.size,
+            bytesSent: 0,
+            filename: this._renameFile(file)
+        };
+        this.files.push(file);
+        file.status = $3ed269f2f0fb224b$export$2e2bcd8739ae039.ADDED;
+        this.emit("addedfile", file);
+        this._enqueueThumbnail(file);
+        this.accept(file, (error)=>{
+            if (error) {
+                file.accepted = false;
+                this._errorProcessing([
+                    file
+                ], error); // Will set the file.status
+            } else {
+                file.accepted = true;
+                if (this.options.autoQueue) this.enqueueFile(file);
+                 // Will set .accepted = true
+            }
+            this._updateMaxFilesReachedClass();
+        });
+    }
+    // Wrapper for enqueueFile
+    enqueueFiles(files) {
+        for (let file of files)this.enqueueFile(file);
+        return null;
+    }
+    enqueueFile(file) {
+        if (file.status === $3ed269f2f0fb224b$export$2e2bcd8739ae039.ADDED && file.accepted === true) {
+            file.status = $3ed269f2f0fb224b$export$2e2bcd8739ae039.QUEUED;
+            if (this.options.autoProcessQueue) return setTimeout(()=>this.processQueue()
+            , 0); // Deferring the call
+        } else throw new Error("This file can't be queued because it has already been processed or was rejected.");
+    }
+    _enqueueThumbnail(file) {
+        if (this.options.createImageThumbnails && file.type.match(/image.*/) && file.size <= this.options.maxThumbnailFilesize * 1048576) {
+            this._thumbnailQueue.push(file);
+            return setTimeout(()=>this._processThumbnailQueue()
+            , 0); // Deferring the call
+        }
+    }
+    _processThumbnailQueue() {
+        if (this._processingThumbnail || this._thumbnailQueue.length === 0) return;
+        this._processingThumbnail = true;
+        let file = this._thumbnailQueue.shift();
+        return this.createThumbnail(file, this.options.thumbnailWidth, this.options.thumbnailHeight, this.options.thumbnailMethod, true, (dataUrl)=>{
+            this.emit("thumbnail", file, dataUrl);
+            this._processingThumbnail = false;
+            return this._processThumbnailQueue();
+        });
+    }
+    // Can be called by the user to remove a file
+    removeFile(file) {
+        if (file.status === $3ed269f2f0fb224b$export$2e2bcd8739ae039.UPLOADING) this.cancelUpload(file);
+        this.files = $3ed269f2f0fb224b$var$without(this.files, file);
+        this.emit("removedfile", file);
+        if (this.files.length === 0) return this.emit("reset");
+    }
+    // Removes all files that aren't currently processed from the list
+    removeAllFiles(cancelIfNecessary) {
+        // Create a copy of files since removeFile() changes the @files array.
+        if (cancelIfNecessary == null) cancelIfNecessary = false;
+        for (let file of this.files.slice())if (file.status !== $3ed269f2f0fb224b$export$2e2bcd8739ae039.UPLOADING || cancelIfNecessary) this.removeFile(file);
+        return null;
+    }
+    // Resizes an image before it gets sent to the server. This function is the default behavior of
+    // `options.transformFile` if `resizeWidth` or `resizeHeight` are set. The callback is invoked with
+    // the resized blob.
+    resizeImage(file, width, height, resizeMethod, callback) {
+        return this.createThumbnail(file, width, height, resizeMethod, true, (dataUrl, canvas)=>{
+            if (canvas == null) // The image has not been resized
+            return callback(file);
+            else {
+                let { resizeMimeType: resizeMimeType  } = this.options;
+                if (resizeMimeType == null) resizeMimeType = file.type;
+                let resizedDataURL = canvas.toDataURL(resizeMimeType, this.options.resizeQuality);
+                if (resizeMimeType === "image/jpeg" || resizeMimeType === "image/jpg") // Now add the original EXIF information
+                resizedDataURL = $3ed269f2f0fb224b$var$ExifRestore.restore(file.dataURL, resizedDataURL);
+                return callback($3ed269f2f0fb224b$export$2e2bcd8739ae039.dataURItoBlob(resizedDataURL));
+            }
+        });
+    }
+    createThumbnail(file, width, height, resizeMethod, fixOrientation, callback) {
+        let fileReader = new FileReader();
+        fileReader.onload = ()=>{
+            file.dataURL = fileReader.result;
+            // Don't bother creating a thumbnail for SVG images since they're vector
+            if (file.type === "image/svg+xml") {
+                if (callback != null) callback(fileReader.result);
+                return;
+            }
+            this.createThumbnailFromUrl(file, width, height, resizeMethod, fixOrientation, callback);
+        };
+        fileReader.readAsDataURL(file);
+    }
+    // `mockFile` needs to have these attributes:
+    //
+    //     { name: 'name', size: 12345, imageUrl: '' }
+    //
+    // `callback` will be invoked when the image has been downloaded and displayed.
+    // `crossOrigin` will be added to the `img` tag when accessing the file.
+    displayExistingFile(mockFile, imageUrl, callback, crossOrigin, resizeThumbnail = true) {
+        this.emit("addedfile", mockFile);
+        this.emit("complete", mockFile);
+        if (!resizeThumbnail) {
+            this.emit("thumbnail", mockFile, imageUrl);
+            if (callback) callback();
+        } else {
+            let onDone = (thumbnail)=>{
+                this.emit("thumbnail", mockFile, thumbnail);
+                if (callback) callback();
+            };
+            mockFile.dataURL = imageUrl;
+            this.createThumbnailFromUrl(mockFile, this.options.thumbnailWidth, this.options.thumbnailHeight, this.options.thumbnailMethod, this.options.fixOrientation, onDone, crossOrigin);
+        }
+    }
+    createThumbnailFromUrl(file, width, height, resizeMethod, fixOrientation, callback, crossOrigin) {
+        // Not using `new Image` here because of a bug in latest Chrome versions.
+        // See https://github.com/enyo/dropzone/pull/226
+        let img = document.createElement("img");
+        if (crossOrigin) img.crossOrigin = crossOrigin;
+        // fixOrientation is not needed anymore with browsers handling imageOrientation
+        fixOrientation = getComputedStyle(document.body)["imageOrientation"] == "from-image" ? false : fixOrientation;
+        img.onload = ()=>{
+            let loadExif = (callback)=>callback(1)
+            ;
+            if (typeof EXIF !== "undefined" && EXIF !== null && fixOrientation) loadExif = (callback)=>EXIF.getData(img, function() {
+                    return callback(EXIF.getTag(this, "Orientation"));
+                })
+            ;
+            return loadExif((orientation)=>{
+                file.width = img.width;
+                file.height = img.height;
+                let resizeInfo = this.options.resize.call(this, file, width, height, resizeMethod);
+                let canvas = document.createElement("canvas");
+                let ctx = canvas.getContext("2d");
+                canvas.width = resizeInfo.trgWidth;
+                canvas.height = resizeInfo.trgHeight;
+                if (orientation > 4) {
+                    canvas.width = resizeInfo.trgHeight;
+                    canvas.height = resizeInfo.trgWidth;
+                }
+                switch(orientation){
+                    case 2:
+                        // horizontal flip
+                        ctx.translate(canvas.width, 0);
+                        ctx.scale(-1, 1);
+                        break;
+                    case 3:
+                        // 180° rotate left
+                        ctx.translate(canvas.width, canvas.height);
+                        ctx.rotate(Math.PI);
+                        break;
+                    case 4:
+                        // vertical flip
+                        ctx.translate(0, canvas.height);
+                        ctx.scale(1, -1);
+                        break;
+                    case 5:
+                        // vertical flip + 90 rotate right
+                        ctx.rotate(0.5 * Math.PI);
+                        ctx.scale(1, -1);
+                        break;
+                    case 6:
+                        // 90° rotate right
+                        ctx.rotate(0.5 * Math.PI);
+                        ctx.translate(0, -canvas.width);
+                        break;
+                    case 7:
+                        // horizontal flip + 90 rotate right
+                        ctx.rotate(0.5 * Math.PI);
+                        ctx.translate(canvas.height, -canvas.width);
+                        ctx.scale(-1, 1);
+                        break;
+                    case 8:
+                        // 90° rotate left
+                        ctx.rotate(-0.5 * Math.PI);
+                        ctx.translate(-canvas.height, 0);
+                        break;
+                }
+                // This is a bugfix for iOS' scaling bug.
+                $3ed269f2f0fb224b$var$drawImageIOSFix(ctx, img, resizeInfo.srcX != null ? resizeInfo.srcX : 0, resizeInfo.srcY != null ? resizeInfo.srcY : 0, resizeInfo.srcWidth, resizeInfo.srcHeight, resizeInfo.trgX != null ? resizeInfo.trgX : 0, resizeInfo.trgY != null ? resizeInfo.trgY : 0, resizeInfo.trgWidth, resizeInfo.trgHeight);
+                let thumbnail = canvas.toDataURL("image/png");
+                if (callback != null) return callback(thumbnail, canvas);
+            });
+        };
+        if (callback != null) img.onerror = callback;
+        return img.src = file.dataURL;
+    }
+    // Goes through the queue and processes files if there aren't too many already.
+    processQueue() {
+        let { parallelUploads: parallelUploads  } = this.options;
+        let processingLength = this.getUploadingFiles().length;
+        let i = processingLength;
+        // There are already at least as many files uploading than should be
+        if (processingLength >= parallelUploads) return;
+        let queuedFiles = this.getQueuedFiles();
+        if (!(queuedFiles.length > 0)) return;
+        if (this.options.uploadMultiple) // The files should be uploaded in one request
+        return this.processFiles(queuedFiles.slice(0, parallelUploads - processingLength));
+        else while(i < parallelUploads){
+            if (!queuedFiles.length) return;
+             // Nothing left to process
+            this.processFile(queuedFiles.shift());
+            i++;
+        }
+    }
+    // Wrapper for `processFiles`
+    processFile(file) {
+        return this.processFiles([
+            file
+        ]);
+    }
+    // Loads the file, then calls finishedLoading()
+    processFiles(files) {
+        for (let file of files){
+            file.processing = true; // Backwards compatibility
+            file.status = $3ed269f2f0fb224b$export$2e2bcd8739ae039.UPLOADING;
+            this.emit("processing", file);
+        }
+        if (this.options.uploadMultiple) this.emit("processingmultiple", files);
+        return this.uploadFiles(files);
+    }
+    _getFilesWithXhr(xhr) {
+        let files;
+        return files = this.files.filter((file)=>file.xhr === xhr
+        ).map((file)=>file
+        );
+    }
+    // Cancels the file upload and sets the status to CANCELED
+    // **if** the file is actually being uploaded.
+    // If it's still in the queue, the file is being removed from it and the status
+    // set to CANCELED.
+    cancelUpload(file) {
+        if (file.status === $3ed269f2f0fb224b$export$2e2bcd8739ae039.UPLOADING) {
+            let groupedFiles = this._getFilesWithXhr(file.xhr);
+            for (let groupedFile of groupedFiles)groupedFile.status = $3ed269f2f0fb224b$export$2e2bcd8739ae039.CANCELED;
+            if (typeof file.xhr !== "undefined") file.xhr.abort();
+            for (let groupedFile1 of groupedFiles)this.emit("canceled", groupedFile1);
+            if (this.options.uploadMultiple) this.emit("canceledmultiple", groupedFiles);
+        } else if (file.status === $3ed269f2f0fb224b$export$2e2bcd8739ae039.ADDED || file.status === $3ed269f2f0fb224b$export$2e2bcd8739ae039.QUEUED) {
+            file.status = $3ed269f2f0fb224b$export$2e2bcd8739ae039.CANCELED;
+            this.emit("canceled", file);
+            if (this.options.uploadMultiple) this.emit("canceledmultiple", [
+                file
+            ]);
+        }
+        if (this.options.autoProcessQueue) return this.processQueue();
+    }
+    resolveOption(option, ...args) {
+        if (typeof option === "function") return option.apply(this, args);
+        return option;
+    }
+    uploadFile(file) {
+        return this.uploadFiles([
+            file
+        ]);
+    }
+    uploadFiles(files) {
+        this._transformFiles(files, (transformedFiles)=>{
+            if (this.options.chunking) {
+                // Chunking is not allowed to be used with `uploadMultiple` so we know
+                // that there is only __one__file.
+                let transformedFile = transformedFiles[0];
+                files[0].upload.chunked = this.options.chunking && (this.options.forceChunking || transformedFile.size > this.options.chunkSize);
+                files[0].upload.totalChunkCount = Math.ceil(transformedFile.size / this.options.chunkSize);
+            }
+            if (files[0].upload.chunked) {
+                // This file should be sent in chunks!
+                // If the chunking option is set, we **know** that there can only be **one** file, since
+                // uploadMultiple is not allowed with this option.
+                let file = files[0];
+                let transformedFile = transformedFiles[0];
+                let startedChunkCount = 0;
+                file.upload.chunks = [];
+                let handleNextChunk = ()=>{
+                    let chunkIndex = 0;
+                    // Find the next item in file.upload.chunks that is not defined yet.
+                    while(file.upload.chunks[chunkIndex] !== undefined)chunkIndex++;
+                    // This means, that all chunks have already been started.
+                    if (chunkIndex >= file.upload.totalChunkCount) return;
+                    startedChunkCount++;
+                    let start = chunkIndex * this.options.chunkSize;
+                    let end = Math.min(start + this.options.chunkSize, transformedFile.size);
+                    let dataBlock = {
+                        name: this._getParamName(0),
+                        data: transformedFile.webkitSlice ? transformedFile.webkitSlice(start, end) : transformedFile.slice(start, end),
+                        filename: file.upload.filename,
+                        chunkIndex: chunkIndex
+                    };
+                    file.upload.chunks[chunkIndex] = {
+                        file: file,
+                        index: chunkIndex,
+                        dataBlock: dataBlock,
+                        status: $3ed269f2f0fb224b$export$2e2bcd8739ae039.UPLOADING,
+                        progress: 0,
+                        retries: 0
+                    };
+                    this._uploadData(files, [
+                        dataBlock
+                    ]);
+                };
+                file.upload.finishedChunkUpload = (chunk, response)=>{
+                    let allFinished = true;
+                    chunk.status = $3ed269f2f0fb224b$export$2e2bcd8739ae039.SUCCESS;
+                    // Clear the data from the chunk
+                    chunk.dataBlock = null;
+                    chunk.response = chunk.xhr.responseText;
+                    chunk.responseHeaders = chunk.xhr.getAllResponseHeaders();
+                    // Leaving this reference to xhr will cause memory leaks.
+                    chunk.xhr = null;
+                    for(let i = 0; i < file.upload.totalChunkCount; i++){
+                        if (file.upload.chunks[i] === undefined) return handleNextChunk();
+                        if (file.upload.chunks[i].status !== $3ed269f2f0fb224b$export$2e2bcd8739ae039.SUCCESS) allFinished = false;
+                    }
+                    if (allFinished) this.options.chunksUploaded(file, ()=>{
+                        this._finished(files, response, null);
+                    });
+                };
+                if (this.options.parallelChunkUploads) for(let i = 0; i < file.upload.totalChunkCount; i++)handleNextChunk();
+                else handleNextChunk();
+            } else {
+                let dataBlocks = [];
+                for(let i = 0; i < files.length; i++)dataBlocks[i] = {
+                    name: this._getParamName(i),
+                    data: transformedFiles[i],
+                    filename: files[i].upload.filename
+                };
+                this._uploadData(files, dataBlocks);
+            }
+        });
+    }
+    /// Returns the right chunk for given file and xhr
+    _getChunk(file, xhr) {
+        for(let i = 0; i < file.upload.totalChunkCount; i++){
+            if (file.upload.chunks[i] !== undefined && file.upload.chunks[i].xhr === xhr) return file.upload.chunks[i];
+        }
+    }
+    // This function actually uploads the file(s) to the server.
+    //
+    //  If dataBlocks contains the actual data to upload (meaning, that this could
+    // either be transformed files, or individual chunks for chunked upload) then
+    // they will be used for the actual data to upload.
+    _uploadData(files, dataBlocks) {
+        let xhr = new XMLHttpRequest();
+        // Put the xhr object in the file objects to be able to reference it later.
+        for (let file of files)file.xhr = xhr;
+        if (files[0].upload.chunked) // Put the xhr object in the right chunk object, so it can be associated
+        // later, and found with _getChunk.
+        files[0].upload.chunks[dataBlocks[0].chunkIndex].xhr = xhr;
+        let method = this.resolveOption(this.options.method, files, dataBlocks);
+        let url = this.resolveOption(this.options.url, files, dataBlocks);
+        xhr.open(method, url, true);
+        // Setting the timeout after open because of IE11 issue: https://gitlab.com/meno/dropzone/issues/8
+        let timeout = this.resolveOption(this.options.timeout, files);
+        if (timeout) xhr.timeout = this.resolveOption(this.options.timeout, files);
+        // Has to be after `.open()`. See https://github.com/enyo/dropzone/issues/179
+        xhr.withCredentials = !!this.options.withCredentials;
+        xhr.onload = (e)=>{
+            this._finishedUploading(files, xhr, e);
+        };
+        xhr.ontimeout = ()=>{
+            this._handleUploadError(files, xhr, `Request timedout after ${this.options.timeout / 1000} seconds`);
+        };
+        xhr.onerror = ()=>{
+            this._handleUploadError(files, xhr);
+        };
+        // Some browsers do not have the .upload property
+        let progressObj = xhr.upload != null ? xhr.upload : xhr;
+        progressObj.onprogress = (e)=>this._updateFilesUploadProgress(files, xhr, e)
+        ;
+        let headers = this.options.defaultHeaders ? {
+            Accept: "application/json",
+            "Cache-Control": "no-cache",
+            "X-Requested-With": "XMLHttpRequest"
+        } : {
+        };
+        if (this.options.binaryBody) headers["Content-Type"] = files[0].type;
+        if (this.options.headers) (0,just_extend__WEBPACK_IMPORTED_MODULE_0__["default"])(headers, this.options.headers);
+        for(let headerName in headers){
+            let headerValue = headers[headerName];
+            if (headerValue) xhr.setRequestHeader(headerName, headerValue);
+        }
+        if (this.options.binaryBody) {
+            // Since the file is going to be sent as binary body, it doesn't make
+            // any sense to generate `FormData` for it.
+            for (let file of files)this.emit("sending", file, xhr);
+            if (this.options.uploadMultiple) this.emit("sendingmultiple", files, xhr);
+            this.submitRequest(xhr, null, files);
+        } else {
+            let formData = new FormData();
+            // Adding all @options parameters
+            if (this.options.params) {
+                let additionalParams = this.options.params;
+                if (typeof additionalParams === "function") additionalParams = additionalParams.call(this, files, xhr, files[0].upload.chunked ? this._getChunk(files[0], xhr) : null);
+                for(let key in additionalParams){
+                    let value = additionalParams[key];
+                    if (Array.isArray(value)) // The additional parameter contains an array,
+                    // so lets iterate over it to attach each value
+                    // individually.
+                    for(let i = 0; i < value.length; i++)formData.append(key, value[i]);
+                    else formData.append(key, value);
+                }
+            }
+            // Let the user add additional data if necessary
+            for (let file of files)this.emit("sending", file, xhr, formData);
+            if (this.options.uploadMultiple) this.emit("sendingmultiple", files, xhr, formData);
+            this._addFormElementData(formData);
+            // Finally add the files
+            // Has to be last because some servers (eg: S3) expect the file to be the last parameter
+            for(let i = 0; i < dataBlocks.length; i++){
+                let dataBlock = dataBlocks[i];
+                formData.append(dataBlock.name, dataBlock.data, dataBlock.filename);
+            }
+            this.submitRequest(xhr, formData, files);
+        }
+    }
+    // Transforms all files with this.options.transformFile and invokes done with the transformed files when done.
+    _transformFiles(files, done) {
+        let transformedFiles = [];
+        // Clumsy way of handling asynchronous calls, until I get to add a proper Future library.
+        let doneCounter = 0;
+        for(let i = 0; i < files.length; i++)this.options.transformFile.call(this, files[i], (transformedFile)=>{
+            transformedFiles[i] = transformedFile;
+            if (++doneCounter === files.length) done(transformedFiles);
+        });
+    }
+    // Takes care of adding other input elements of the form to the AJAX request
+    _addFormElementData(formData) {
+        // Take care of other input elements
+        if (this.element.tagName === "FORM") for (let input of this.element.querySelectorAll("input, textarea, select, button")){
+            let inputName = input.getAttribute("name");
+            let inputType = input.getAttribute("type");
+            if (inputType) inputType = inputType.toLowerCase();
+            // If the input doesn't have a name, we can't use it.
+            if (typeof inputName === "undefined" || inputName === null) continue;
+            if (input.tagName === "SELECT" && input.hasAttribute("multiple")) {
+                // Possibly multiple values
+                for (let option of input.options)if (option.selected) formData.append(inputName, option.value);
+            } else if (!inputType || inputType !== "checkbox" && inputType !== "radio" || input.checked) formData.append(inputName, input.value);
+        }
+    }
+    // Invoked when there is new progress information about given files.
+    // If e is not provided, it is assumed that the upload is finished.
+    _updateFilesUploadProgress(files, xhr, e) {
+        if (!files[0].upload.chunked) // Handle file uploads without chunking
+        for (let file of files){
+            if (file.upload.total && file.upload.bytesSent && file.upload.bytesSent == file.upload.total) continue;
+            if (e) {
+                file.upload.progress = 100 * e.loaded / e.total;
+                file.upload.total = e.total;
+                file.upload.bytesSent = e.loaded;
+            } else {
+                // No event, so we're at 100%
+                file.upload.progress = 100;
+                file.upload.bytesSent = file.upload.total;
+            }
+            this.emit("uploadprogress", file, file.upload.progress, file.upload.bytesSent);
+        }
+        else {
+            // Handle chunked file uploads
+            // Chunked upload is not compatible with uploading multiple files in one
+            // request, so we know there's only one file.
+            let file = files[0];
+            // Since this is a chunked upload, we need to update the appropriate chunk
+            // progress.
+            let chunk = this._getChunk(file, xhr);
+            if (e) {
+                chunk.progress = 100 * e.loaded / e.total;
+                chunk.total = e.total;
+                chunk.bytesSent = e.loaded;
+            } else {
+                // No event, so we're at 100%
+                chunk.progress = 100;
+                chunk.bytesSent = chunk.total;
+            }
+            // Now tally the *file* upload progress from its individual chunks
+            file.upload.progress = 0;
+            file.upload.total = 0;
+            file.upload.bytesSent = 0;
+            for(let i = 0; i < file.upload.totalChunkCount; i++)if (file.upload.chunks[i] && typeof file.upload.chunks[i].progress !== "undefined") {
+                file.upload.progress += file.upload.chunks[i].progress;
+                file.upload.total += file.upload.chunks[i].total;
+                file.upload.bytesSent += file.upload.chunks[i].bytesSent;
+            }
+            // Since the process is a percentage, we need to divide by the amount of
+            // chunks we've used.
+            file.upload.progress = file.upload.progress / file.upload.totalChunkCount;
+            this.emit("uploadprogress", file, file.upload.progress, file.upload.bytesSent);
+        }
+    }
+    _finishedUploading(files, xhr, e) {
+        let response;
+        if (files[0].status === $3ed269f2f0fb224b$export$2e2bcd8739ae039.CANCELED) return;
+        if (xhr.readyState !== 4) return;
+        if (xhr.responseType !== "arraybuffer" && xhr.responseType !== "blob") {
+            response = xhr.responseText;
+            if (xhr.getResponseHeader("content-type") && ~xhr.getResponseHeader("content-type").indexOf("application/json")) try {
+                response = JSON.parse(response);
+            } catch (error) {
+                e = error;
+                response = "Invalid JSON response from server.";
+            }
+        }
+        this._updateFilesUploadProgress(files, xhr);
+        if (!(200 <= xhr.status && xhr.status < 300)) this._handleUploadError(files, xhr, response);
+        else if (files[0].upload.chunked) files[0].upload.finishedChunkUpload(this._getChunk(files[0], xhr), response);
+        else this._finished(files, response, e);
+    }
+    _handleUploadError(files, xhr, response) {
+        if (files[0].status === $3ed269f2f0fb224b$export$2e2bcd8739ae039.CANCELED) return;
+        if (files[0].upload.chunked && this.options.retryChunks) {
+            let chunk = this._getChunk(files[0], xhr);
+            if ((chunk.retries++) < this.options.retryChunksLimit) {
+                this._uploadData(files, [
+                    chunk.dataBlock
+                ]);
+                return;
+            } else console.warn("Retried this chunk too often. Giving up.");
+        }
+        this._errorProcessing(files, response || this.options.dictResponseError.replace("{{statusCode}}", xhr.status), xhr);
+    }
+    submitRequest(xhr, formData, files) {
+        if (xhr.readyState != 1) {
+            console.warn("Cannot send this request because the XMLHttpRequest.readyState is not OPENED.");
+            return;
+        }
+        if (this.options.binaryBody) {
+            if (files[0].upload.chunked) {
+                const chunk = this._getChunk(files[0], xhr);
+                xhr.send(chunk.dataBlock.data);
+            } else xhr.send(files[0]);
+        } else xhr.send(formData);
+    }
+    // Called internally when processing is finished.
+    // Individual callbacks have to be called in the appropriate sections.
+    _finished(files, responseText, e) {
+        for (let file of files){
+            file.status = $3ed269f2f0fb224b$export$2e2bcd8739ae039.SUCCESS;
+            this.emit("success", file, responseText, e);
+            this.emit("complete", file);
+        }
+        if (this.options.uploadMultiple) {
+            this.emit("successmultiple", files, responseText, e);
+            this.emit("completemultiple", files);
+        }
+        if (this.options.autoProcessQueue) return this.processQueue();
+    }
+    // Called internally when processing is finished.
+    // Individual callbacks have to be called in the appropriate sections.
+    _errorProcessing(files, message, xhr) {
+        for (let file of files){
+            file.status = $3ed269f2f0fb224b$export$2e2bcd8739ae039.ERROR;
+            this.emit("error", file, message, xhr);
+            this.emit("complete", file);
+        }
+        if (this.options.uploadMultiple) {
+            this.emit("errormultiple", files, message, xhr);
+            this.emit("completemultiple", files);
+        }
+        if (this.options.autoProcessQueue) return this.processQueue();
+    }
+    static uuidv4() {
+        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+            let r = Math.random() * 16 | 0, v = c === "x" ? r : r & 3 | 8;
+            return v.toString(16);
+        });
+    }
+    constructor(el, options){
+        super();
+        let fallback, left;
+        this.element = el;
+        this.clickableElements = [];
+        this.listeners = [];
+        this.files = []; // All files
+        if (typeof this.element === "string") this.element = document.querySelector(this.element);
+        // Not checking if instance of HTMLElement or Element since IE9 is extremely weird.
+        if (!this.element || this.element.nodeType == null) throw new Error("Invalid dropzone element.");
+        if (this.element.dropzone) throw new Error("Dropzone already attached.");
+        // Now add this dropzone to the instances.
+        $3ed269f2f0fb224b$export$2e2bcd8739ae039.instances.push(this);
+        // Put the dropzone inside the element itself.
+        this.element.dropzone = this;
+        let elementOptions = (left = $3ed269f2f0fb224b$export$2e2bcd8739ae039.optionsForElement(this.element)) != null ? left : {
+        };
+        this.options = (0,just_extend__WEBPACK_IMPORTED_MODULE_0__["default"])(true, {
+        }, $4ca367182776f80b$export$2e2bcd8739ae039, elementOptions, options != null ? options : {
+        });
+        this.options.previewTemplate = this.options.previewTemplate.replace(/\n*/g, "");
+        // If the browser failed, just call the fallback and leave
+        if (this.options.forceFallback || !$3ed269f2f0fb224b$export$2e2bcd8739ae039.isBrowserSupported()) return this.options.fallback.call(this);
+        // @options.url = @element.getAttribute "action" unless @options.url?
+        if (this.options.url == null) this.options.url = this.element.getAttribute("action");
+        if (!this.options.url) throw new Error("No URL provided.");
+        if (this.options.acceptedFiles && this.options.acceptedMimeTypes) throw new Error("You can't provide both 'acceptedFiles' and 'acceptedMimeTypes'. 'acceptedMimeTypes' is deprecated.");
+        if (this.options.uploadMultiple && this.options.chunking) throw new Error("You cannot set both: uploadMultiple and chunking.");
+        if (this.options.binaryBody && this.options.uploadMultiple) throw new Error("You cannot set both: binaryBody and uploadMultiple.");
+        // Backwards compatibility
+        if (this.options.acceptedMimeTypes) {
+            this.options.acceptedFiles = this.options.acceptedMimeTypes;
+            delete this.options.acceptedMimeTypes;
+        }
+        // Backwards compatibility
+        if (this.options.renameFilename != null) this.options.renameFile = (file)=>this.options.renameFilename.call(this, file.name, file)
+        ;
+        if (typeof this.options.method === "string") this.options.method = this.options.method.toUpperCase();
+        if ((fallback = this.getExistingFallback()) && fallback.parentNode) // Remove the fallback
+        fallback.parentNode.removeChild(fallback);
+        // Display previews in the previewsContainer element or the Dropzone element unless explicitly set to false
+        if (this.options.previewsContainer !== false) {
+            if (this.options.previewsContainer) this.previewsContainer = $3ed269f2f0fb224b$export$2e2bcd8739ae039.getElement(this.options.previewsContainer, "previewsContainer");
+            else this.previewsContainer = this.element;
+        }
+        if (this.options.clickable) {
+            if (this.options.clickable === true) this.clickableElements = [
+                this.element
+            ];
+            else this.clickableElements = $3ed269f2f0fb224b$export$2e2bcd8739ae039.getElements(this.options.clickable, "clickable");
+        }
+        this.init();
+    }
+}
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.initClass();
+// This is a map of options for your different dropzones. Add configurations
+// to this object for your different dropzone elemens.
+//
+// Example:
+//
+//     Dropzone.options.myDropzoneElementId = { maxFilesize: 1 };
+//
+// And in html:
+//
+//     <form action="/upload" id="my-dropzone-element-id" class="dropzone"></form>
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.options = {
+};
+// Returns the options for an element or undefined if none available.
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.optionsForElement = function(element) {
+    // Get the `Dropzone.options.elementId` for this element if it exists
+    if (element.getAttribute("id")) return $3ed269f2f0fb224b$export$2e2bcd8739ae039.options[$3ed269f2f0fb224b$var$camelize(element.getAttribute("id"))];
+    else return undefined;
+};
+// Holds a list of all dropzone instances
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.instances = [];
+// Returns the dropzone for given element if any
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.forElement = function(element) {
+    if (typeof element === "string") element = document.querySelector(element);
+    if ((element != null ? element.dropzone : undefined) == null) throw new Error("No Dropzone found for given element. This is probably because you're trying to access it before Dropzone had the time to initialize. Use the `init` option to setup any additional observers on your Dropzone.");
+    return element.dropzone;
+};
+// Looks for all .dropzone elements and creates a dropzone for them
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.discover = function() {
+    let dropzones;
+    if (document.querySelectorAll) dropzones = document.querySelectorAll(".dropzone");
+    else {
+        dropzones = [];
+        // IE :(
+        let checkElements = (elements)=>(()=>{
+                let result = [];
+                for (let el of elements)if (/(^| )dropzone($| )/.test(el.className)) result.push(dropzones.push(el));
+                else result.push(undefined);
+                return result;
+            })()
+        ;
+        checkElements(document.getElementsByTagName("div"));
+        checkElements(document.getElementsByTagName("form"));
+    }
+    return (()=>{
+        let result = [];
+        for (let dropzone of dropzones)// Create a dropzone unless auto discover has been disabled for specific element
+        if ($3ed269f2f0fb224b$export$2e2bcd8739ae039.optionsForElement(dropzone) !== false) result.push(new $3ed269f2f0fb224b$export$2e2bcd8739ae039(dropzone));
+        else result.push(undefined);
+        return result;
+    })();
+};
+// Some browsers support drag and drog functionality, but not correctly.
+//
+// So I created a blocklist of userAgents. Yes, yes. Browser sniffing, I know.
+// But what to do when browsers *theoretically* support an API, but crash
+// when using it.
+//
+// This is a list of regular expressions tested against navigator.userAgent
+//
+// ** It should only be used on browser that *do* support the API, but
+// incorrectly **
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.blockedBrowsers = [
+    // The mac os and windows phone version of opera 12 seems to have a problem with the File drag'n'drop API.
+    /opera.*(Macintosh|Windows Phone).*version\/12/i, 
+];
+// Checks if the browser is supported
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.isBrowserSupported = function() {
+    let capableBrowser = true;
+    if (window.File && window.FileReader && window.FileList && window.Blob && window.FormData && document.querySelector) {
+        if (!("classList" in document.createElement("a"))) capableBrowser = false;
+        else {
+            if ($3ed269f2f0fb224b$export$2e2bcd8739ae039.blacklistedBrowsers !== undefined) // Since this has been renamed, this makes sure we don't break older
+            // configuration.
+            $3ed269f2f0fb224b$export$2e2bcd8739ae039.blockedBrowsers = $3ed269f2f0fb224b$export$2e2bcd8739ae039.blacklistedBrowsers;
+            // The browser supports the API, but may be blocked.
+            for (let regex of $3ed269f2f0fb224b$export$2e2bcd8739ae039.blockedBrowsers)if (regex.test(navigator.userAgent)) {
+                capableBrowser = false;
+                continue;
+            }
+        }
+    } else capableBrowser = false;
+    return capableBrowser;
+};
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.dataURItoBlob = function(dataURI) {
+    // convert base64 to raw binary data held in a string
+    // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+    let byteString = atob(dataURI.split(",")[1]);
+    // separate out the mime component
+    let mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
+    // write the bytes of the string to an ArrayBuffer
+    let ab = new ArrayBuffer(byteString.length);
+    let ia = new Uint8Array(ab);
+    for(let i = 0, end = byteString.length, asc = 0 <= end; asc ? i <= end : i >= end; asc ? i++ : i--)ia[i] = byteString.charCodeAt(i);
+    // write the ArrayBuffer to a blob
+    return new Blob([
+        ab
+    ], {
+        type: mimeString
+    });
+};
+// Returns an array without the rejected item
+const $3ed269f2f0fb224b$var$without = (list, rejectedItem)=>list.filter((item)=>item !== rejectedItem
+    ).map((item)=>item
+    )
+;
+// abc-def_ghi -> abcDefGhi
+const $3ed269f2f0fb224b$var$camelize = (str)=>str.replace(/[\-_](\w)/g, (match)=>match.charAt(1).toUpperCase()
+    )
+;
+// Creates an element from string
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.createElement = function(string) {
+    let div = document.createElement("div");
+    div.innerHTML = string;
+    return div.childNodes[0];
+};
+// Tests if given element is inside (or simply is) the container
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.elementInside = function(element, container) {
+    if (element === container) return true;
+     // Coffeescript doesn't support do/while loops
+    while(element = element.parentNode){
+        if (element === container) return true;
+    }
+    return false;
+};
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.getElement = function(el, name) {
+    let element;
+    if (typeof el === "string") element = document.querySelector(el);
+    else if (el.nodeType != null) element = el;
+    if (element == null) throw new Error(`Invalid \`${name}\` option provided. Please provide a CSS selector or a plain HTML element.`);
+    return element;
+};
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.getElements = function(els, name) {
+    let el, elements;
+    if (els instanceof Array) {
+        elements = [];
+        try {
+            for (el of els)elements.push(this.getElement(el, name));
+        } catch (e) {
+            elements = null;
+        }
+    } else if (typeof els === "string") {
+        elements = [];
+        for (el of document.querySelectorAll(els))elements.push(el);
+    } else if (els.nodeType != null) elements = [
+        els
+    ];
+    if (elements == null || !elements.length) throw new Error(`Invalid \`${name}\` option provided. Please provide a CSS selector, a plain HTML element or a list of those.`);
+    return elements;
+};
+// Asks the user the question and calls accepted or rejected accordingly
+//
+// The default implementation just uses `window.confirm` and then calls the
+// appropriate callback.
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.confirm = function(question, accepted, rejected) {
+    if (window.confirm(question)) return accepted();
+    else if (rejected != null) return rejected();
+};
+// Validates the mime type like this:
+//
+// https://developer.mozilla.org/en-US/docs/HTML/Element/input#attr-accept
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.isValidFile = function(file, acceptedFiles) {
+    if (!acceptedFiles) return true;
+     // If there are no accepted mime types, it's OK
+    acceptedFiles = acceptedFiles.split(",");
+    let mimeType = file.type;
+    let baseMimeType = mimeType.replace(/\/.*$/, "");
+    for (let validType of acceptedFiles){
+        validType = validType.trim();
+        if (validType.charAt(0) === ".") {
+            if (file.name.toLowerCase().indexOf(validType.toLowerCase(), file.name.length - validType.length) !== -1) return true;
+        } else if (/\/\*$/.test(validType)) {
+            // This is something like a image/* mime type
+            if (baseMimeType === validType.replace(/\/.*$/, "")) return true;
+        } else {
+            if (mimeType === validType) return true;
+        }
+    }
+    return false;
+};
+// Augment jQuery
+if (typeof jQuery !== "undefined" && jQuery !== null) jQuery.fn.dropzone = function(options) {
+    return this.each(function() {
+        return new $3ed269f2f0fb224b$export$2e2bcd8739ae039(this, options);
+    });
+};
+// Dropzone file status codes
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.ADDED = "added";
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.QUEUED = "queued";
+// For backwards compatibility. Now, if a file is accepted, it's either queued
+// or uploading.
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.ACCEPTED = $3ed269f2f0fb224b$export$2e2bcd8739ae039.QUEUED;
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.UPLOADING = "uploading";
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.PROCESSING = $3ed269f2f0fb224b$export$2e2bcd8739ae039.UPLOADING; // alias
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.CANCELED = "canceled";
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.ERROR = "error";
+$3ed269f2f0fb224b$export$2e2bcd8739ae039.SUCCESS = "success";
+/*
+
+ Bugfix for iOS 6 and 7
+ Source: http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios
+ based on the work of https://github.com/stomita/ios-imagefile-megapixel
+
+ */ // Detecting vertical squash in loaded image.
+// Fixes a bug which squash image vertically while drawing into canvas for some images.
+// This is a bug in iOS6 devices. This function from https://github.com/stomita/ios-imagefile-megapixel
+let $3ed269f2f0fb224b$var$detectVerticalSquash = function(img) {
+    let iw = img.naturalWidth;
+    let ih = img.naturalHeight;
+    let canvas = document.createElement("canvas");
+    canvas.width = 1;
+    canvas.height = ih;
+    let ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    let { data: data  } = ctx.getImageData(1, 0, 1, ih);
+    // search image edge pixel position in case it is squashed vertically.
+    let sy = 0;
+    let ey = ih;
+    let py = ih;
+    while(py > sy){
+        let alpha = data[(py - 1) * 4 + 3];
+        if (alpha === 0) ey = py;
+        else sy = py;
+        py = ey + sy >> 1;
+    }
+    let ratio = py / ih;
+    if (ratio === 0) return 1;
+    else return ratio;
+};
+// A replacement for context.drawImage
+// (args are for source and destination).
+var $3ed269f2f0fb224b$var$drawImageIOSFix = function(ctx, img, sx, sy, sw, sh, dx, dy, dw, dh) {
+    let vertSquashRatio = $3ed269f2f0fb224b$var$detectVerticalSquash(img);
+    return ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh / vertSquashRatio);
+};
+// Based on MinifyJpeg
+// Source: http://www.perry.cz/files/ExifRestorer.js
+// http://elicon.blog57.fc2.com/blog-entry-206.html
+class $3ed269f2f0fb224b$var$ExifRestore {
+    static initClass() {
+        this.KEY_STR = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    }
+    static encode64(input) {
+        let output = "";
+        let chr1 = undefined;
+        let chr2 = undefined;
+        let chr3 = "";
+        let enc1 = undefined;
+        let enc2 = undefined;
+        let enc3 = undefined;
+        let enc4 = "";
+        let i = 0;
+        while(true){
+            chr1 = input[i++];
+            chr2 = input[i++];
+            chr3 = input[i++];
+            enc1 = chr1 >> 2;
+            enc2 = (chr1 & 3) << 4 | chr2 >> 4;
+            enc3 = (chr2 & 15) << 2 | chr3 >> 6;
+            enc4 = chr3 & 63;
+            if (isNaN(chr2)) enc3 = enc4 = 64;
+            else if (isNaN(chr3)) enc4 = 64;
+            output = output + this.KEY_STR.charAt(enc1) + this.KEY_STR.charAt(enc2) + this.KEY_STR.charAt(enc3) + this.KEY_STR.charAt(enc4);
+            chr1 = chr2 = chr3 = "";
+            enc1 = enc2 = enc3 = enc4 = "";
+            if (!(i < input.length)) break;
+        }
+        return output;
+    }
+    static restore(origFileBase64, resizedFileBase64) {
+        if (!origFileBase64.match("data:image/jpeg;base64,")) return resizedFileBase64;
+        let rawImage = this.decode64(origFileBase64.replace("data:image/jpeg;base64,", ""));
+        let segments = this.slice2Segments(rawImage);
+        let image = this.exifManipulation(resizedFileBase64, segments);
+        return `data:image/jpeg;base64,${this.encode64(image)}`;
+    }
+    static exifManipulation(resizedFileBase64, segments) {
+        let exifArray = this.getExifArray(segments);
+        let newImageArray = this.insertExif(resizedFileBase64, exifArray);
+        let aBuffer = new Uint8Array(newImageArray);
+        return aBuffer;
+    }
+    static getExifArray(segments) {
+        let seg = undefined;
+        let x = 0;
+        while(x < segments.length){
+            seg = segments[x];
+            if (seg[0] === 255 & seg[1] === 225) return seg;
+            x++;
+        }
+        return [];
+    }
+    static insertExif(resizedFileBase64, exifArray) {
+        let imageData = resizedFileBase64.replace("data:image/jpeg;base64,", "");
+        let buf = this.decode64(imageData);
+        let separatePoint = buf.indexOf(255, 3);
+        let mae = buf.slice(0, separatePoint);
+        let ato = buf.slice(separatePoint);
+        let array = mae;
+        array = array.concat(exifArray);
+        array = array.concat(ato);
+        return array;
+    }
+    static slice2Segments(rawImageArray) {
+        let head = 0;
+        let segments = [];
+        while(true){
+            var length;
+            if (rawImageArray[head] === 255 & rawImageArray[head + 1] === 218) break;
+            if (rawImageArray[head] === 255 & rawImageArray[head + 1] === 216) head += 2;
+            else {
+                length = rawImageArray[head + 2] * 256 + rawImageArray[head + 3];
+                let endPoint = head + length + 2;
+                let seg = rawImageArray.slice(head, endPoint);
+                segments.push(seg);
+                head = endPoint;
+            }
+            if (head > rawImageArray.length) break;
+        }
+        return segments;
+    }
+    static decode64(input) {
+        let output = "";
+        let chr1 = undefined;
+        let chr2 = undefined;
+        let chr3 = "";
+        let enc1 = undefined;
+        let enc2 = undefined;
+        let enc3 = undefined;
+        let enc4 = "";
+        let i = 0;
+        let buf = [];
+        // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
+        let base64test = /[^A-Za-z0-9\+\/\=]/g;
+        if (base64test.exec(input)) console.warn("There were invalid base64 characters in the input text.\nValid base64 characters are A-Z, a-z, 0-9, '+', '/',and '='\nExpect errors in decoding.");
+        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+        while(true){
+            enc1 = this.KEY_STR.indexOf(input.charAt(i++));
+            enc2 = this.KEY_STR.indexOf(input.charAt(i++));
+            enc3 = this.KEY_STR.indexOf(input.charAt(i++));
+            enc4 = this.KEY_STR.indexOf(input.charAt(i++));
+            chr1 = enc1 << 2 | enc2 >> 4;
+            chr2 = (enc2 & 15) << 4 | enc3 >> 2;
+            chr3 = (enc3 & 3) << 6 | enc4;
+            buf.push(chr1);
+            if (enc3 !== 64) buf.push(chr2);
+            if (enc4 !== 64) buf.push(chr3);
+            chr1 = chr2 = chr3 = "";
+            enc1 = enc2 = enc3 = enc4 = "";
+            if (!(i < input.length)) break;
+        }
+        return buf;
+    }
+}
+$3ed269f2f0fb224b$var$ExifRestore.initClass();
+/*
+ * contentloaded.js
+ *
+ * Author: Diego Perini (diego.perini at gmail.com)
+ * Summary: cross-browser wrapper for DOMContentLoaded
+ * Updated: 20101020
+ * License: MIT
+ * Version: 1.2
+ *
+ * URL:
+ * http://javascript.nwbox.com/ContentLoaded/
+ * http://javascript.nwbox.com/ContentLoaded/MIT-LICENSE
+ */ // @win window reference
+// @fn function reference
+let $3ed269f2f0fb224b$var$contentLoaded = function(win, fn) {
+    let done = false;
+    let top = true;
+    let doc = win.document;
+    let root = doc.documentElement;
+    let add = doc.addEventListener ? "addEventListener" : "attachEvent";
+    let rem = doc.addEventListener ? "removeEventListener" : "detachEvent";
+    let pre = doc.addEventListener ? "" : "on";
+    var init = function(e) {
+        if (e.type === "readystatechange" && doc.readyState !== "complete") return;
+        (e.type === "load" ? win : doc)[rem](pre + e.type, init, false);
+        if (!done && (done = true)) return fn.call(win, e.type || e);
+    };
+    var poll = function() {
+        try {
+            root.doScroll("left");
+        } catch (e) {
+            setTimeout(poll, 50);
+            return;
+        }
+        return init("poll");
+    };
+    if (doc.readyState !== "complete") {
+        if (doc.createEventObject && root.doScroll) {
+            try {
+                top = !win.frameElement;
+            } catch (error) {
+            }
+            if (top) poll();
+        }
+        doc[add](pre + "DOMContentLoaded", init, false);
+        doc[add](pre + "readystatechange", init, false);
+        return win[add](pre + "load", init, false);
+    }
+};
+function $3ed269f2f0fb224b$var$__guard__(value, transform) {
+    return typeof value !== "undefined" && value !== null ? transform(value) : undefined;
+}
+function $3ed269f2f0fb224b$var$__guardMethod__(obj, methodName, transform) {
+    if (typeof obj !== "undefined" && obj !== null && typeof obj[methodName] === "function") return transform(obj, methodName);
+    else return undefined;
+}
+
+
+
+//# sourceMappingURL=dropzone.mjs.map
+
 
 /***/ }),
 

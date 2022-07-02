@@ -67,7 +67,10 @@ class UserController extends Controller
     }
 
     function view (Request $request) {
-        return view('user.view', ['user' => User::get_user_by_id($request->id), 'user_bios' => User::get_user_bio($request->id)]);
+        $user = User::find($request->id);
+        $user_bios = User::get_user_bio($request->id);
+        $user_leagues = User::get_user_temporades($user->id);
+        return view('user.view', compact(['user','user_bios','user_leagues']));
     }
 
     function create (Request $request) {
@@ -86,7 +89,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'nombre' => 'required|max:15',
             'apellido' => 'required|max:30',
-            'foto' => 'image|max:1000|mimes:jpg,png,jpeg'
+            'profile_image' => 'required'
         ]);
         $user = User::find($user_id);
         if($request->username != $user->username) {
@@ -97,14 +100,7 @@ class UserController extends Controller
         $user->name = $request->nombre;
         $user->surname = $request->apellido;
         $user->username = $request->username;
-        if ($request->hasFile('foto')) {
-            $file = $request->file('foto');
-            $extension = $request->foto->getClientOriginalExtension();
-            $fileName = $user->username.'-profile-'.uniqid().'.'.$extension;
-            $data = 'images/uploads/profiles/'.$user->username.'/';
-            $file->move(public_path().'/'.$data,$fileName);
-            $user->image = $data.$fileName;
-        }
+        $user->image = $request->profile_image;
         $user->save();
         return redirect()->route("user.view", ["id" => $user->id])->with('status', ['type'=>"success" , 'message' =>"El usuario ".$user->name. " ". $user->surname. " se ha actualizado correctamente"]);
     }

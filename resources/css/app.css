@@ -1,8 +1,11 @@
+@import 'animate.css';
+@import '~datatables.net-dt/css/jquery.dataTables.min.css';
+@import '~dropzone/dist/basic.css';
+@import '~dropzone/dist/dropzone.css';
+@import '~lightgallery/css/lightgallery-bundle.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import 'animate.css';
-@import '~datatables.net-dt/css/jquery.dataTables.min.css';
 
 /* DATATABLES PAGINATION */
 

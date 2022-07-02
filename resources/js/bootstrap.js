@@ -61,3 +61,14 @@ $.extend($.fn.dataTable.defaults, {
 	},
 	responsive: true,
 });
+
+import Dropzone from "dropzone";
+global.Dropzone = Dropzone;
+
+import lightGallery from 'lightgallery';
+global.lightGallery = lightGallery;
+
+import lgThumbnail from 'lightgallery/plugins/thumbnail'
+global.lgThumbnail = lgThumbnail
+import lgZoom from 'lightgallery/plugins/zoom'
+global.lgZoom = lgZoom

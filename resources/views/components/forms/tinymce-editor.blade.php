@@ -1,5 +1,5 @@
 <x-head.tinymce-config/>
-<div class="dfree-body mce-content-body mb-4" id="mceContent" contenteditable="true" spellcheck="false">
+<div class="mb-4 dfree-body mce-content-body" id="mceContent" contenteditable="true" spellcheck="false">
     {!! $text !!}
 </div>
 <div class="flex justify-end">

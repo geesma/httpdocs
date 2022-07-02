@@ -142,4 +142,122 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class);
     }
+
+    /**
+     * Get all of the userImages for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function userImages()
+    {
+
+        return $this->hasMany(userImages::class);
+    }
+
+    public static function get_user_temporades($id) {
+        $table = [];
+        $temporades_user = DB::table('liga_temporada')->where([
+            ['user_id', '=', $id]
+        ])->orderBy('temporada_id', 'asc')->get();
+        foreach($temporades_user as $temporada) {
+            $table[] = [
+                "temporada_name" => Temporada::find($temporada->temporada_id)->nom_temporada,
+                "liga_name" => Liga::find($temporada->liga_id)->name,
+                "position" => User::get_position($temporada->temporada_id, $temporada->liga_id, $temporada->user_id),
+                "points" => $temporada->points,
+                "temporada_id" => $temporada->temporada_id,
+                "liga_id" => $temporada->liga_id
+            ];
+        }
+        return $table;
+    }
+
+    private static function get_position($temporada_id, $liga_id, $user_id) {
+        $table = DB::table('liga_temporada')->where([
+            ['liga_id', '=', $liga_id],
+            ['temporada_id', '=', $temporada_id]
+        ])->orderBy('points', 'desc')->get();
+        foreach($table as $key => $valor) {
+            if($valor->user_id == $user_id) return $key+1;
+        }
+    }
+
+    public static function set_user_profile_picture($user_id, $image) {
+        $user = User::find($user_id);
+        if(isset($user->image)) return;
+        $user->image = $image;
+        $user->save();
+        return;
+    }
+
+    private static function get_historical_user_points ($user_id) {
+        $temporades = Temporada::all();
+        $total = 0;
+        $i = 0;
+        $user = [];
+        foreach($temporades as $temporada) {
+            $user_temporada = DB::table('liga_temporada')->where([['user_id', '=', $user_id],['temporada_id', '=', $temporada->id]])->first();
+            if(isset($user_temporada)) {
+                $i++;
+                $total += $user_temporada->points;
+                $user[] = ["temporada_id" => $user_temporada->temporada_id, "points" => $user_temporada->points];
+            } else {
+                $user[] = ["temporada_id" => $temporada->id, "points" => ""];
+            }
+        }
+        switch($i) {
+            case 1:
+                $color = "#c0392b";
+                break;
+            case 2:
+                $color = "#e74c3c";
+                break;
+            case 3:
+                $color = "#d35400";
+                break;
+            case 4:
+                $color = "#e67e22";
+                break;
+            case 5:
+                $color = "#f39c12";
+                break;
+            case 6:
+                $color = "#f1c40f";
+                break;
+            case 7:
+                $color = "#8e44ad";
+                break;
+            case 8:
+                $color = "#9b59b6";
+                break;
+            case 9:
+                $color = "#27ae60";
+                break;
+            case 10:
+                $color = "#2ecc71";
+                break;
+            case 11:
+                $color = "#1abc9c";
+                break;
+            case 12:
+                $color = "#16a085";
+                break;
+            default:
+                $color = "black";
+        }
+        return ["temporadas" => $user, "totals" => ["total" => $total, "temporadas_jugadas" => $i, "color" => $color]];
+    }
+
+    public static function get_historical_data() {
+        $data = [];
+        $data[] = Temporada::all()->toArray();
+        $secundary_data = [];
+        $users = DB::table('liga_temporada')->selectRaw('sum(points) as total_points, user_id')->groupBy('user_id')->orderBy('total_points', 'desc')->get();
+        foreach($users as $user) {
+            $secundary_data[] = ["player_username" => User::find($user->user_id)->username ,"player_data" => User::get_historical_user_points($user->user_id), "player_points" => $user->total_points];
+        }
+        $data[] = $secundary_data;
+        $data[] = ["temporadas_totales" => count($data[0])];
+        return $data;
+    }
 }

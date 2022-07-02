@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAlbumRequest;
 use App\Http\Requests\UpdateAlbumRequest;
 use App\Models\Album;
+use App\Models\Temporada;
 
 class AlbumController extends Controller
 {
@@ -15,7 +16,8 @@ class AlbumController extends Controller
      */
     public function index()
     {
-        //
+        $temporadas = Temporada::all();
+        return view('album.index', compact(['temporadas']));
     }
 
     /**
@@ -23,9 +25,9 @@ class AlbumController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Temporada $temporada)
     {
-        //
+        return view('album.create', compact('temporada'));
     }
 
     /**
@@ -34,9 +36,30 @@ class AlbumController extends Controller
      * @param  \App\Http\Requests\StoreAlbumRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreAlbumRequest $request)
+    public function store(StoreAlbumRequest $request, Temporada $temporada)
     {
-        //
+        $validated = $request->validate([
+            'titulo' => 'required|max:40',
+            'subtitulo' => 'max:100',
+            'album' => 'required|mimetypes:application/pdf|max:800000'
+        ]);
+        $album = new Album;
+        $album->title = $request->titulo;
+        $album->subtitle = $request->subtitulo;
+        $album->content = $request->content;
+        $album->temporada_id = $temporada->id;
+        $album->likes = 0;
+        if ($request->hasFile('album')) {
+            $file = $request->file('album');
+            $extension = ".pdf";
+            $fileName = 'album-'.uniqid().'.'.$extension;
+            $data = 'images/uploads/album/temporada-'.$temporada->id."/";
+            $file->move(public_path().'/'.$data,$fileName);
+            $album->original_filename = $file->getClientOriginalName();
+            $album->filename = $data.$fileName;
+        }
+        $album->save();
+        return redirect()->route("album.index")->with('status', ['type'=>"success" , 'message' =>"El album ".$album->title. " se ha creado correctamente"]);
     }
 
     /**
@@ -45,9 +68,10 @@ class AlbumController extends Controller
      * @param  \App\Models\Album  $album
      * @return \Illuminate\Http\Response
      */
-    public function show(Album $album)
+    public function show(Temporada $temporada)
     {
-        //
+        $album = Album::where('temporada_id', $temporada->id)->first();
+        return view('album.view', compact(['temporada','album']));
     }
 
     /**
@@ -72,7 +96,6 @@ class AlbumController extends Controller
     {
         //
     }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -81,6 +104,6 @@ class AlbumController extends Controller
      */
     public function destroy(Album $album)
     {
-        //
+
     }
 }

@@ -15,6 +15,10 @@ class CreateAlbumsTable extends Migration
     {
         Schema::create('albums', function (Blueprint $table) {
             $table->id();
+            $table->string('original_filename');
+            $table->string('filename');
+            $table->foreignId('temporada_id')->constrained();
+            $table->integer('likes');
             $table->timestamps();
         });
     }

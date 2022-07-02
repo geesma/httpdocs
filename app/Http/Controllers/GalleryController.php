@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Gallery;
 use Illuminate\Http\Request;
+use App\Models\Temporada;
 
 class GalleryController extends Controller
 {
@@ -12,9 +13,10 @@ class GalleryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Temporada $temporada)
     {
-        //
+        $images = Gallery::where('temporada_id', '=', $temporada->id)->get();
+        return view('galeria.index', compact(['images', 'temporada']));
     }
 
     /**
@@ -22,9 +24,10 @@ class GalleryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Temporada $temporada)
     {
-        //
+        $images = Gallery::where('temporada_id', '=', $temporada->id)->get();
+        return view('galeria.edit', compact(['images', 'temporada']));
     }
 
     /**
@@ -33,9 +36,20 @@ class GalleryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Temporada $temporada,Request $request)
     {
-        //
+        $image = $request->file('file');
+        $imageName = $image->getClientOriginalName();
+        $data = 'images/uploads/gallery/temporada-'.$temporada->id.'/';
+        $image->move(public_path().'/'.$data,$imageName);
+
+        $imageUpload = new Gallery();
+        $imageUpload->original_filename = $imageName;
+        $imageUpload->temporada_id = $temporada->id;
+        $imageUpload->filename = $data.$imageName;
+        $imageUpload->likes = 0;
+        $imageUpload->save();
+        return response()->json(['success'=>$imageName]);
     }
 
     /**
@@ -55,9 +69,10 @@ class GalleryController extends Controller
      * @param  \App\Models\Gallery  $gallery
      * @return \Illuminate\Http\Response
      */
-    public function edit(Gallery $gallery)
+    public function edit(Temporada $temporada)
     {
-        //
+        $images = Gallery::where('temporada_id', '=', $temporada->id)->get();
+        return view('galeria.edit', compact(['images', 'temporada']));
     }
 
     /**
@@ -78,8 +93,20 @@ class GalleryController extends Controller
      * @param  \App\Models\Gallery  $gallery
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Gallery $gallery)
+    public function destroy(Temporada $temporada, Request $request)
     {
-        //
+        $fileName = 'images/uploads/gallery/temporada-'.$temporada->id.'/'.$request->filename;
+        if(unlink($fileName)) {
+            $imageUpload = Gallery::where('filename', '=', $fileName)->first();
+            $imageUpload->delete();
+        } else {
+            return response()->json(['message' => 'No existe ninguna imagen con ese nombre'], 409);
+        }
+        return response()->json(['success'=>$fileName]);
+    }
+
+    public function createGaleria() {
+        $temporadas = Temporada::all();
+        return view('galeria.create', compact('temporadas'));
     }
 }

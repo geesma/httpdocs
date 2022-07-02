@@ -15,11 +15,17 @@
                 @elseif (isset($element->image))
                     <div class="flex items-center justify-center w-12 h-12 rounded-full shadow-lg ring-2 ring-white"
                         style="z-index: {{ (5 - $i) * 10 }}; background-image: url('{{ asset($element->image) }}'); background-position: center; background-size:cover;"></div>
+                @elseif (isset($element->filename))
+                    <div class="flex items-center justify-center w-12 h-12 rounded-full shadow-lg ring-2 ring-white"
+                        style="z-index: {{ (5 - $i) * 10 }}; background-image: url('{{ asset($element->filename) }}'); background-position: center; background-size:cover;"></div>
+                @else
+                    <div class="flex items-center justify-center w-12 h-12 text-xs rounded-full shadow-lg ring-2 ring-white"
+                    style="background-color: #3498db;">Album</div>
                 @endif
                 <?php $i++; ?>
             @endforeach
         </div>
-        @if ((session()->get('user')->role == 'super' || session()->get('user')->role == 'editor') && $elements->count() == 0)
+        @if ($delete && (session()->get('user')->role == 'super' || session()->get('user')->role == 'editor') && $elements->count() == 0)
             <x-button.card-delete />
         @endif
     @endif

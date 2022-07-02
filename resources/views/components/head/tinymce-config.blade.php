@@ -14,23 +14,23 @@
         inline: true,
         plugins: [
             'autolink',
-            'codesample',
             'link',
             'lists',
             'media',
             'table',
             'image',
             'quickbars',
-            'codesample',
             'help'
         ],
         toolbar: false,
         quickbars_insert_toolbar: 'quicktable image media codesample',
         quickbars_selection_toolbar: 'bold italic underline | formatselect | blockquote quicklink',
         contextmenu: 'undo redo | inserttable | cell row column deletetable | help',
-        powerpaste_word_import: 'clean',
-        powerpaste_html_import: 'clean',
-        images_upload_url: 'postAcceptor.php',
+        powerpaste_word_import: 'propmt',
+        powerpaste_html_import: 'propmt',
+        images_upload_url: '{{ route("media.upload") }}',
+        automatic_uploads: true,
+        images_upload_credentials: true
     };
 
     tinymce.init(dfreeBodyConfig);

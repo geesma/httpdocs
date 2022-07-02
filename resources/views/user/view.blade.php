@@ -1,6 +1,11 @@
 <x-page-parts.header page="user"/>
 
 <div class="grid w-full grid-cols-1 gap-2 p-2 mx-auto max-w-7xl md:grid-cols-3 md:gap-4 sm:p-6 lg:p-8">
+    @if(session()->get('user')->role != "player")
+    <div class="my-4 col-span-full">
+        <x-elements.link :href="route('user.all')" text="Volver a usuarios"/>
+    </div>
+    @endif
     <div class="">
         <div class="p-8 text-center bg-white rounded-lg shadow-lg">
             <img src="{{ isset($user->image) ? asset($user->image) : asset('images/uploads/profiles/no_image/no_image.jpg') }}" alt="" class="w-full mb-4 rounded-lg">
@@ -129,6 +134,150 @@
                 </script>
             </div>
         @endif
+    <div class="p-10 text-left bg-white rounded-lg shadow-lg md:col-span-2 md:col-start-2" id="albumContainer">
+        <div>
+            <div class="mb-4">
+                <h3 class="text-xl font-bold">Álbum</h3>
+            </div>
+            @if(session()->get('user')->role != 'player')
+                <div class="gap-4">
+                    <form method="post" action="{{ route('user_images.store', ['id' => $user->id])}}" enctype="multipart/form-data"
+                        class="flex flex-wrap items-center w-full text-center border-2 border-dashed rounded min-h-32 dropzone" id="dropzone">
+                        @csrf
+                    </form>
+                    <script type="text/javascript">
+                        $(function() {
+                            // access Dropzone here
+                            Dropzone.options.dropzone =
+                                {
+                                    maxFilesize: 12,
+                                    renameFile: function(file) {
+                                        var dt = new Date();
+                                        var time = dt.getTime();
+                                        var fileType = file.name.split('.');
+                                        var num = Math.floor(Math.random() * 1000) + 100;
+                                        fileType = fileType[fileType.length-1]
+                                        return time+"-"+num+"-user."+fileType;
+                                    },
+                                    acceptedFiles: ".jpeg,.jpg,.png,.gif",
+                                    addRemoveLinks: true,
+                                    timeout: 5000,
+                                    removedfile: function(file)
+                                    {
+                                        var name = file.upload.filename;
+                                        $.ajax({
+                                            headers: {
+                                                        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                                                    },
+                                            type: 'DELETE',
+                                            url: '{{ route('user_images.delete', ['id' => $user->id]) }}',
+                                            data: {filename: name},
+                                            success: function (data){
+                                                console.log("File has been successfully removed!!");
+                                            },
+                                            error: function(e) {
+                                                console.log(e);
+                                        }});
+                                        var fileRef;
+                                        return (fileRef = file.previewElement) != null ?
+                                        fileRef.parentNode.removeChild(file.previewElement) : void 0;
+                                    },
+                                    success: function(file, response)
+                                    {
+                                        console.log(response);
+                                    },
+                                    error: function(file, response)
+                                    {
+                                        return false;
+                                    },
+                                    init: function () {
+                                        const mockFile = @json($user->userImages).map(el => {
+                                            console.log(el)
+                                            return {
+                                                file: {
+                                                    name: el.original_filename,
+                                                    size: 12345,
+                                                    type: 'image/jpeg',
+                                                    upload: {
+                                                        filename: el.original_filename
+                                                    }
+                                                },
+                                                url: "https://{{ request()->getHost() }}/"+el.filename
+                                            }
+                                        })
+                                        mockFile.forEach(file => {
+                                            this.options.addedfile.call(this, file.file);
+                                            this.options.thumbnail.call(this, file.file, file.url);
+                                            file.file.previewElement.classList.add('dz-success');
+                                            file.file.previewElement.classList.add('dz-complete');
+                                        })
+                                    }
+                            };
+                            Dropzone.discover();
+                        });
+                        </script>
+                </div>
+            @else
+                <div id="lightgallery" class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+                    @foreach ($user->userImages as $image)
+                        <a href="{{ asset($image->filename) }}">
+                            <img alt="img1" src="{{ asset($image->filename) }}" />
+                        </a>
+                    @endforeach
+                </div>
+                <script type="text/javascript">
+
+                    lightGallery(document.getElementById('lightgallery'), {
+                        plugins: [lgZoom, lgThumbnail],
+                        licenseKey: 'gplv3',
+                        speed: 200
+                    });
+
+                </script>
+
+            @endif
+        </div>
+    </div>
+    <div class="p-10 text-left bg-white rounded-lg shadow-lg md:col-span-2 md:col-start-2" id="tableContainer">
+        <div>
+            <div class="mb-4">
+                <h3 class="text-xl font-bold">Histórico</h3>
+            </div>
+            <table class="w-full text-center table-auto" id="users-table">
+                <thead>
+                  <tr>
+                    <th>Temporada</th>
+                    <th>Liga</th>
+                    <th>Posición</th>
+                    <th>Puntos</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach ($user_leagues as $league)
+                    <tr onclick="handleClick({{$league['temporada_id']}},{{$league['liga_id']}})" class="cursor-pointer">
+                      <td>{{ $league['temporada_name'] }}</td>
+                      <td>{{ $league['liga_name'] }}</td>
+                      <td><a href="{{ route("temporada.liga.show", ['temporada' => $league['temporada_id'],'liga' => $league['liga_id']]) }}">{{ $league['position'] }}</a></td>
+                      <td>{{ $league['points'] }}</td>
+                    </td>
+                    </tr>
+                  @endforeach
+                </tbody>
+            </table>
+            <script>
+                let table = $('#users-table').DataTable({
+                    "paging":   false,
+                    "ordering": false,
+                    "info":     false,
+                    "searching":   false
+                });
+
+                function handleClick(temporada, liga) {
+                    location.href = `/temporada/${temporada}/liga/${liga}`
+                }
+            </script>
+        </div>
+    </div>
 </div>
 
 <x-page-parts.footer/>

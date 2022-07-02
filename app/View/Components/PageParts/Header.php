@@ -5,6 +5,7 @@ namespace App\View\Components\PageParts;
 use Illuminate\Http\Request;
 use Illuminate\View\Component;
 use App\Models\Temporada;
+use App\Models\Gallery;
 use Illuminate\Support\Facades\DB;
 
 class Header extends Component
@@ -23,9 +24,12 @@ class Header extends Component
     {
         $last_season = Temporada::orderBy('nom_any', 'desc')->distinct()->first();
         $seasons = Temporada::orderBy('nom_any', 'asc')->distinct()->get();
+        $galeries = Gallery::orderBy('temporada_id', 'asc')->groupBy('temporada_id')->distinct()->get();
         $current_season_array = array();
         $current_season_ligues_array = array();
         $seasons_array = array();
+        $albums_array = array();
+        $galleries_array = array();
         if(empty($page)) {
             $page= explode('/', $_SERVER['REQUEST_URI'])[1];
         }
@@ -33,26 +37,16 @@ class Header extends Component
             ["Historia", $page == 'historia', "historia.index"],
             ["Nuestras ligas", $page == 'ligas', "user.all", []],
             ["Clasificación", $page == 'clasificacion', "user.all", []],
-            ["Galeria", $page == 'galeria', "user.all", [
-                ["Temporada 2016/2017", route('temporada.index')],
-                ["Temporada 2017/2018", route('temporada.index')],
-                ["Temporada 2018/2019", route('temporada.index')],
-                ["Temporada 2020/2021", route('temporada.index')],
-                ["Temporada 2021/2022", route('temporada.index')]
-            ]],
-            ["Álbum", $page == 'album', "user.all"],
-            ["Estatutos", $page == 'estatutos', "user.all"],
+            ["Galeria", $page == 'galeria', "user.all", []],
+            ["Álbum", $page == 'album', "album.index", []],
+            ["Estatutos", $page == 'estatutos', "estatuto.index"],
             ["Premios", $page == 'premios', "user.all", [
-                ["Past Champions", route('temporada.index')],
-                ["Premios", route('temporada.index'),[
-                    ["Premios 3a Gala", route('temporada.index')],
-                    ["Premios 4a Gala", route('temporada.index')],
-                    ["Premios 5a Gala", route('temporada.index')]
-                ]],
-                ["Diplomas", route('temporada.index'), [
-                    ["Temporada 2019/2020", route('temporada.index')],
-                    ["Temporada 2020/2021", route('temporada.index')]
-                ]]
+                ["Past Champions", route('temporada.pastChampions')],
+                ["Premios", route('temporada.index'),[]],
+                // ["Diplomas", route('temporada.index'), [
+                //     ["Temporada 2019/2020", route('temporada.index')],
+                //     ["Temporada 2020/2021", route('temporada.index')]
+                // ]]
             ]]
           ];
 
@@ -70,13 +64,25 @@ class Header extends Component
 
         $this->menu[2][3] = $current_season_ligues_array;
 
-        foreach($seasons as $seasion) {
-            //var_dump($seasion);
+        foreach($galeries as $gallery) {
+            array_push($galleries_array, [$gallery->temporada->nom_temporada, route("temporada.galeria.index", ["temporada" => $gallery->temporada])]);
         }
+
+        $this->menu[3][3] = $galleries_array;
+
+        foreach($seasons as $seasion) {
+            if(count($seasion->albums) > 0)
+                array_push($albums_array, [$seasion->nom_temporada, route('album.show', ['temporada' => $seasion])]);
+        }
+
+        $this->menu[4][3] = $albums_array;
 
         $this->admin_menu = [
             ["Usuarios", route("user.all"), "editor"],
             ["Ligas", route('liga.index'), "editor"],
+            ["Temporadas", route("temporada.index"), "editor"],
+            ["Galerias", route('temporada.createGaleria'), "editor"],
+            ["Albumes", route('album.index'), "editor"],
             ["Reportes", route('post.create'), "moderator"]
           ];
         $this->user_menu = [

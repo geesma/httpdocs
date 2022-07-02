@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTemporadaRequest;
 use App\Http\Requests\UpdateTemporadaRequest;
 use App\Models\Temporada;
+use App\Models\Liga;
 use App\Models\User;
 
 class TemporadaController extends Controller
@@ -95,6 +96,12 @@ class TemporadaController extends Controller
     }
 
     public function historico() {
-        return view("temporades.historico");
+        $data = User::get_historical_data();
+        return view("temporades.historico", compact(['data']));
+    }
+
+    public function past_champions() {
+        $ligas = Liga::all();
+        return view('temporades.pastChampions', compact(['ligas']));
     }
 }

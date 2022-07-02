@@ -35,14 +35,36 @@ class Temporada extends Model
         return $this->belongsToMany(User::class, 'liga_temporada')->where('liga_id', '=', $liga_id);
     }
 
+    public function users_season($liga_id, $temporada_id) {
+        return $this->belongsToMany(User::class, 'liga_temporada')->where([
+            ['liga_id', '=', $liga_id],
+            ['temporada_id', '=', $temporada_id]
+        ]);
+    }
+
+    public function get_user($user_id) {
+        return DB::table('users')->where('id', '=', $user_id)->first();
+    }
+
+    public function get_winner($temporada_id, $liga_id) {
+        return DB::table('liga_temporada')->where([
+            ['liga_id', '=', $liga_id],
+            ['temporada_id', '=', $temporada_id]
+        ])->orderBy('points', 'desc')->first();
+    }
     /**
      * Get all of the galleries for the Temporada
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function galleries(): HasMany
+    public function galleries()
     {
         return $this->hasMany(Gallery::class);
+    }
+
+    public function albums()
+    {
+        return $this->hasMany(Album::class);
     }
 
 }

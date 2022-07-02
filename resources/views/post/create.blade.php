@@ -38,10 +38,10 @@
                     <div class="">
                         <div class="w-100">
                             <label class="block mb-3 ml-1" for="temporada">Temporada</label>
-                            <select name="temporada" id="Liga">
+                            <select name="temporada" id="Liga"> --}}
                                 <option value="0" selected="selected">Ninguna temporada</option>
                                 @foreach ($temporadas as $liga)
-                                    <option value="{{ $liga->id }}">{{ $liga->name }}</option>
+                                    <option value="{{ $liga->id }}">{{ $liga->nom_temporada }}</option>
                                 @endforeach
                             </select>
                         </div>

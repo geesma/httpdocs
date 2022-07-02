@@ -11,19 +11,21 @@ class Card extends Component
     public $subtitle;
     public $elements;
     public $id;
+    public $delete = true;
 
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($link, $title, $subtitle, $id, $elements)
+    public function __construct($link, $title, $subtitle, $id, $elements, $delete = true)
     {
         $this->link = $link;
         $this->title = $title;
         $this->subtitle = $subtitle;
         $this->elements = $elements;
         $this->id = $id;
+        $this->delete = $delete;
     }
 
     /**
