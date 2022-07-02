@@ -6073,6 +6073,15 @@ Ensure the default browser behavior of the `hidden` attribute.
 .h-24{
   height: 6rem;
 }
+.h-56{
+  height: 14rem;
+}
+.h-80{
+  height: 20rem;
+}
+.h-96{
+  height: 24rem;
+}
 .max-h-60{
   max-height: 15rem;
 }
@@ -6412,6 +6421,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .bg-cover{
   background-size: cover;
+}
+.bg-contain{
+  background-size: contain;
 }
 .bg-clip-text{
   -webkit-background-clip: text;
