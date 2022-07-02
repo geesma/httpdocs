@@ -73,9 +73,9 @@ class PremioController extends Controller
      * @param  \App\Models\Premio  $premio
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePremioRequest $request, Premio $premio)
+    public function update(UpdatePremioRequest $request, $id)
     {
-        $nova_historia = Premio::find(1);
+        $nova_historia = Premio::find($id);
         $nova_historia->content = $request->content;
         return $nova_historia->save();
     }
