@@ -45,13 +45,13 @@ $(document).ready(function () {
                     },
                     statusCode: {
                         404: function () {
-                            console.log('web not found');
+                            console.error('web not found');
                         },
                         409: function (response) {
-                            console.log(response.responseJSON.message)
+                            console.error(response.responseJSON.message)
                         },
                         500: function (response) {
-                            console.log(response.responseJSON.message);
+                            console.error(response.responseJSON.message);
                         }
                     },
                     error: function (response) {

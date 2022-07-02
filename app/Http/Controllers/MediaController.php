@@ -12,6 +12,6 @@ class MediaController extends Controller
         $fileName = 'historia-'.uniqid().'.'.$extension;
         $data = 'images/uploads/historia/';
         $file->move(public_path().'/'.$data,$fileName);
-        return response()->json(['location'=>$data.$fileName]);
+        return response()->json(['location'=>'/'.$data.$fileName]);
     }
 }

@@ -15,7 +15,9 @@ class PremioController extends Controller
      */
     public function index()
     {
-
+        $premios = Premio::all();
+        $temporadas = \App\Models\Temporada::all();
+        return view('premio.index', compact(['premios', 'temporadas']));
     }
 
     /**
@@ -36,7 +38,10 @@ class PremioController extends Controller
      */
     public function store(StorePremioRequest $request)
     {
-        //
+        $premio = new Premio();
+        $premio->fill($request->all());
+        $premio->save();
+        return $premio;
     }
 
     /**
@@ -81,8 +86,9 @@ class PremioController extends Controller
      * @param  \App\Models\Premio  $premio
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Premio $premio)
+    public function destroy($id)
     {
-        //
+        $premio = Premio::findOrFail($id);
+        return $premio->delete();
     }
 }

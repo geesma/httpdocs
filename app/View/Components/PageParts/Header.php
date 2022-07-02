@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\Component;
 use App\Models\Temporada;
 use App\Models\Gallery;
+use App\Models\Premio;
 use Illuminate\Support\Facades\DB;
 
 class Header extends Component
@@ -30,6 +31,7 @@ class Header extends Component
         $seasons_array = array();
         $albums_array = array();
         $galleries_array = array();
+        $premios_array = array();
         if(empty($page)) {
             $page= explode('/', $_SERVER['REQUEST_URI'])[1];
         }
@@ -42,7 +44,7 @@ class Header extends Component
             ["Estatutos", $page == 'estatutos', "estatuto.index"],
             ["Premios", $page == 'premios', "user.all", [
                 ["Past Champions", route('temporada.pastChampions')],
-                ["Premios", route('temporada.index'),[['prueba1', route('temporada.index')]]],
+                ["Premios", route('temporada.index'),[]],
                 // ["Diplomas", route('temporada.index'), [
                 //     ["Temporada 2019/2020", route('temporada.index')],
                 //     ["Temporada 2020/2021", route('temporada.index')]
@@ -77,13 +79,22 @@ class Header extends Component
 
         $this->menu[4][3] = $albums_array;
 
+        /* add premis subsubmenu to premios */
+        $premios = Premio::orderBy('title', 'desc')->get();
+        foreach($premios as $premio) {
+            array_push($premios_array, [$premio->title, route('premio.show', ['premio' => $premio])]);
+        }
+        $this->menu[6][3][1][2] = $premios_array;
+
         $this->admin_menu = [
             ["Usuarios", route("user.all"), "editor"],
             ["Ligas", route('liga.index'), "editor"],
             ["Temporadas", route("temporada.index"), "editor"],
             ["Galerias", route('temporada.createGaleria'), "editor"],
             ["Albumes", route('album.index'), "editor"],
-            ["Reportes", route('post.create'), "moderator"]
+            ["Reportes", route('post.create'), "moderator"],
+            ["Estatutos", route('estatuto.index'), "editor"],
+            ["Premios", route('premio.index'), "editor"]
           ];
         $this->user_menu = [
             ["Tu usuario", route('user.view', ['id' => $request->session()->get('user')->id])],
