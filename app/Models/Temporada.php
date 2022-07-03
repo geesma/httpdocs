@@ -67,4 +67,9 @@ class Temporada extends Model
         return $this->hasMany(Album::class);
     }
 
+    public function diplomas()
+    {
+        return $this->hasMany(Diplomas::class);
+    }
+
 }

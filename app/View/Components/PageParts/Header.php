@@ -7,6 +7,7 @@ use Illuminate\View\Component;
 use App\Models\Temporada;
 use App\Models\Gallery;
 use App\Models\Premio;
+use App\Models\Diplomas;
 use Illuminate\Support\Facades\DB;
 
 class Header extends Component
@@ -26,12 +27,16 @@ class Header extends Component
         $last_season = Temporada::orderBy('nom_any', 'desc')->distinct()->first();
         $seasons = Temporada::orderBy('nom_any', 'asc')->distinct()->get();
         $galeries = Gallery::orderBy('temporada_id', 'asc')->groupBy('temporada_id')->distinct()->get();
+        $diplomas = Diplomas::select(['nom_temporada', 'temporada_id'])->distinct()->join('temporadas', "temporadas.id", "=", "diplomas.temporada_id")->get();
+
+
         $current_season_array = array();
         $current_season_ligues_array = array();
         $seasons_array = array();
         $albums_array = array();
         $galleries_array = array();
         $premios_array = array();
+        $diplomas_array = array();
         if(empty($page)) {
             $page= explode('/', $_SERVER['REQUEST_URI'])[1];
         }
@@ -45,10 +50,7 @@ class Header extends Component
             ["Premios", $page == 'premios', "user.all", [
                 ["Past Champions", route('temporada.pastChampions')],
                 ["Premios", route('temporada.index'),[]],
-                // ["Diplomas", route('temporada.index'), [
-                //     ["Temporada 2019/2020", route('temporada.index')],
-                //     ["Temporada 2020/2021", route('temporada.index')]
-                // ]]
+                ["Diplomas", route('temporada.index'), []]
             ]]
           ];
 
@@ -79,12 +81,17 @@ class Header extends Component
 
         $this->menu[4][3] = $albums_array;
 
-        /* add premis subsubmenu to premios */
         $premios = Premio::orderBy('title', 'desc')->get();
         foreach($premios as $premio) {
             array_push($premios_array, [$premio->title, route('premio.show', ['premio' => $premio])]);
         }
         $this->menu[6][3][1][2] = $premios_array;
+
+        foreach($diplomas as $diploma) {
+            array_push($diplomas_array, [$diploma->nom_temporada, route('temporada.diploma.index', ['temporada' => $diploma->temporada_id])]);
+        }
+
+        $this->menu[6][3][2][2] = $diplomas_array;
 
         $this->admin_menu = [
             ["Usuarios", route("user.all"), "editor"],
@@ -94,7 +101,8 @@ class Header extends Component
             ["Albumes", route('album.index'), "editor"],
             ["Reportes", route('post.create'), "moderator"],
             ["Estatutos", route('estatuto.index'), "editor"],
-            ["Premios", route('premio.index'), "editor"]
+            ["Premios", route('premio.index'), "editor"],
+            ["Diplomas", route('temporada.createDiploma'), "editor"]
           ];
         $this->user_menu = [
             ["Tu usuario", route('user.view', ['id' => $request->session()->get('user')->id])],

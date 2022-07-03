@@ -10,6 +10,7 @@ use App\Http\Controllers\TemporadaLigaController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\AlbumController;
+use App\Http\Controllers\DiplomasController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\EstatutoController;
 use App\Http\Controllers\PremioController;
@@ -53,11 +54,15 @@ Route::middleware(['logged'])->group(function() {
         Route::get('/bio', [UserController::class, 'removeBioToUser'])->name('user.bio.get');
         Route::delete('temporada/{temporada}/galeria', [GalleryController::class, 'destroy'])->name('temporada.galeria.delete');
         Route::get('temporada/{temporada}/galeria/edit', [GalleryController::class, 'edit'])->name('temporada.galeria.edit');
+        Route::delete('temporada/{temporada}/diploma', [DiplomasController::class, 'destroy'])->name('temporada.diploma.delete');
+        Route::get('temporada/{temporada}/diploma/edit', [DiplomasController::class, 'edit'])->name('temporada.diploma.edit');
         Route::get('temporada/{temporada}/album/create', [AlbumController::class, 'create'])->name('temporada.album.create');
         Route::post('temporada/{temporada}/album', [AlbumController::class, 'store'])->name('temporada.album.save');
         Route::get('albums', [AlbumController::class, 'index'])->name('album.index');
         Route::resource('temporada.galeria', GalleryController::class)->except(['index','show','delete', 'edit']);
         Route::get('galeria/create', [GalleryController::class, 'createGaleria'])->name('temporada.createGaleria');
+        Route::resource('temporada.diploma', DiplomasController::class)->except(['index','show','delete', 'edit']);
+        Route::get('diploma/create', [DiplomasController::class, 'createDiploma'])->name('temporada.createDiploma');
     });
 
     //SELF OR EDITOR ROUTES
@@ -92,6 +97,7 @@ Route::middleware(['logged'])->group(function() {
     Route::get('historico', [TemporadaController::class, 'historico'])->name('temporada.historico');
     Route::resource('post', PostController::class)->only(['index','show']);
     Route::resource('temporada.galeria', GalleryController::class)->only(['index','show']);
+    Route::resource('temporada.diploma', DiplomasController::class)->only(['index','show']);
     Route::get('temporada/{temporada}/albums', [AlbumController::class, 'show'])->name('album.show');
     Route::get('/past-champions', [TemporadaController::class, 'past_champions'])->name('temporada.pastChampions');
 });
