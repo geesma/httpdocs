@@ -73,13 +73,10 @@
                                 title: 'Temporada creada'
                             });
                             console.log({ response });
-                            const content = '<a href="{{ route('premio.index') }}/'+ response.id +'" aria-id="' + response.id +
-                                '" aria-name="' + response.title +
-                                '" class="relative block max-w-sm p-6 bg-white border border-gray-100 rounded-lg shadow-md hover:bg-gray-100">' +
-                                '<h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">' +
-                                response.title + '</h5>' +
-                                '<p class="font-normal text-gray-700">' + temporada_name + '</p>' +
-                                '</a>';
+                            const content = `<a href="{{ route('premio.index') }}/${response.id}" aria-id="${response.id}" aria-name="${response.title}" class="relative block max-w-sm p-6 bg-white border border-gray-100 rounded-lg shadow-md hover:bg-gray-100">
+                                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">${response.title}</h5>
+                                <p class="font-normal text-gray-700">${temporada_name}</p>
+                                </a>`;
                             $("#addSeason").before(content);
                             order++;
                         },
