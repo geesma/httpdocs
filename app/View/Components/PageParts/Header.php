@@ -106,7 +106,7 @@ class Header extends Component
           ];
         $this->user_menu = [
             ["Tu usuario", route('user.view', ['id' => $request->session()->get('user')->id])],
-            ["Página de bienvenida", "#"],
+            ["Página de bienvenida", route('user.welcome')],
             ["Cerrar sesión",  route('user.logoff')]
         ];
 

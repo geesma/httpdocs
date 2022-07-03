@@ -100,4 +100,5 @@ Route::middleware(['logged'])->group(function() {
     Route::resource('temporada.diploma', DiplomasController::class)->only(['index','show']);
     Route::get('temporada/{temporada}/albums', [AlbumController::class, 'show'])->name('album.show');
     Route::get('/past-champions', [TemporadaController::class, 'past_champions'])->name('temporada.pastChampions');
+    Route::get('/welcome', [UserController::class, 'welcome'])->name('user.welcome');
 });

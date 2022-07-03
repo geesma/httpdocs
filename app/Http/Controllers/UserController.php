@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -54,7 +55,7 @@ class UserController extends Controller
     }
 
     private function redirectLogin($user) {
-        return redirect()->route("user.view", ["id" => $user->id])->with('status', ['type'=>"success" , 'message' =>"Hola, ".$user->name. " ". $user->surname. "!"]);
+        return redirect()->route('user.welcome')->with('status', ['type'=>"success" , 'message' =>"Hola, ".$user->name. " ". $user->surname. "!"]);
     }
 
     function do_logoff(Request $request) {
@@ -121,5 +122,12 @@ class UserController extends Controller
 
     function removeBioToUser(Request $request, $id) {
         return User::delete_user_bio($id);;
+    }
+
+    function welcome(Request $request) {
+        $user = $request->session()->get('user');
+        $posts = Post::take(3)->get();
+        $user_leagues = User::get_user_temporades($user->id);
+        return view('user.welcome', compact(['user','posts','user_leagues']));
     }
 }

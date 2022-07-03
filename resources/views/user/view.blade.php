@@ -247,38 +247,31 @@
             <div class="mb-4">
                 <h3 class="text-xl font-bold">Histórico</h3>
             </div>
-            <table class="w-full text-center table-auto" id="users-table">
+            <table class="w-full text-left" id="users-table">
                 <thead>
                     <tr>
-                        <th>Temporada</th>
-                        <th>Liga</th>
-                        <th>Posición</th>
-                        <th>Puntos</th>
+                        <th class="px-4 py-2">Temporada</th>
+                        <th class="px-4 py-2">Liga</th>
+                        <th class="px-4 py-2">Posición</th>
+                        <th class="px-4 py-2">Puntos</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($user_leagues as $league)
                         <tr onclick="handleClick({{ $league['temporada_id'] }},{{ $league['liga_id'] }})"
                             class="cursor-pointer">
-                            <td>{{ $league['temporada_name'] }}</td>
-                            <td>{{ $league['liga_name'] }}</td>
-                            <td><a
+                            <td class="px-4 py-2">{{ $league['temporada_name'] }}</td>
+                            <td class="px-4 py-2">{{ $league['liga_name'] }}</td>
+                            <td class="px-4 py-2"><a
                                     href="{{ route('temporada.liga.show', ['temporada' => $league['temporada_id'], 'liga' => $league['liga_id']]) }}">{{ $league['position'] }}</a>
                             </td>
-                            <td>{{ $league['points'] }}</td>
+                            <td class="px-4 py-2">{{ $league['points'] }}</td>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
             <script>
-                let table = $('#users-table').DataTable({
-                    "paging": false,
-                    "ordering": false,
-                    "info": false,
-                    "searching": false
-                });
-
                 function handleClick(temporada, liga) {
                     location.href = `/temporada/${temporada}/liga/${liga}`
                 }
