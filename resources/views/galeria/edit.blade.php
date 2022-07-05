@@ -7,7 +7,7 @@
     <div class="col-span-full">
         <form method="post" action="{{ route('temporada.galeria.store', ['temporada' => $temporada]) }}"
             enctype="multipart/form-data"
-            class="flex items-center justify-center w-full border-2 border-dashed rounded min-h-32 dropzone"
+            class="flex flex-wrap items-center justify-center w-full border-2 border-dashed rounded min-h-32 dropzone"
             id="dropzone">
             @csrf
         </form>

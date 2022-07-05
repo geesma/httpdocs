@@ -6001,9 +6001,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .ml-3{
   margin-left: 0.75rem;
 }
-.mb-16{
-  margin-bottom: 4rem;
-}
 .block{
   display: block;
 }
@@ -6126,9 +6123,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .w-48{
   width: 12rem;
-}
-.w-16{
-  width: 4rem;
 }
 .min-w-0{
   min-width: 0px;
@@ -6386,10 +6380,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-bg-opacity: 1;
   background-color: rgb(31 41 55 / var(--tw-bg-opacity));
 }
-.bg-blue-500{
-  --tw-bg-opacity: 1;
-  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
-}
 .bg-gradient-to-tr{
   background-image: linear-gradient(to top right, var(--tw-gradient-stops));
 }
@@ -6544,9 +6534,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .align-baseline{
   vertical-align: baseline;
-}
-.align-middle{
-  vertical-align: middle;
 }
 .font-mono{
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -7001,11 +6988,6 @@ table.dataTable tr:hover {
 .hover\:bg-gray-700:hover{
   --tw-bg-opacity: 1;
   background-color: rgb(55 65 81 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-blue-700:hover{
-  --tw-bg-opacity: 1;
-  background-color: rgb(29 78 216 / var(--tw-bg-opacity));
 }
 
 .hover\:text-red-500:hover{
