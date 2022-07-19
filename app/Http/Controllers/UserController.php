@@ -126,7 +126,7 @@ class UserController extends Controller
 
     function welcome(Request $request) {
         $user = $request->session()->get('user');
-        $posts = Post::take(3)->get();
+        $posts = Post::orderby('created_at', 'desc')->take(4)->get();
         $user_leagues = User::get_user_temporades($user->id);
         return view('user.welcome', compact(['user','posts','user_leagues']));
     }

@@ -19,4 +19,9 @@ class Premio extends Model
     {
         return $this->belongsTo('App\Models\Temporada');
     }
+
+    public function premis_diplomas()
+    {
+        return $this->hasMany('App\Models\PremisDiploma', 'premios_id');
+    }
 }

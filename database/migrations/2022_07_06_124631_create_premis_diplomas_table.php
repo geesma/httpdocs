@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDiplomasTable extends Migration
+class CreatePremisDiplomasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateDiplomasTable extends Migration
      */
     public function up()
     {
-        Schema::create('diplomas', function (Blueprint $table) {
+        Schema::create('premis_diplomas', function (Blueprint $table) {
             $table->id();
             $table->string('original_filename');
             $table->string('filename');
-            $table->foreignId('temporada_id')->constrained();
-            $table->foreignId('liga_id')->constrained();
+            $table->foreignId('premios_id')->constrained();
             $table->integer('likes');
             $table->timestamps();
         });
@@ -31,6 +30,6 @@ class CreateDiplomasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('diplomas');
+        Schema::dropIfExists('premis_diplomas');
     }
 }

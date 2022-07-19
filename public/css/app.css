@@ -5896,6 +5896,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .right-0{
   right: 0px;
 }
+.bottom-0{
+  bottom: 0px;
+}
 .right-4{
   right: 1rem;
 }
@@ -6001,8 +6004,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 .ml-3{
   margin-left: 0.75rem;
 }
+.mt-10{
+  margin-top: 2.5rem;
+}
 .block{
   display: block;
+}
+.inline-block{
+  display: inline-block;
 }
 .inline{
   display: inline;
@@ -6052,6 +6061,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .h-auto{
   height: auto;
 }
+.h-10{
+  height: 2.5rem;
+}
 .h-12{
   height: 3rem;
 }
@@ -6063,9 +6075,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .h-32{
   height: 8rem;
-}
-.h-10{
-  height: 2.5rem;
 }
 .h-20{
   height: 5rem;
@@ -6237,6 +6246,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .justify-between{
   justify-content: space-between;
 }
+.justify-evenly{
+  justify-content: space-evenly;
+}
 .gap-4{
   gap: 1rem;
 }
@@ -6368,6 +6380,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-bg-opacity: 1;
   background-color: rgb(0 0 0 / var(--tw-bg-opacity));
 }
+.bg-gray-200{
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 231 235 / var(--tw-bg-opacity));
+}
+.bg-blue-500{
+  --tw-bg-opacity: 1;
+  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
+}
 .bg-gray-600{
   --tw-bg-opacity: 1;
   background-color: rgb(75 85 99 / var(--tw-bg-opacity));
@@ -6471,13 +6491,17 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding-left: 0.75rem;
   padding-right: 0.75rem;
 }
-.px-4{
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
 .px-10{
   padding-left: 2.5rem;
   padding-right: 2.5rem;
+}
+.py-1{
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+.px-4{
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 .py-14{
   padding-top: 3.5rem;
@@ -6490,10 +6514,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .py-6{
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
-}
-.py-1{
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
 }
 .px-2{
   padding-left: 0.5rem;
@@ -6554,6 +6574,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   font-size: 0.75rem;
   line-height: 1rem;
 }
+.text-3xl{
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
 .text-xl{
   font-size: 1.25rem;
   line-height: 1.75rem;
@@ -6561,10 +6585,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .text-2xl{
   font-size: 1.5rem;
   line-height: 2rem;
-}
-.text-3xl{
-  font-size: 1.875rem;
-  line-height: 2.25rem;
 }
 .text-base{
   font-size: 1rem;
@@ -6975,9 +6995,24 @@ table.dataTable tr:hover {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+.hover\:bg-teal-400:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(45 212 191 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-red-400:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(248 113 113 / var(--tw-bg-opacity));
+}
+
 .hover\:bg-gray-100:hover{
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-blue-700:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(29 78 216 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-slate-200:hover{
@@ -7259,6 +7294,9 @@ table.dataTable tr:hover {
   .md\:block{
     display: block;
   }
+  .md\:h-80{
+    height: 20rem;
+  }
   .md\:w-4\/6{
     width: 66.666667%;
   }
@@ -7348,6 +7386,9 @@ table.dataTable tr:hover {
   }
   .xl\:hidden{
     display: none;
+  }
+  .xl\:h-128{
+    height: 30rem;
   }
 }
 

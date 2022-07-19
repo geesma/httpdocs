@@ -52,7 +52,8 @@ class PremioController extends Controller
      */
     public function show(Premio $premio)
     {
-        return view('premio.show', compact(['premio']));
+        $images = $premio->premis_diplomas;
+        return view('premio.show', compact(['premio', 'images']));
     }
 
     /**

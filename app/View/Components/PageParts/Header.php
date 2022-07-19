@@ -99,7 +99,7 @@ class Header extends Component
             ["Temporadas", route("temporada.index"), "editor"],
             ["Galerias", route('temporada.createGaleria'), "editor"],
             ["Albumes", route('album.index'), "editor"],
-            ["Reportes", route('post.create'), "moderator"],
+            ["Reportes", route('post.index'), "moderator"],
             ["Estatutos", route('estatuto.index'), "editor"],
             ["Premios", route('premio.index'), "editor"],
             ["Diplomas", route('temporada.createDiploma'), "editor"]

@@ -50,4 +50,9 @@ class Liga extends Model
             ['user_id', '=', $player_id],
         ])->delete();
     }
+
+    //liga has many galleries
+    public function diplomas() {
+        return $this->hasMany(Diplomas::class, 'liga_id');
+    }
 }

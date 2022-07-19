@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Diplomas;
 use App\Models\Temporada;
+use App\Models\Liga;
 
 
 class DiplomasController extends Controller
@@ -16,8 +17,7 @@ class DiplomasController extends Controller
      */
     public function index(Temporada $temporada)
     {
-        $images = Diplomas::where('temporada_id', '=', $temporada->id)->get();
-        return view('diploma.index', compact(['images', 'temporada']));
+        return view('diploma.index', compact(['temporada']));
     }
 
 
@@ -28,8 +28,7 @@ class DiplomasController extends Controller
      */
     public function create(Temporada $temporada)
     {
-        $images = Diplomas::where('temporada_id', '=', $temporada->id)->get();
-        return view('diploma.edit', compact(['images', 'temporada']));
+        return view('diploma.edit', compact(['temporada']));
     }
 
     /**
@@ -48,6 +47,7 @@ class DiplomasController extends Controller
         $imageUpload = new Diplomas();
         $imageUpload->original_filename = $imageName;
         $imageUpload->temporada_id = $temporada->id;
+        $imageUpload->liga_id = $request->liga_id;
         $imageUpload->filename = $data.$imageName;
         $imageUpload->save();
         return response()->json(['success'=>$imageName]);
@@ -72,8 +72,7 @@ class DiplomasController extends Controller
      */
     public function edit(Temporada $temporada)
     {
-        $images = Gallery::where('temporada_id', '=', $temporada->id)->get();
-        return view('galeria.edit', compact(['images', 'temporada']));
+        return view('diploma.edit', compact(['temporada']));
     }
 
     /**

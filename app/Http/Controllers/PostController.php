@@ -18,7 +18,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::orderby('created_at', 'desc')->get();
         return view('post.index', compact('posts'));
     }
 
@@ -43,8 +43,8 @@ class PostController extends Controller
     public function store(StorePostRequest $request)
     {
         $validated = $request->validate([
-            'titulo' => 'required|max:40',
-            'subtitulo' => 'max:100',
+            'titulo' => 'required|max:80',
+            'subtitulo' => 'max:240',
             'image' => 'image|max:2000|mimes:jpg,png,jpeg'
         ]);
         $post = new Post;
@@ -88,7 +88,9 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        $ligas = Liga::all();
+        $temporadas = Temporada::all();
+        return view('post.edit', compact(['ligas', 'temporadas', 'post']));
     }
 
     /**
@@ -100,7 +102,30 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        //
+        $validated = $request->validate([
+            'titulo' => 'required|max:80',
+            'subtitulo' => 'max:240',
+            'image' => 'image|max:2000|mimes:jpg,png,jpeg'
+        ]);
+        $post->user_id = session()->get('user')->id;
+        $post->title = $request->titulo;
+        $post->subtitle = $request->subtitulo;
+        $post->content = $request->content;
+        if(isset($request->liga) && isset($request->temporada) && $request->liga != 0 && $request->temporada != 0) {
+            $users = User::getTemporadaLigaPlayersWithPoints($request->temporada, $request->liga);
+            $users->toJson();
+            $post->qualification = $users;
+        }
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $extension = $request->image->getClientOriginalExtension();
+            $fileName = 'post-'.uniqid().'.'.$extension;
+            $data = 'images/uploads/post/';
+            $file->move(public_path().'/'.$data,$fileName);
+            $post->image = $data.$fileName;
+        }
+        $post->save();
+        return redirect()->route("post.index")->with('status', ['type'=>"success" , 'message' =>"El post ".$post->title. " se ha actualizado correctamente"]);
     }
 
     /**
@@ -111,6 +136,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $title = $post->title;
+        $post->delete();
+        return redirect()->route("post.index")->with('status', ['type'=>"success" , 'message' =>"El post ".$title. " se ha eliminado correctamente"]);
     }
 }

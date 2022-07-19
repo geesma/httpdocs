@@ -15,6 +15,7 @@ use App\Http\Controllers\MediaController;
 use App\Http\Controllers\EstatutoController;
 use App\Http\Controllers\PremioController;
 use App\Http\Controllers\UserImagesController;
+use App\Http\Controllers\PremisDiplomaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,6 +56,8 @@ Route::middleware(['logged'])->group(function() {
         Route::delete('temporada/{temporada}/galeria', [GalleryController::class, 'destroy'])->name('temporada.galeria.delete');
         Route::get('temporada/{temporada}/galeria/edit', [GalleryController::class, 'edit'])->name('temporada.galeria.edit');
         Route::delete('temporada/{temporada}/diploma', [DiplomasController::class, 'destroy'])->name('temporada.diploma.delete');
+        Route::delete('temporada/{premio}/premi-diploma', [PremisDiplomaController::class, 'destroy'])->name('temporada.premi-diploma.delete');
+        Route::post('temporada/{premio}/premi-diploma', [PremisDiplomaController::class, 'store'])->name('temporada.premi-diploma.store');
         Route::get('temporada/{temporada}/diploma/edit', [DiplomasController::class, 'edit'])->name('temporada.diploma.edit');
         Route::get('temporada/{temporada}/album/create', [AlbumController::class, 'create'])->name('temporada.album.create');
         Route::post('temporada/{temporada}/album', [AlbumController::class, 'store'])->name('temporada.album.save');

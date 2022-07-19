@@ -7,11 +7,12 @@
         <div class="my-4 col-span-full">
             <h2 class="text-3xl font-medium leading-tight align-baseline">{{ $liga->name }}</h2>
         </div>
-        @foreach ($liga->temporadas()->groupBy('temporada_id')->get() as $temporada)
-        <?php
+        @foreach ($liga->temporadas()->groupBy('temporada_id')->where('nom_any', '<', date('Y'))->get()
+    as $temporada)
+            <?php
             $winner = $temporada->get_winner($temporada->id, $liga->id);
             $player = $temporada->get_user($winner->user_id);
-        ?>
+            ?>
             <a href="{{ route('user.view', ['id' => $player->id]) }}"
                 class="relative flex flex-col items-center content-center max-w-sm px-10 bg-white border border-gray-100 rounded-lg shadow-md py-14 md:px-6 md:py-10 hover:bg-gray-100">
                 <img src="{{ isset($player->image) ? asset($player->image) : asset('images/uploads/profiles/no_image/no_image.jpg') }}"
